@@ -12,6 +12,9 @@ program = Tk()
 program.title("Restaurant Ordering System")
 program.resizable(width=False, height=False)
 
+#constants
+user_level = 0
+
 def reset_gui():
     signin_username_label.grid_remove()
     signin_password_label.grid_remove()
@@ -51,8 +54,10 @@ def signin_confirm_button_action():
     elif signin_confirm_result == 2:
         print("vip customers")
     elif signin_confirm_result == 3:
-        print("chef / delivery man")
+        print("delivery man")
     elif signin_confirm_result == 4:
+        print("chef")
+    elif signin_confirm_result == 5:
         print("manager")
 
 def signin_forget_button_action():
@@ -66,14 +71,6 @@ def signin_retrieve_button_action():
     signin_retrive_result = forget.retrieve(signin_forget_entry.get())
     messagebox.showinfo("",signin_retrive_result)
 
-#signin interface
-signin_username_label = Label(program, text="Username")
-signin_password_label = Label(program, text="Password")
-signin_username_entry = Entry(program)
-signin_password_entry = Entry(program)
-signin_confirm_button = Button(text="Sign in", command=signin_confirm_button_action)
-signin_forget_button = Button(text="Forget", command=signin_forget_button_action)
-
 def signin_interface():
     reset_gui()
     signin_username_label.grid(row=0, column=0)
@@ -83,12 +80,20 @@ def signin_interface():
     signin_confirm_button.grid(row=2, column=1)
     signin_forget_button.grid(row=2, column=0)
 
+#signin interface
+signin_username_label = Label(program, text="Username")
+signin_password_label = Label(program, text="Password")
+signin_username_entry = Entry(program)
+signin_password_entry = Entry(program)
+signin_confirm_button = Button(text="Sign in", command=signin_confirm_button_action)
+signin_forget_button = Button(text="Forget", command=signin_forget_button_action)
+
 #forget interface
 signin_forget_entry = Entry(program)
 signin_forget_label = Label(program, text="Email")
 signin_retrive_button = Button(text="Retrive", command=signin_retrieve_button_action)
 signin_back_button = Button(text="Back", command=signin_interface)
 
-signin_interface()
+
 window_center()
 program.mainloop()
