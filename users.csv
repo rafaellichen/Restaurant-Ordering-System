@@ -1,8 +1,0 @@
-username,password,balance,email,level,uid,cart,compliment,complaint,salary,name
-r,r,50,,1,0,,,,,
-vip,vip,100,,2,1,,,,,
-d,d,0,,3,2,,,,,
-chef1,chef1,500,,4,3,,,,100,A
-chef2,chef2,500,,4,4,,,,100,B
-chef3,chef3,500,,4,5,,,,100,C
-admin,admin,1000,,5,6,,,,,
