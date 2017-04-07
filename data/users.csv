@@ -1,0 +1,8 @@
+username,password,balance,email,level,uid,cart,compliment,complaint,salary,name,approved,
+r,r,50,,1,0,,,,,,1,
+vip,vip,100,,2,1,,,,,,1,
+d,d,,,3,2,,,,50,,,
+chef1,chef1,,,4,3,,0,0,100,A,,
+chef2,chef2,,,4,4,,0,0,100,B,,
+chef3,chef3,,,4,5,,0,0,100,C,,
+admin,admin,,rafaellichen@gmail.com,5,6,,,,,,,
