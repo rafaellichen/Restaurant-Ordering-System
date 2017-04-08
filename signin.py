@@ -7,10 +7,11 @@ def validate(username_input,password_input):
     users_password_database = users_database["password"].values
     users_uid_database = users_database["uid"].values
     users_level_database = users_database["level"].values
+    users_enabled_database = users_database["enabled"]
     i=0
     for username_check in users_username_database:
         if username_check == username_input:
-            if users_password_database[i] == password_input:
+            if users_password_database[i] == password_input and users_enabled_database[i] == 1:
                 return (users_level_database[i],users_uid_database[i])
             else:
                 return False
@@ -43,6 +44,8 @@ def register(username_input,password_input,email_input,deposit_input):
     users_salary_database = users_database["salary"].values.tolist()
     users_name_database = users_database["name"].values.tolist()
     users_approved_database = users_database["approved"].values.tolist()
+    users_enabled_database = users_database["enabled"].values.tolist()
+    users_warning_database = users_database["warning"].values.tolist()
     if username_input == "" or password_input == "" or email_input == "" or deposit_input == "":
         return ("Please fill out all information")
     for u,e in zip(users_username_database,users_email_database):
@@ -55,6 +58,8 @@ def register(username_input,password_input,email_input,deposit_input):
     users_level_database.append(1)
     users_uid_database.append(users_uid_database[-1]+1)
     users_approved_database.append(0)
+    users_enabled_database.append(1)
+    users_warning_database.append(0)
     users_cart_database.append(numpy.nan)
     users_compliment_database.append(numpy.nan)
     users_complaint_database.append(numpy.nan)
@@ -71,7 +76,9 @@ def register(username_input,password_input,email_input,deposit_input):
                                         "complaint": users_complaint_database,
                                         "salary": users_salary_database,
                                         "name": users_name_database,
-                                        "approved": users_approved_database})
+                                        "approved": users_approved_database,
+                                        "enabled": users_enabled_database,
+                                        "warning": users_warning_database})
     users_database = users_database[["username",
                                     "password",
                                     "balance",
@@ -83,5 +90,8 @@ def register(username_input,password_input,email_input,deposit_input):
                                     'complaint',
                                     "salary",
                                     "name",
-                                    "approved"]]
+                                    "approved",
+                                    "enabled",
+                                    "warning"]]
     users_database.to_csv("data/users.csv", index=False)
+    return ("Registration successful")

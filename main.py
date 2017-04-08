@@ -95,6 +95,19 @@ def reset_gui():
     register_username_entry.delete(0,END)
     register_email_entry.delete(0,END)
     register_deposit_entry.delete(0,END)
+    users_approve_list.grid_remove()
+    registeration_approve_button.grid_remove()
+    users_approve_list_label.grid_remove()
+    dish_compliments_list_label.grid_remove()
+    dish_compliments_list.grid_remove()
+    dish_compliments_approve_button.grid_remove()
+    dish_complaints_list_label.grid_remove()
+    dish_complaints_list.grid_remove()
+    dish_complaints_approve_button.grid_remove()
+    manager_signout_button.grid_remove()
+    registeration_decline_button.grid_remove()
+    dish_complaints_decline_button.grid_remove()
+    dish_compliments_decline_button.grid_remove()
 
 def window_center():
     program.update()
@@ -115,10 +128,16 @@ def signin_confirm_button_action():
         messagebox.showinfo("","Username or Password is incorrect")
         signin_username_entry.delete(0,END)
         signin_password_entry.delete(0,END)
-    else:
+    elif signin_confirm_result[0] == 1 or signin_confirm_result[0] == 2:
         current_user.uid = signin_confirm_result[1]
         current_user.user_level = signin_confirm_result[0]
         start_interface()
+    elif signin_confirm_result[0] == 4:
+        current_user.user_level = 4
+        start_interface()
+    elif signin_confirm_result[0] == 5:
+        current_user.user_level = 5
+        manager_interface()
 
 def signin_forget_button_action():
     reset_gui()
@@ -133,7 +152,6 @@ def signin_retrieve_button_action():
 
 def signout_status_button_action():
     current_user.user_level = 0
-    shopping_cart = []
     start_interface()  
 
 def signin_interface():
@@ -166,6 +184,10 @@ def become_member_button_action():
                         register_password_entry.get(),
                         register_email_entry.get(),
                         register_deposit_entry.get()))
+    register_password_entry.delete(0,END)
+    register_username_entry.delete(0,END)
+    register_email_entry.delete(0,END)
+    register_deposit_entry.delete(0,END)
 
 def start_interface():
     reset_gui()
@@ -204,11 +226,48 @@ def start_interface():
     previous_page_button.grid(row=9, column=0)
     window_center()
 
+def manager_interface():
+    reset_gui()
+    manager_signout_button.grid(row=0, column=2)
+    users_approve_list_label.grid(row=1, column=0)
+    users_approve_list.grid(row=2, column=0)   
+    registeration_approve_button.grid(row=3, column=0)
+    registeration_decline_button.grid(row=4, column=0)
+    dish_compliments_list_label.grid(row=1, column=1)
+    dish_compliments_list.grid(row=2, column=1)
+    dish_compliments_approve_button.grid(row=3, column=1)
+    dish_compliments_decline_button.grid(row=4, column=1)
+    dish_complaints_list_label.grid(row=1, column=2)
+    dish_complaints_list.grid(row=2, column=2)
+    dish_complaints_approve_button.grid(row=3, column=2)
+    dish_complaints_decline_button.grid(row=4, column=2)
+    window_center()
+
+def manager_signout_button_action():
+    current_user.user_level = 0
+    start_interface()
+
 def menu_next_page():
     pass
 
 def menu_previous_page():
     pass    
+
+#manager interface
+users_approve_list = Listbox(program)
+users_approve_list_label = Label(program, text="Pending registrations")
+registeration_approve_button = Button(text="Approve", command=None)
+registeration_decline_button = Button(text="Decline", command=None)
+dish_compliments_list_label = Label(program, text="Pending compliments")
+dish_compliments_list = Listbox(program)
+dish_compliments_approve_button = Button(text="Approve", command=None)
+dish_compliments_decline_button = Button(text="Decline", command=None)
+dish_complaints_list_label = Label(program, text="Pending complaints")
+dish_complaints_list = Listbox(program)
+dish_complaints_approve_button = Button(text="Approve", command=None)
+dish_complaints_decline_button = Button(text="Decline", command=None)
+manager_signout_button = Button(text="Sign Out", command=manager_signout_button_action)
+
 
 #signin interface
 signin_username_label = Label(program, text="Username")
