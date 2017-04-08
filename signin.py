@@ -7,11 +7,14 @@ def validate(username_input,password_input):
     users_password_database = users_database["password"].values
     users_uid_database = users_database["uid"].values
     users_level_database = users_database["level"].values
-    users_enabled_database = users_database["enabled"]
+    users_enabled_database = users_database["enabled"].values
+    users_approved_database = users_database["approved"].values
     i=0
     for username_check in users_username_database:
         if username_check == username_input:
-            if users_password_database[i] == password_input and users_enabled_database[i] == 1:
+            if users_password_database[i] == password_input and \
+                users_enabled_database[i] == 1 and \
+                users_approved_database[i] == 1:
                 return (users_level_database[i],users_uid_database[i])
             else:
                 return False

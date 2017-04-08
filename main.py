@@ -9,6 +9,7 @@ from os import system
 import signin
 import bar
 import element
+import manage
 
 program = Tk()
 program.title("Restaurant Ordering System")
@@ -35,79 +36,15 @@ global current_user
 current_user = user()
 
 def reset_gui():
-    signin_username_label.grid_remove()
-    signin_password_label.grid_remove()
-    signin_username_entry.grid_remove()
-    signin_password_entry.grid_remove()
-    signin_confirm_button.grid_remove()
-    signin_forget_button.grid_remove()
-    signin_forget_label.grid_remove()
-    signin_forget_entry.grid_remove()
-    signin_forget_button.grid_remove()
-    signin_retrive_button.grid_remove()
-    signin_back_button.grid_remove()
-    forget_back_button.grid_remove()
     signin_username_entry.delete(0,END)
     signin_password_entry.delete(0,END)
     signin_forget_entry.delete(0,END)
-    dish_image1.grid_remove()
-    dish_image2.grid_remove()
-    dish_image3.grid_remove()
-    dish_image4.grid_remove()
-    dish_image5.grid_remove()
-    dish_image6.grid_remove()
-    dish_name1.grid_remove()
-    dish_name2.grid_remove()
-    dish_name3.grid_remove()
-    dish_name4.grid_remove()
-    dish_name5.grid_remove()
-    dish_name6.grid_remove()
-    dish_buy1.grid_remove()
-    dish_buy2.grid_remove()
-    dish_buy3.grid_remove()
-    dish_buy4.grid_remove()
-    dish_buy5.grid_remove()
-    dish_buy6.grid_remove()
-    dish_price1.grid_remove()
-    dish_price2.grid_remove()
-    dish_price3.grid_remove()
-    dish_price4.grid_remove()
-    dish_price5.grid_remove()
-    dish_price6.grid_remove()
-    next_page_button.grid_remove()
-    previous_page_button.grid_remove()
-    signout_status_button.grid_remove()
-    signin_status_button.grid_remove()
-    balance_label.grid_remove()
-    shopping_cart_items.grid_remove()
-    register_button.grid_remove()
-    register_username_entry.grid_remove()
-    register_username_label.grid_remove()
-    register_password_entry.grid_remove()
-    register_password_label.grid_remove()
-    register_email_entry.grid_remove()
-    register_email_label.grid_remove()
-    register_enter_button.grid_remove()
-    register_back_button.grid_remove()
-    register_deposit_label.grid_remove()
-    register_deposit_entry.grid_remove()
     register_password_entry.delete(0,END)
     register_username_entry.delete(0,END)
     register_email_entry.delete(0,END)
     register_deposit_entry.delete(0,END)
-    users_approve_list.grid_remove()
-    registeration_approve_button.grid_remove()
-    users_approve_list_label.grid_remove()
-    dish_compliments_list_label.grid_remove()
-    dish_compliments_list.grid_remove()
-    dish_compliments_approve_button.grid_remove()
-    dish_complaints_list_label.grid_remove()
-    dish_complaints_list.grid_remove()
-    dish_complaints_approve_button.grid_remove()
-    manager_signout_button.grid_remove()
-    registeration_decline_button.grid_remove()
-    dish_complaints_decline_button.grid_remove()
-    dish_compliments_decline_button.grid_remove()
+    for widget in program.winfo_children():
+        widget.grid_remove()
 
 def window_center():
     program.update()
@@ -162,8 +99,8 @@ def signin_interface():
     signin_password_entry.grid(row=1, column=1)
     signin_confirm_button.grid(row=2, column=1)
     signin_forget_button.grid(row=2, column=0)
-    register_button.grid(row=3, column=0)
-    signin_back_button.grid(row=3, column=1)
+    register_button.grid(row=3, column=1)
+    signin_back_button.grid(row=3, column=0)
     window_center()
 
 def register_button_action():
@@ -176,8 +113,8 @@ def register_button_action():
     register_email_label.grid(row=2, column=0)
     register_deposit_label.grid(row=3, column=0)
     register_deposit_entry.grid(row=3, column=1)
-    register_enter_button.grid(row=4, column=0)
-    register_back_button.grid(row=4, column=1)
+    register_enter_button.grid(row=4, column=1)
+    register_back_button.grid(row=4, column=0)
 
 def become_member_button_action():
     messagebox.showinfo("",signin.register(register_username_entry.get(),
@@ -231,43 +168,66 @@ def manager_interface():
     manager_signout_button.grid(row=0, column=2)
     users_approve_list_label.grid(row=1, column=0)
     users_approve_list.grid(row=2, column=0)   
-    registeration_approve_button.grid(row=3, column=0)
-    registeration_decline_button.grid(row=4, column=0)
+    manager_approve_button.grid(row=3, column=2)
+    manager_decline_button.grid(row=3, column=0)
     dish_compliments_list_label.grid(row=1, column=1)
     dish_compliments_list.grid(row=2, column=1)
-    dish_compliments_approve_button.grid(row=3, column=1)
-    dish_compliments_decline_button.grid(row=4, column=1)
     dish_complaints_list_label.grid(row=1, column=2)
     dish_complaints_list.grid(row=2, column=2)
-    dish_complaints_approve_button.grid(row=3, column=2)
-    dish_complaints_decline_button.grid(row=4, column=2)
+    update_all_button.grid(row=0, column=0)
+    manager_update_all_action()
     window_center()
+
+def manager_update_all_action():
+    dish_compliments_list.delete(0,END)
+    dish_complaints_list.delete(0,END)
+    users_approve_list.delete(0,END)
+    pending_list = element.get_pending_registrations()
+    compliments_list = element.get_pending_compliments()
+    complaints_list = element.get_pending_complaints()
+    for item in pending_list:
+        users_approve_list.insert(END, item)
+    for item in compliments_list:
+        dish_compliments_list.insert(END, item)
+    for item in complaints_list:
+        dish_complaints_list.insert(END, item)
+
+def manager_approve_decline_button_action(input):
+    try:
+        manage.approve_pending_registrations(users_approve_list.get(users_approve_list.curselection()), input)
+        manager_update_all_action()
+    except TclError:
+        try:
+            manage.approve_compliments(dish_compliments_list.get(dish_compliments_list.curselection()), input)
+            manager_update_all_action()
+        except TclError:
+            try:
+                manage.approve_complaints(dish_complaints_list.get(dish_complaints_list.curselection()), input)
+                manager_update_all_action()
+            except TclError:
+                messagebox.showinfo("","Please select an item to approve")
 
 def manager_signout_button_action():
     current_user.user_level = 0
     start_interface()
 
 def menu_next_page():
-    pass
+    print("next")
 
 def menu_previous_page():
-    pass    
+    print("previous")  
 
 #manager interface
 users_approve_list = Listbox(program)
 users_approve_list_label = Label(program, text="Pending registrations")
-registeration_approve_button = Button(text="Approve", command=None)
-registeration_decline_button = Button(text="Decline", command=None)
+manager_approve_button = Button(text="Approve", command=lambda: manager_approve_decline_button_action(1))
+manager_decline_button = Button(text="Decline", command=lambda: manager_approve_decline_button_action(-1))
 dish_compliments_list_label = Label(program, text="Pending compliments")
 dish_compliments_list = Listbox(program)
-dish_compliments_approve_button = Button(text="Approve", command=None)
-dish_compliments_decline_button = Button(text="Decline", command=None)
 dish_complaints_list_label = Label(program, text="Pending complaints")
 dish_complaints_list = Listbox(program)
-dish_complaints_approve_button = Button(text="Approve", command=None)
-dish_complaints_decline_button = Button(text="Decline", command=None)
 manager_signout_button = Button(text="Sign Out", command=manager_signout_button_action)
-
+update_all_button = Button(text="Update", command=manager_update_all_action)
 
 #signin interface
 signin_username_label = Label(program, text="Username")
