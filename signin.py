@@ -33,7 +33,7 @@ def retrieve(email_input):
         i+=1
     return ("?",",","?")
 
-def register(username_input,password_input,email_input,deposit_input):
+def register(username_input,password_input,email_input):
     users_database = pandas.read_csv("data/users.csv")
     users_username_database = users_database["username"].values.tolist()
     users_password_database = users_database["password"].values.tolist()
@@ -49,7 +49,7 @@ def register(username_input,password_input,email_input,deposit_input):
     users_approved_database = users_database["approved"].values.tolist()
     users_enabled_database = users_database["enabled"].values.tolist()
     users_warning_database = users_database["warning"].values.tolist()
-    if username_input == "" or password_input == "" or email_input == "" or deposit_input == "":
+    if username_input == "" or password_input == "" or email_input == "":
         return ("Please fill out all information")
     for u,e in zip(users_username_database,users_email_database):
         if u == username_input or e == email_input:
@@ -57,7 +57,7 @@ def register(username_input,password_input,email_input,deposit_input):
     users_username_database.append(username_input)
     users_password_database.append(password_input)
     users_email_database.append(email_input)
-    users_balance_database.append(deposit_input)
+    users_balance_database.append(50)
     users_level_database.append(1)
     users_uid_database.append(users_uid_database[-1]+1)
     users_approved_database.append(0)

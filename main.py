@@ -42,7 +42,6 @@ def reset_gui():
     register_password_entry.delete(0,END)
     register_username_entry.delete(0,END)
     register_email_entry.delete(0,END)
-    register_deposit_entry.delete(0,END)
     for widget in program.winfo_children():
         widget.grid_remove()
 
@@ -111,20 +110,18 @@ def register_button_action():
     register_password_label.grid(row=1, column=0)
     register_email_entry.grid(row=2, column=1)
     register_email_label.grid(row=2, column=0)
-    register_deposit_label.grid(row=3, column=0)
-    register_deposit_entry.grid(row=3, column=1)
     register_enter_button.grid(row=4, column=1)
     register_back_button.grid(row=4, column=0)
 
 def become_member_button_action():
-    messagebox.showinfo("",signin.register(register_username_entry.get(),
-                        register_password_entry.get(),
-                        register_email_entry.get(),
-                        register_deposit_entry.get()))
-    register_password_entry.delete(0,END)
-    register_username_entry.delete(0,END)
-    register_email_entry.delete(0,END)
-    register_deposit_entry.delete(0,END)
+    result = messagebox.askyesno("", "Fixed amount of deposit ($50) is required. Still wish to apply?")
+    if result:
+        messagebox.showinfo("",signin.register(register_username_entry.get(),
+                            register_password_entry.get(),
+                            register_email_entry.get()))
+        register_password_entry.delete(0,END)
+        register_username_entry.delete(0,END)
+        register_email_entry.delete(0,END)
 
 def start_interface():
     reset_gui()
@@ -252,8 +249,6 @@ register_password_entry = Entry(program)
 register_password_label = Label(program, text="Password")
 register_email_entry = Entry(program)
 register_email_label = Label(program, text="Email")
-register_deposit_label = Label(program, text="Deposit")
-register_deposit_entry = Entry(program)
 register_enter_button = Button(text="Become Member", command=become_member_button_action)
 register_back_button = Button(text="Back", command=signin_interface)
 
