@@ -1,11 +1,21 @@
-uid,comment,did,approval
-0,good,1,0
-0,great,2,0
-0,excellent,4,0
-1,delicious,3,0
-1,best,13,0
-1,good,9,0
-0,taste good,6,0
-1,look delicious,5,0
-1,tasty,16,0
-0,good job,11,0
+uid,comment,cpid,did,approval
+0,sfasdfdsafsadfihfisdafsalfhsafhsdlfhsafllhs,1,1,-1
+0,great,2,2,0
+0,excellent,3,4,0
+1,delicious,4,3,0
+1,best,5,13,0
+1,good,6,9,0
+0,taste good,7,6,1
+1,look delicious,8,5,0
+1,tasty,9,16,0
+0,good job,10,11,0
+1,good,11,5,0
+1,great,12,12,0
+0,excellent,13,17,0
+1,delicious,14,8,0
+0,best,15,11,0
+1,good,16,13,0
+1,taste good,17,4,1
+0,look delicious,18,19,1
+1,tasty,19,18,0
+1,good job,20,10,0
