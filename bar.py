@@ -1,9 +1,8 @@
 import pandas
 import numpy
-import smtplib
 
 def chef_in_list():
-    chefs = pandas.read_csv("users.csv")
+    chefs = pandas.read_csv("data/users.csv")
     chefs = chefs.loc[chefs["level"]==4]
     return chefs["name"].values
 

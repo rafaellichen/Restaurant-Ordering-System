@@ -7,8 +7,8 @@ import sys
 from os import system
 
 import signin
-import forget
 import bar
+import element
 
 program = Tk()
 program.title("Restaurant Ordering System")
@@ -19,7 +19,6 @@ chef_list = Menu(menubar, tearoff=0)
 temp_chefs_in_list = bar.chef_in_list()
 for e in temp_chefs_in_list:
     chef_list.add_command(label=str(e), command=lambda e=str(e): bar.change_menu(e))
-    print(str(e))
 menubar.add_cascade(label="Chefs", menu=chef_list)
 program.config(menu=menubar)
 
@@ -30,6 +29,7 @@ class user:
         self.shopping_cart = []
         self.current_menu = []
         self.top_menu = []
+        self.uid = -1
 
 global current_user
 current_user = user()
@@ -80,6 +80,34 @@ def reset_gui():
     signin_status_button.grid_remove()
     balance_label.grid_remove()
     shopping_cart_items.grid_remove()
+    register_button.grid_remove()
+    register_username_entry.grid_remove()
+    register_username_label.grid_remove()
+    register_password_entry.grid_remove()
+    register_password_label.grid_remove()
+    register_email_entry.grid_remove()
+    register_email_label.grid_remove()
+    register_enter_button.grid_remove()
+    register_back_button.grid_remove()
+    register_deposit_label.grid_remove()
+    register_deposit_entry.grid_remove()
+    register_password_entry.delete(0,END)
+    register_username_entry.delete(0,END)
+    register_email_entry.delete(0,END)
+    register_deposit_entry.delete(0,END)
+    users_approve_list.grid_remove()
+    registeration_approve_button.grid_remove()
+    users_approve_list_label.grid_remove()
+    dish_compliments_list_label.grid_remove()
+    dish_compliments_list.grid_remove()
+    dish_compliments_approve_button.grid_remove()
+    dish_complaints_list_label.grid_remove()
+    dish_complaints_list.grid_remove()
+    dish_complaints_approve_button.grid_remove()
+    manager_signout_button.grid_remove()
+    registeration_decline_button.grid_remove()
+    dish_complaints_decline_button.grid_remove()
+    dish_compliments_decline_button.grid_remove()
 
 def window_center():
     program.update()
@@ -92,28 +120,24 @@ def window_center():
     # modified
 
 def signin_confirm_button_action():
-    signin_confirm_result = signin.validate(signin_username_entry.get(),signin_password_entry.get())
+    signin_confirm_result = signin.validate(signin_username_entry.get(),
+                                            signin_password_entry.get())
     # write function to change the software interface based on the type of user
     # replace print command
     if signin_confirm_result == False:
         messagebox.showinfo("","Username or Password is incorrect")
         signin_username_entry.delete(0,END)
         signin_password_entry.delete(0,END)
-    elif signin_confirm_result == 1:
-        current_user.user_level = 1
+    elif signin_confirm_result[0] == 1 or signin_confirm_result[0] == 2:
+        current_user.uid = signin_confirm_result[1]
+        current_user.user_level = signin_confirm_result[0]
         start_interface()
-    elif signin_confirm_result == 2:
-        current_user.user_level = 2
-        start_interface()
-    elif signin_confirm_result == 3:
-        current_user.user_level = 3
-        start_interface()
-    elif signin_confirm_result == 4:
+    elif signin_confirm_result[0] == 4:
         current_user.user_level = 4
         start_interface()
-    elif signin_confirm_result == 5:
+    elif signin_confirm_result[0] == 5:
         current_user.user_level = 5
-        start_interface()
+        manager_interface()
 
 def signin_forget_button_action():
     reset_gui()
@@ -124,12 +148,10 @@ def signin_forget_button_action():
     window_center()
 
 def signin_retrieve_button_action():
-    signin_retrive_result = forget.retrieve(signin_forget_entry.get())
-    messagebox.showinfo("",signin_retrive_result)
+    messagebox.showinfo("",signin.retrieve(signin_forget_entry.get()))
 
 def signout_status_button_action():
     current_user.user_level = 0
-    shopping_cart = []
     start_interface()  
 
 def signin_interface():
@@ -140,8 +162,32 @@ def signin_interface():
     signin_password_entry.grid(row=1, column=1)
     signin_confirm_button.grid(row=2, column=1)
     signin_forget_button.grid(row=2, column=0)
-    signin_back_button.grid(row=2, column=2)
+    register_button.grid(row=3, column=0)
+    signin_back_button.grid(row=3, column=1)
     window_center()
+
+def register_button_action():
+    reset_gui()
+    register_username_entry.grid(row=0, column=1)
+    register_username_label.grid(row=0, column=0)
+    register_password_entry.grid(row=1, column=1)
+    register_password_label.grid(row=1, column=0)
+    register_email_entry.grid(row=2, column=1)
+    register_email_label.grid(row=2, column=0)
+    register_deposit_label.grid(row=3, column=0)
+    register_deposit_entry.grid(row=3, column=1)
+    register_enter_button.grid(row=4, column=0)
+    register_back_button.grid(row=4, column=1)
+
+def become_member_button_action():
+    messagebox.showinfo("",signin.register(register_username_entry.get(),
+                        register_password_entry.get(),
+                        register_email_entry.get(),
+                        register_deposit_entry.get()))
+    register_password_entry.delete(0,END)
+    register_username_entry.delete(0,END)
+    register_email_entry.delete(0,END)
+    register_deposit_entry.delete(0,END)
 
 def start_interface():
     reset_gui()
@@ -150,6 +196,7 @@ def start_interface():
     else:
         signout_status_button.grid(row=0, column=2)
         balance_label.grid(row=0, column=0)
+        balance_label.config(text=element.get_balance(current_user.uid))
     shopping_cart_items.grid(row=0, column=1)
     dish_image1.grid(row=1, column=0)
     dish_name1.grid(row=2, column=0)
@@ -179,11 +226,48 @@ def start_interface():
     previous_page_button.grid(row=9, column=0)
     window_center()
 
+def manager_interface():
+    reset_gui()
+    manager_signout_button.grid(row=0, column=2)
+    users_approve_list_label.grid(row=1, column=0)
+    users_approve_list.grid(row=2, column=0)   
+    registeration_approve_button.grid(row=3, column=0)
+    registeration_decline_button.grid(row=4, column=0)
+    dish_compliments_list_label.grid(row=1, column=1)
+    dish_compliments_list.grid(row=2, column=1)
+    dish_compliments_approve_button.grid(row=3, column=1)
+    dish_compliments_decline_button.grid(row=4, column=1)
+    dish_complaints_list_label.grid(row=1, column=2)
+    dish_complaints_list.grid(row=2, column=2)
+    dish_complaints_approve_button.grid(row=3, column=2)
+    dish_complaints_decline_button.grid(row=4, column=2)
+    window_center()
+
+def manager_signout_button_action():
+    current_user.user_level = 0
+    start_interface()
+
 def menu_next_page():
     pass
 
 def menu_previous_page():
     pass    
+
+#manager interface
+users_approve_list = Listbox(program)
+users_approve_list_label = Label(program, text="Pending registrations")
+registeration_approve_button = Button(text="Approve", command=None)
+registeration_decline_button = Button(text="Decline", command=None)
+dish_compliments_list_label = Label(program, text="Pending compliments")
+dish_compliments_list = Listbox(program)
+dish_compliments_approve_button = Button(text="Approve", command=None)
+dish_compliments_decline_button = Button(text="Decline", command=None)
+dish_complaints_list_label = Label(program, text="Pending complaints")
+dish_complaints_list = Listbox(program)
+dish_complaints_approve_button = Button(text="Approve", command=None)
+dish_complaints_decline_button = Button(text="Decline", command=None)
+manager_signout_button = Button(text="Sign Out", command=manager_signout_button_action)
+
 
 #signin interface
 signin_username_label = Label(program, text="Username")
@@ -193,12 +277,25 @@ signin_password_entry = Entry(program)
 signin_confirm_button = Button(text="Sign in", command=signin_confirm_button_action)
 signin_forget_button = Button(text="Forget", command=signin_forget_button_action)
 signin_back_button = Button(text="Back", command=start_interface)
+register_button = Button(text="Register", command=register_button_action)
 
 #forget interface
 signin_forget_entry = Entry(program)
 signin_forget_label = Label(program, text="Email")
 signin_retrive_button = Button(text="Retrive", command=signin_retrieve_button_action)
 forget_back_button = Button(text="Back", command=signin_interface)
+
+#register_interface
+register_username_entry = Entry(program)
+register_username_label = Label(program, text="Username")
+register_password_entry = Entry(program)
+register_password_label = Label(program, text="Password")
+register_email_entry = Entry(program)
+register_email_label = Label(program, text="Email")
+register_deposit_label = Label(program, text="Deposit")
+register_deposit_entry = Entry(program)
+register_enter_button = Button(text="Become Member", command=become_member_button_action)
+register_back_button = Button(text="Back", command=signin_interface)
 
 #start interface
 balance_label = Label(program, text="Balance")
