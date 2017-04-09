@@ -9,8 +9,9 @@ Restaurant Ordering System
 ### Customers:
 - [ ] Can browse menus and ratings only without registration
 - [x] Can register to become a member with fixed amount of deposit
+- [ ] Unregistered customer can browse menus and ratings only
 ### System features:
 - [x] Provide a GUI
-- [x] Regiered customers have username and password to login
+- [x] Registered customers have username and password to login
 
 Etc...
