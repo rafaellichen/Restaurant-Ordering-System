@@ -17,8 +17,8 @@ Restaurant Ordering System
 - [ ] Become VIP cutomers after spending at least $500 or 50 orders
 - [ ] VIP customers receive 10% discount
 - [ ] VIP customers' complements/complaints are weight twice as important as regular customers'
-### surfers:
-- [ ] Can become a registered customer with fixed amount of deposit
+### Surfers:
+- [x] Can become a registered customer with fixed amount of deposit
 - [ ] Unregistered customer can browse menus and ratings only
 ## System features:
 - [x] Provide a GUI
