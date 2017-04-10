@@ -11,12 +11,14 @@ def approve_pending_registrations(username, input):
     for u in users_username_database:
         if u == username:
             if input == 1:
-                result = messagebox.askyesno("","Approve this user who has: $"+str(users_balance_database[i])+"?")
+                result = messagebox.askyesno("","Approving the following user:\n"+"Username: "+str(username)+
+                                                "\nBalance: $"+str(users_balance_database[i]))
                 if result:
                     users_database.set_value(i, "approved", 1)
                     users_database.to_csv("data/users.csv", index=False)
             else:
-                result = messagebox.askyesno("","Decline this user who has: $"+str(users_balance_database[i])+"?")
+                result = messagebox.askyesno("","Declining the following user:\n"+"Username: "+str(username)+
+                                                "\nBalance: $"+str(users_balance_database[i]))
                 if result:
                     users_database.set_value(i, "approved", -1)
                     users_database.to_csv("data/users.csv", index=False)
@@ -30,12 +32,12 @@ def approve_compliments(cpid, input):
     for c in compliments_cpid_database:
         if c == int(cpid):
             if input == 1:
-                result = messagebox.askyesno("","Approve this comment: "+str(compliments_comment_database[i])+"?")
+                result = messagebox.askyesno("","Approving the following comment:\n"+str(compliments_comment_database[i]))
                 if result:
                     compliments_database.set_value(i, "approval", 1)
                     compliments_database.to_csv("data/compliments.csv", index=False)
             else:
-                result = messagebox.askyesno("","Decline this comment: "+str(compliments_comment_database[i])+"?")
+                result = messagebox.askyesno("","Declining the following comment:\n"+str(compliments_comment_database[i]))
                 if result:
                     compliments_database.set_value(i, "approval", -1)
                     compliments_database.to_csv("data/compliments.csv", index=False)
@@ -49,12 +51,12 @@ def approve_complaints(cnid, input):
     for c in complaints_cnid_database:
         if c == int(cnid):
             if input == 1:
-                result = messagebox.askyesno("","Approve this comment: "+str(complaints_comment_database[i])+"?")
+                result = messagebox.askyesno("","Approving the following comment:\n"+str(complaints_comment_database[i]))
                 if result:
                     complaints_database.set_value(i, "approval", 1)
                     complaints_database.to_csv("data/complaints.csv", index=False)
             else:
-                result = messagebox.askyesno("","Decline this comment: "+str(complaints_comment_database[i])+"?")
+                result = messagebox.askyesno("","Declining the following comment:\n"+str(complaints_comment_database[i]))
                 if result:
                     complaints_database.set_value(i, "approval", -1)
                     complaints_database.to_csv("data/complaints.csv", index=False)

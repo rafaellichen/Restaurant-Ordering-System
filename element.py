@@ -67,26 +67,18 @@ def get_comment_content(id,num):
                 return comment_database[i]
             i+=1
 
-def get_comment_dish(id,num):
-    if num==1:
-        compliments_database = pandas.read_csv("data/compliments.csv")
-        cpid_database = compliments_database["cpid"].values
-        compliments_did_database = compliments_database["did"].values
-        dish_database = pandas.read_csv("data/dish.csv")
-        dish_did_database = dish_database["did"].values
-        dish_path_database = dish_database["path"].values
-        i=0
-        j=0
-        did=-1
-        for c in cpid_database:
-            if c == id:
-                did = compliments_did_database[i]
-            i+=1
-        for d in dish_did_database:
-            if d == did:
-                print(dish_path_database[j])
-                return dish_path_database[j]
-            j+=1
-    else:
-        pass
-        
+def get_menu_list():
+    did_database = pandas.read_csv("data/dish.csv")
+    return (list(reversed(did_database.sort_values("time")["did"].values)))
+
+def get_image_list():
+    path_database = pandas.read_csv("data/dish.csv")
+    return (list(reversed(path_database.sort_values("time")["path"].values)))
+
+def get_name_list():
+    name_database = pandas.read_csv("data/dish.csv")
+    return (list(reversed(name_database.sort_values("time")["dish"].values)))
+
+def get_price_list():
+    price_database = pandas.read_csv("data/dish.csv")
+    return (list(reversed(price_database.sort_values("time")["price"].values)))
