@@ -61,3 +61,6 @@ def approve_complaints(cnid, input):
                     complaints_database.set_value(i, "approval", -1)
                     complaints_database.to_csv("data/complaints.csv", index=False)
         i+=1
+
+def approve_declined_user(username):
+    pass

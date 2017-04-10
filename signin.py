@@ -1,5 +1,7 @@
 import pandas
 import numpy
+from tkinter import *
+from tkinter import messagebox
 
 def validate(username_input,password_input):
     users_database = pandas.read_csv("data/users.csv")
@@ -12,12 +14,19 @@ def validate(username_input,password_input):
     i=0
     for username_check in users_username_database:
         if username_check == username_input:
-            if users_password_database[i] == password_input and \
+            if users_enabled_database[i] == 0 or users_approved_database[i] == -1:
+                messagebox.showinfo("", "Account is disabled")
+                return 10
+            elif users_approved_database[i] == 0:
+                messagebox.showinfo("", "Account must be approved first")
+                return 20
+            else:
+                if users_password_database[i] == password_input and \
                 users_enabled_database[i] == 1 and \
                 users_approved_database[i] == 1:
-                return (users_level_database[i],users_uid_database[i])
-            else:
-                return False
+                    return (users_level_database[i],users_uid_database[i])
+                else:
+                    return False
         i+=1
     return False
 

@@ -67,6 +67,26 @@ def get_comment_content(id,num):
                 return comment_database[i]
             i+=1
 
+def get_comment(t, num):
+    if t == 1:
+        compliments_database = pandas.read_csv("data/compliments.csv")
+        compliments_database = compliments_database.loc[compliments_database["approval"] == num]
+        return compliments_database["cpid"].values
+    else:
+        complaints_database = pandas.read_csv("data/complaints.csv")
+        complaints_database = complaints_database.loc[complaints_database["approval"] == num]
+        return complaints_database["cnid"].values
+
+def get_users(num):
+    if num == 0:
+        approved_database = pandas.read_csv("data/users.csv")
+        approved_database = approved_database.loc[approved_database["enabled"] == num]
+        return approved_database["username"].values
+    else:
+        approved_database = pandas.read_csv("data/users.csv")
+        approved_database = approved_database.loc[approved_database["approved"] == num]
+        return approved_database["username"].values
+
 def get_menu_list():
     did_database = pandas.read_csv("data/dish.csv")
     return (list(reversed(did_database.sort_values("time")["did"].values)))
