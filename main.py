@@ -10,6 +10,7 @@ import signin
 import bar
 import element
 import manage
+import shop
 
 program = Tk()
 program.title("Restaurant Ordering System")
@@ -23,10 +24,11 @@ program.config(menu=menubar)
 #variables
 class user:
     def __init__(self):
-        self.user_level = 0
+        self.user_level = 1
         self.shopping_cart = []
         self.current_menu = []
         self.top_menu = []
+        self.total = 0
         self.uid = -1
 
 class parameter:
@@ -147,6 +149,55 @@ def become_member_button_action():
         register_password_entry.delete(0,END)
         register_username_entry.delete(0,END)
         register_email_entry.delete(0,END)
+
+def shopping_cart_buttom_action():
+    reset_gui()
+    shopping_sum_of_total= Label(program,text= current_user.total)
+    shopping_total_label.grid(row=0,column=0)
+    shopping_sum_of_total.grid(row=1,column=0)
+    shopping_checkout_buttom.grid(row=2,column=0)
+    
+
+
+    signin_back_button.grid(row=3, column=0)
+    window_center()
+
+def add_car_buttom_action(i):
+    reset_gui()
+    shopping_image=dish_image_list[i]
+    shopping_image.grid(row=0,column=0)
+
+    shopping_name= dish_name_list[i]
+    shopping_name.grid(row=1,column=0)
+
+    shopping_price.append(current_parameter.price_list[i])
+    dish_price_list[i].grid(row=2,column=0)
+
+    shopping_did.append(dish_did_list[i])
+
+
+    label_quantity_entry.grid(row=4,column=0)
+    label_quantity.grid(row=3, column=0)
+
+
+
+    signin_back_button.grid(row=6, column=0)
+    shpping_enter_button.grid(row=5,column=0)
+    window_center()
+
+
+
+def shpping_enter_button_action():
+    if shop.check_quantity(label_quantity_entry.get()):
+        for i in range(int(label_quantity_entry.get())):
+            current_user.shopping_cart.append(shopping_did[-1])
+            current_user.total += int(shopping_price[-1])
+
+    messagebox.showinfo("", "The item has been add on your shopping cart")
+    label_quantity_entry.delete(0,END)
+
+
+
 
 def page_change():
     if current_parameter.menu_current_page == 1:
@@ -383,11 +434,24 @@ register_email_label = Label(program, text="Email")
 register_enter_button = Button(text="Become Member", command=become_member_button_action)
 register_back_button = Button(text="Back", command=signin_interface)
 
+#shpping cart interface
+label_quantity_entry = Entry(program)
+label_quantity = Label(program, text="Please enter item quantities")
+shpping_enter_button = Button(text="Enter", command=shpping_enter_button_action)
+purchased_item_quantity_label=Label(program,text = "You have been add item on your shpping car")
+shopping_image = Label(image=None)
+shopping_did = []
+shopping_name=[]
+shopping_price=[]
+shopping_quantity=[]
+shopping_checkout_buttom=Button(text= "Check out",command= None)
+shopping_total_label = Label(program,text="Total:")
+
 #start interface
 chef_name = Label(program, text="Chef: All")
 info_button = Button(text="Profile", command=None)
 refresh_button = Button(text="Refresh", command=start_interface)
-shopping_cart_items = Button(text=str(len(current_user.shopping_cart)), command=None)
+shopping_cart_items = Button(text="Your Shopping Cart", command=shopping_cart_buttom_action)
 signout_button = Button(text="Sign Out", command=signout_button_action)
 signin_button = Button(text="Sign In", command=signin_interface)
 next_page_button = Button(text="Next", command=menu_next_page)
@@ -396,32 +460,32 @@ etc_photo = PhotoImage(file="images/etc.gif")
 dish_image1 = Label(image=None)
 dish_name1 = Label(program, text="Name")
 dish_price1 = Label(program, text="Price")
-dish_buy1 = Button(text="Add to cart", command=None)
+dish_buy1 = Button(text="Add to cart", command=lambda: add_car_buttom_action(0))
 dish_did1=""
 dish_image2 = Label(image=None)
 dish_name2 = Label(program, text="Name")
 dish_price2 = Label(program, text="Price")
-dish_buy2 = Button(text="Add to cart", command=None)
+dish_buy2 = Button(text="Add to cart", command=lambda: add_car_buttom_action(1))
 dish_did2=""
 dish_image3 = Label(image=None)
 dish_name3 = Label(program, text="Name")
 dish_price3 = Label(program, text="Price")
-dish_buy3 = Button(text="Add to cart", command=None)
+dish_buy3 = Button(text="Add to cart", command=lambda: add_car_buttom_action(2))
 dish_did3=""
 dish_image4 = Label(image=None)
 dish_name4 = Label(program, text="Name")
 dish_price4 = Label(program, text="Price")
-dish_buy4 = Button(text="Add to cart", command=None)
+dish_buy4 = Button(text="Add to cart", command=lambda: add_car_buttom_action(3))
 dish_did4=""
 dish_image5 = Label(image=None)
 dish_name5 = Label(program, text="Name")
 dish_price5 = Label(program, text="Price")
-dish_buy5 = Button(text="Add to cart", command=None)
+dish_buy5 = Button(text="Add to cart", command=lambda: add_car_buttom_action(4))
 dish_did5=""
 dish_image6 = Label(image=None)
 dish_name6 = Label(program, text="Name")
 dish_price6 = Label(program, text="Price")
-dish_buy6 = Button(text="Add to cart", command=None)
+dish_buy6 = Button(text="Add to cart", command=lambda: add_car_buttom_action(5))
 dish_did6=""
 img1=""
 img2=""
