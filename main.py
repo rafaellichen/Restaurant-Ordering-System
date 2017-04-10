@@ -85,7 +85,7 @@ def signin_confirm_button_action():
                                             signin_password_entry.get())
     # write function to change the software interface based on the type of user
     # replace print command
-    if signin_confirm_result == 10 or signin_confirm_result == 20:
+    if signin_confirm_result == 10:
         signin_username_entry.delete(0,END)
         signin_password_entry.delete(0,END)
     else:
@@ -280,7 +280,7 @@ def start_interface():
 
 def manager_interface():
     reset_gui()
-    signout_button.grid(row=0, column=3)
+    signout_button.grid(row=0, column=2)
     users_approve_list_label.grid(row=1, column=0)
     update_all_button.grid(row=0, column=0)
     users_approve_list.grid(row=2, column=0)
@@ -288,8 +288,6 @@ def manager_interface():
     user_approved_list.grid(row=2, column=1)
     user_declined_list_label.grid(row=1, column=2)
     user_declined_list.grid(row=2, column=2)
-    user_black_list.grid(row=2, column=3)
-    user_black_list_label.grid(row=1, column=3)
     dish_compliments_list_label.grid(row=3, column=0)
     dish_compliments_list.grid(row=4, column=0)
     dish_approved_compliements_list_label.grid(row=3, column=1)
@@ -302,7 +300,7 @@ def manager_interface():
     dish_approved_compliants_list.grid(row=6, column=1)
     dish_declined_compliants_list.grid(row=6, column=2)
     dish_declined_compliants_list_label.grid(row=5, column=2)
-    manager_approve_button.grid(row=9, column=3)
+    manager_approve_button.grid(row=9, column=2)
     manager_decline_button.grid(row=9, column=0)
     manager_update_all_action()
     window_center()
@@ -313,7 +311,6 @@ def manager_update_all_action():
     users_approve_list.delete(0,END)
     user_approved_list.delete(0,END)
     user_declined_list.delete(0,END)
-    user_black_list.delete(0, END)
     dish_approved_compliements_list.delete(0, END)
     dish_declined_compliments_list.delete(0, END)
     dish_approved_compliants_list.delete(0, END)
@@ -336,8 +333,6 @@ def manager_update_all_action():
         dish_approved_compliants_list.insert(END, item)
     for item in declined_compliants_list:
         dish_declined_compliants_list.insert(END, item)
-    for item in blocked_list:
-        user_black_list.insert(END, item)
     for item in pending_list:
         users_approve_list.insert(END, item)
     for item in compliments_list:
@@ -404,14 +399,12 @@ dish_declined_compliments_list_label = Label(program, text="Declined compliments
 dish_declined_compliants_list_label = Label(program, text="Declined compliants")
 user_approved_list_label = Label(program, text="Approved users")
 user_declined_list_label = Label(program, text="Declined users")
-user_black_list_label = Label(program, text="Disabled users")
 dish_approved_compliements_list = Listbox(program)
 dish_approved_compliants_list = Listbox(program)
 dish_declined_compliments_list = Listbox(program)
 dish_declined_compliants_list = Listbox(program)
 user_approved_list = Listbox(program)
 user_declined_list = Listbox(program)
-user_black_list = Listbox(program)
 
 #signin interface
 signin_username_label = Label(program, text="Username")

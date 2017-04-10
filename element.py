@@ -80,7 +80,6 @@ def get_comment(t, num):
 def get_users(num):
     if num == 0:
         approved_database = pandas.read_csv("data/users.csv")
-        approved_database = approved_database.loc[approved_database["enabled"] == num]
         return approved_database["username"].values
     else:
         approved_database = pandas.read_csv("data/users.csv")
