@@ -24,7 +24,7 @@ program.config(menu=menubar)
 #variables
 class user:
     def __init__(self):
-        self.user_level = 1
+        self.user_level = 0
         self.shopping_cart = []
         self.current_menu = []
         self.top_menu = []
