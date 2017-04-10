@@ -175,13 +175,12 @@ def page_change():
     dish_price4.config(text="")
     dish_price5.config(text="")
     dish_price6.config(text="")
-    
 
 def display_menu():
-    a=0
-    while a<6:
-        dish_did_list[a]=-1
-        a+=1
+    i=0
+    while i<6:
+        dish_did_list[i]=-1
+        i+=1
     if current_parameter.menu_current_page != current_parameter.menu_max_page:
         for i in range(current_parameter.menu_current_page*6-6,current_parameter.menu_current_page*6):
             dish_did_list[i-(current_parameter.menu_current_page-1)*6] = current_parameter.menu_list[i]
@@ -198,7 +197,17 @@ def display_menu():
             dish_image_list[i].config(image=dish_img_list[i])
         for e in current_parameter.name_list[(current_parameter.menu_current_page-1)*6:-1]:
             dish_name_list[i].config(text=e)
+        for e in current_parameter.price_list[(current_parameter.menu_current_page-1)*6:-1]:
+            dish_price_list[i].config(text=e)
         i+=1
+    if current_user.user_level != 0:
+        i=0
+        for e in dish_did_list:
+            if e == -1:
+                dish_buy_list[i].config(state=DISABLED)
+            else:
+                dish_buy_list[i].config(state=NORMAL)
+            i+=1
     
 def menu_next_page():
     current_parameter.menu_current_page += 1
@@ -212,9 +221,6 @@ def menu_previous_page():
 
 def start_interface():
     reset_gui()
-    set_parameter()
-    page_change()
-    display_menu()
     if current_user.user_level == 0:
         dish_buy1.config(state=DISABLED)
         dish_buy2.config(state=DISABLED)
@@ -229,6 +235,9 @@ def start_interface():
         dish_buy4.config(state=NORMAL)
         dish_buy5.config(state=NORMAL)
         dish_buy6.config(state=NORMAL)
+    set_parameter()
+    page_change()
+    display_menu()
     refresh_button.grid(row=0, column=0)
     chef_name.grid(row=1, column=0)
     if(current_user.user_level == 0):
@@ -270,14 +279,28 @@ def manager_interface():
     signout_button.grid(row=0, column=2)
     users_approve_list_label.grid(row=1, column=0)
     users_approve_list.grid(row=2, column=0)   
-    manager_approve_button.grid(row=3, column=2)
-    manager_decline_button.grid(row=3, column=0)
+    manager_approve_button.grid(row=9, column=2)
+    manager_decline_button.grid(row=9, column=0)
     dish_compliments_list_label.grid(row=1, column=1)
     dish_compliments_list.grid(row=2, column=1)
     dish_complaints_list_label.grid(row=1, column=2)
     dish_complaints_list.grid(row=2, column=2)
     update_all_button.grid(row=0, column=0)
     manager_update_all_action()
+    user_approved_list_label.grid(row=3, column=0)
+    user_approved_list.grid(row=4, column=0)
+    dish_approved_compliements_list_label.grid(row=3, column=1)
+    dish_approved_compliements_list.grid(row=4, column=1)
+    dish_approved_compliants_list_label.grid(row=3, column=2)
+    dish_approved_compliants_list.grid(row=4, column=2)
+    user_declined_list_label.grid(row=5, column=0)
+    user_declined_list.grid(row=6, column=0)
+    dish_declined_compliments_list_label.grid(row=5, column=1)
+    dish_declined_compliments_list.grid(row=6, column=1)
+    dish_declined_compliants_list.grid(row=6, column=2)
+    dish_declined_compliants_list_label.grid(row=5, column=2)
+    user_black_list.grid(row=8, column=0)
+    user_black_list_label.grid(row=7, column=0)
     window_center()
 
 def manager_update_all_action():
@@ -319,6 +342,20 @@ dish_compliments_list = Listbox(program)
 dish_complaints_list_label = Label(program, text="Pending complaints")
 dish_complaints_list = Listbox(program)
 update_all_button = Button(text="Refresh", command=manager_update_all_action)
+dish_approved_compliements_list_label = Label(program, text="Approved compliments")
+dish_approved_compliants_list_label = Label(program, text="Approved complaints")
+dish_declined_compliments_list_label = Label(program, text="Declined compliments")
+dish_declined_compliants_list_label = Label(program, text="Declined compliants")
+user_approved_list_label = Label(program, text="Approved users")
+user_declined_list_label = Label(program, text="Declined users")
+user_black_list_label = Label(program, text="Disabled users")
+dish_approved_compliements_list = Listbox(program)
+dish_approved_compliants_list = Listbox(program)
+dish_declined_compliments_list = Listbox(program)
+dish_declined_compliants_list = Listbox(program)
+user_approved_list = Listbox(program)
+user_declined_list = Listbox(program)
+user_black_list = Listbox(program)
 
 #signin interface
 signin_username_label = Label(program, text="Username")
@@ -349,7 +386,7 @@ register_back_button = Button(text="Back", command=signin_interface)
 #start interface
 chef_name = Label(program, text="Chef: All")
 info_button = Button(text="Profile", command=None)
-refresh_button = Button(text="Refresh", command=set_parameter)
+refresh_button = Button(text="Refresh", command=start_interface)
 shopping_cart_items = Button(text=str(len(current_user.shopping_cart)), command=None)
 signout_button = Button(text="Sign Out", command=signout_button_action)
 signin_button = Button(text="Sign In", command=signin_interface)

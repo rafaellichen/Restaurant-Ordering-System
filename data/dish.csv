@@ -10,7 +10,7 @@ ikura,3,7,0,1,17,images/ikura.gif
 inari,5,8,2,6,20,images/inari.gif
 kappa,5,9,0,8,5,images/kappa.gif
 masago,3,10,0,3,9,images/masago.gif
-saba,4,11,3,99,11,images/saba.gif
+saba,4,11,3,22,11,images/saba.gif
 sake,3,12,4,2,22,images/sake.gif
 tako,5,13,0,1,13,images/tako.gif
 tamago,4,14,1,7,12,images/tamago.gif
@@ -18,4 +18,4 @@ tekka,4,15,5,3,18,images/tekka.gif
 temaki,3,16,5,7,19,images/temaki.gif
 toro,4,17,0,3,20,images/toro.gif
 unagi,5,18,2,5,16,images/unagi.gif
-uni,5,19,3,90,14,images/uni.gif
+uni,5,19,3,21,14,images/uni.gif
