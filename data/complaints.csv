@@ -5,17 +5,18 @@ uid,comment,cnid,did,approval
 1,yuck,4,11,0
 1,not good,5,1,0
 1,worst,6,2,0
-0,no taste,7,4,0
+0,no taste,7,4,1
 1,bad,8,3,0
 1,need to be better,9,13,0
-0,improvement needed,10,9,1
+0,improvement needed,10,9,0
 1,worst,11,2,0
 0,no taste,12,17,0
 1,bad,13,13,0
 0,need to be better,14,5,0
-1,improvement needed,15,15,1
+1,improvement needed,15,15,0
 1,bad,16,13,0
 1,expensive,17,18,0
 0,nasty,18,19,0
 0,yuck,19,16,0
 1,not good,20,2,0
+1,dfagagoiahdgiaf,21,1,-1

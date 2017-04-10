@@ -85,20 +85,24 @@ def signin_confirm_button_action():
                                             signin_password_entry.get())
     # write function to change the software interface based on the type of user
     # replace print command
-    if signin_confirm_result == False:
-        messagebox.showinfo("","Username or Password is incorrect")
+    if signin_confirm_result == 10:
         signin_username_entry.delete(0,END)
         signin_password_entry.delete(0,END)
-    elif signin_confirm_result[0] == 1 or signin_confirm_result[0] == 2:
-        current_user.uid = signin_confirm_result[1]
-        current_user.user_level = signin_confirm_result[0]
-        start_interface()
-    elif signin_confirm_result[0] == 4:
-        current_user.user_level = 4
-        start_interface()
-    elif signin_confirm_result[0] == 5:
-        current_user.user_level = 5
-        manager_interface()
+    else:
+        if signin_confirm_result == False:
+            messagebox.showinfo("","Username or Password is incorrect")
+            signin_username_entry.delete(0,END)
+            signin_password_entry.delete(0,END)
+        elif signin_confirm_result[0] == 1 or signin_confirm_result[0] == 2:
+            current_user.uid = signin_confirm_result[1]
+            current_user.user_level = signin_confirm_result[0]
+            start_interface()
+        elif signin_confirm_result[0] == 4:
+            current_user.user_level = 4
+            start_interface()
+        elif signin_confirm_result[0] == 5:
+            current_user.user_level = 5
+            manager_interface()
 
 def signin_forget_button_action():
     reset_gui()
@@ -278,45 +282,68 @@ def manager_interface():
     reset_gui()
     signout_button.grid(row=0, column=2)
     users_approve_list_label.grid(row=1, column=0)
-    users_approve_list.grid(row=2, column=0)   
-    manager_approve_button.grid(row=9, column=2)
-    manager_decline_button.grid(row=9, column=0)
-    dish_compliments_list_label.grid(row=1, column=1)
-    dish_compliments_list.grid(row=2, column=1)
-    dish_complaints_list_label.grid(row=1, column=2)
-    dish_complaints_list.grid(row=2, column=2)
     update_all_button.grid(row=0, column=0)
-    manager_update_all_action()
-    user_approved_list_label.grid(row=3, column=0)
-    user_approved_list.grid(row=4, column=0)
+    users_approve_list.grid(row=2, column=0)
+    user_approved_list_label.grid(row=1, column=1)
+    user_approved_list.grid(row=2, column=1)
+    user_declined_list_label.grid(row=1, column=2)
+    user_declined_list.grid(row=2, column=2)
+    dish_compliments_list_label.grid(row=3, column=0)
+    dish_compliments_list.grid(row=4, column=0)
     dish_approved_compliements_list_label.grid(row=3, column=1)
     dish_approved_compliements_list.grid(row=4, column=1)
-    dish_approved_compliants_list_label.grid(row=3, column=2)
-    dish_approved_compliants_list.grid(row=4, column=2)
-    user_declined_list_label.grid(row=5, column=0)
-    user_declined_list.grid(row=6, column=0)
-    dish_declined_compliments_list_label.grid(row=5, column=1)
-    dish_declined_compliments_list.grid(row=6, column=1)
+    dish_declined_compliments_list_label.grid(row=3, column=2)
+    dish_declined_compliments_list.grid(row=4, column=2)
+    dish_complaints_list_label.grid(row=5, column=0)
+    dish_complaints_list.grid(row=6, column=0)
+    dish_approved_compliants_list_label.grid(row=5, column=1)
+    dish_approved_compliants_list.grid(row=6, column=1)
     dish_declined_compliants_list.grid(row=6, column=2)
     dish_declined_compliants_list_label.grid(row=5, column=2)
-    user_black_list.grid(row=8, column=0)
-    user_black_list_label.grid(row=7, column=0)
+    manager_approve_button.grid(row=9, column=2)
+    manager_decline_button.grid(row=9, column=0)
+    manager_update_all_action()
     window_center()
 
 def manager_update_all_action():
     dish_compliments_list.delete(0,END)
     dish_complaints_list.delete(0,END)
     users_approve_list.delete(0,END)
+    user_approved_list.delete(0,END)
+    user_declined_list.delete(0,END)
+    dish_approved_compliements_list.delete(0, END)
+    dish_declined_compliments_list.delete(0, END)
+    dish_approved_compliants_list.delete(0, END)
+    dish_declined_compliants_list.delete(0, END)
     pending_list = element.get_pending_registrations()
     compliments_list = element.get_pending_compliments()
     complaints_list = element.get_pending_complaints()
+    approved_list = element.get_users(1)
+    declined_list = element.get_users(-1)
+    blocked_list = element.get_users(0)
+    approved_compliments_list = element.get_comment(1,1)
+    declined_compliments_list = element.get_comment(1,-1)
+    approved_compliants_list = element.get_comment(0,1)
+    declined_compliants_list = element.get_comment(0,-1)
+    for item in approved_compliments_list:
+        dish_approved_compliements_list.insert(END, item)
+    for item in declined_compliments_list:
+        dish_declined_compliments_list.insert(END, item)
+    for item in approved_compliants_list:
+        dish_approved_compliants_list.insert(END, item)
+    for item in declined_compliants_list:
+        dish_declined_compliants_list.insert(END, item)
     for item in pending_list:
         users_approve_list.insert(END, item)
     for item in compliments_list:
         dish_compliments_list.insert(END, item)
     for item in complaints_list:
         dish_complaints_list.insert(END, item)
-
+    for item in approved_list:
+        user_approved_list.insert(END, item)
+    for item in declined_list:
+        user_declined_list.insert(END, item)
+    
 def manager_approve_decline_button_action(input):
     try:
         manage.approve_pending_registrations(users_approve_list.get(users_approve_list.curselection()), input)
@@ -330,7 +357,31 @@ def manager_approve_decline_button_action(input):
                 manage.approve_complaints(dish_complaints_list.get(dish_complaints_list.curselection()), input)
                 manager_update_all_action()
             except TclError:
-                messagebox.showinfo("","Please select an item to process")
+                try:
+                    manage.approve_pending_registrations(user_approved_list.get(user_approved_list.curselection()), input)
+                    manager_update_all_action()
+                except TclError:
+                    try:
+                        manage.approve_pending_registrations(user_declined_list.get(user_declined_list.curselection()), input)
+                        manager_update_all_action()
+                    except TclError:
+                        try:
+                            manage.approve_compliments(dish_approved_compliements_list.get(dish_approved_compliements_list.curselection()), input)
+                            manager_update_all_action()
+                        except TclError:
+                            try:
+                                manage.approve_compliments(dish_declined_compliments_list.get(dish_declined_compliments_list.curselection()), input)
+                                manager_update_all_action()
+                            except TclError:
+                                try:
+                                    manage.approve_complaints(dish_approved_compliants_list.get(dish_approved_compliants_list.curselection()), input)
+                                    manager_update_all_action()
+                                except TclError:
+                                    try:
+                                        manage.approve_complaints(dish_declined_compliants_list.get(dish_declined_compliants_list.curselection()), input)
+                                        manager_update_all_action()
+                                    except TclError:
+                                        messagebox.showinfo("","Please select an item to process")
 
 #manager interface
 users_approve_list = Listbox(program)
@@ -348,14 +399,12 @@ dish_declined_compliments_list_label = Label(program, text="Declined compliments
 dish_declined_compliants_list_label = Label(program, text="Declined compliants")
 user_approved_list_label = Label(program, text="Approved users")
 user_declined_list_label = Label(program, text="Declined users")
-user_black_list_label = Label(program, text="Disabled users")
 dish_approved_compliements_list = Listbox(program)
 dish_approved_compliants_list = Listbox(program)
 dish_declined_compliments_list = Listbox(program)
 dish_declined_compliants_list = Listbox(program)
 user_approved_list = Listbox(program)
 user_declined_list = Listbox(program)
-user_black_list = Listbox(program)
 
 #signin interface
 signin_username_label = Label(program, text="Username")
