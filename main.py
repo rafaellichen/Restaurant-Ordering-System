@@ -40,27 +40,57 @@ class parameter:
         self.image_list = []
         self.name_list = []
         self.price_list = []
+        self.current_chef_uid = -1
+        self.current_chef_name = "All"
+
 
 global current_parameter
 global current_user
 current_parameter = parameter()
 current_user = user()
 
+temp = bar.chef_in_list()
+current_parameter.chef_list = temp
+chef_list.delete(0,END)
+chef_list.add_command(label="All", command=lambda: bar_change_menu("all","All"))
+for e,f in zip(temp[0],temp[1]):
+    chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
+
+def refresh_menu():
+    if current_parameter.current_chef_uid != -1:
+        bar_change_menu(current_parameter.current_chef_uid,current_parameter.current_chef_name)
+    else:
+        bar_change_menu("all",current_parameter.current_chef_name)
+
+def bar_change_menu(uid,name):
+    current_parameter.current_chef_uid = uid
+    current_parameter.current_chef_name = name
+    chef_name.config(text=current_parameter.current_chef_name)
+    if uid == "all":
+        start_interface()
+    else:
+        current_parameter.menu_list = bar.get_menu_list(uid)
+        current_parameter.image_list = bar.get_image_list(uid)
+        current_parameter.name_list = bar.get_name_list(uid)
+        current_parameter.price_list = bar.get_price_list(uid)
+    if (len(current_parameter.menu_list)-1) % 6 == 0:
+        current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6)
+    else:
+        current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6 + 1)
+    current_parameter.menu_current_page = 1
+    page_change()
+    display_menu()
+
 def set_parameter():
-    temp = bar.chef_in_list()
-    chef_list.delete(0,END)
-    chef_list.add_command(label="All", command=lambda: bar.change_menu("all"))
-    for e in temp[0]:
-        chef_list.add_command(label=str(e), command=lambda e=str(e): bar.change_menu(e))
-    current_parameter.chef_list = temp
     current_parameter.menu_list = element.get_menu_list()
     current_parameter.image_list = element.get_image_list()
     current_parameter.name_list = element.get_name_list()
     current_parameter.price_list = element.get_price_list()
-    if len(current_parameter.menu_list) % 6 == 0:
-        current_parameter.menu_max_page = int(len(current_parameter.menu_list)/6)
+    if (len(current_parameter.menu_list)-1) % 6 == 0:
+        current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6)
     else:
-        current_parameter.menu_max_page = int(len(current_parameter.menu_list)/6 + 1)
+        current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6 + 1)
+    current_parameter.menu_current_page = 1
 
 def reset_gui():
     signin_username_entry.delete(0,END)
@@ -233,14 +263,20 @@ def display_menu():
         i=0
         for e in current_parameter.menu_list[(current_parameter.menu_current_page-1)*6:-1]:
             dish_did_list[i]=e
+            i+=1
+        i=0
         for e in current_parameter.image_list[(current_parameter.menu_current_page-1)*6:-1]:
             dish_img_list[i] = PhotoImage(file=e)
             dish_image_list[i].config(image=dish_img_list[i])
+            i+=1
+        i=0
         for e in current_parameter.name_list[(current_parameter.menu_current_page-1)*6:-1]:
             dish_name_list[i].config(text=e)
+            i+=1
+        i=0
         for e in current_parameter.price_list[(current_parameter.menu_current_page-1)*6:-1]:
             dish_price_list[i].config(text=e)
-        i+=1
+            i+=1
     if current_user.user_level != 0:
         i=0
         for e in dish_did_list:
@@ -344,11 +380,14 @@ def start_interface():
         dish_buy4.config(state=NORMAL)
         dish_buy5.config(state=NORMAL)
         dish_buy6.config(state=NORMAL)
+    chef_name.config(text="All")
+    current_parameter.current_chef_name = "All"
+    current_parameter.current_chef_uid = -1
     set_parameter()
     page_change()
     display_menu()
     refresh_button.grid(row=0, column=0)
-    chef_name.grid(row=1, column=0)
+    chef_name.grid(row=1, column=1)
     if(current_user.user_level == 0):
         signin_button.grid(row=0, column=2)
     else:
@@ -771,9 +810,9 @@ edge39 = Label(text="__")
 edge40 = Label(text="__")
 
 #start interface
-chef_name = Label(program, text="Chef: All")
+chef_name = Label(program, text="All")
 info_button = Button(text="Profile", command=None)
-refresh_button = Button(text="Refresh", command=start_interface)
+refresh_button = Button(text="Refresh", command=refresh_menu)
 shopping_cart_items = Button(text="Your Shopping Cart", command=shopping_cart_buttom_action)
 signout_button = Button(text="Sign Out", command=signout_button_action)
 signin_button = Button(text="Sign In", command=signin_interface)
