@@ -18,7 +18,7 @@ program.resizable(width=False, height=False)
 
 menubar = Menu(program)
 chef_list = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Chefs", menu=chef_list)
+menubar.add_cascade(label="Menus", menu=chef_list)
 program.config(menu=menubar)
 
 #variables
@@ -43,7 +43,6 @@ class parameter:
         self.current_chef_uid = -1
         self.current_chef_name = "All"
 
-
 global current_parameter
 global current_user
 current_parameter = parameter()
@@ -53,6 +52,7 @@ temp = bar.chef_in_list()
 current_parameter.chef_list = temp
 chef_list.delete(0,END)
 chef_list.add_command(label="All", command=lambda: bar_change_menu("all","All"))
+chef_list.add_command(label="Top", command=lambda: bar_change_menu("top","Top"))
 for e,f in zip(temp[0],temp[1]):
     chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
 
@@ -63,12 +63,23 @@ def refresh_menu():
         bar_change_menu("all",current_parameter.current_chef_name)
 
 def bar_change_menu(uid,name):
-    current_parameter.current_chef_uid = uid
-    current_parameter.current_chef_name = name
-    chef_name.config(text=current_parameter.current_chef_name)
     if uid == "all":
+        current_parameter.current_chef_uid = uid
+        current_parameter.current_chef_name = name
+        chef_name.config(text=current_parameter.current_chef_name)
         start_interface()
+    elif uid == "top":
+        if current_user.uid == -1:
+            messagebox.showinfo("", "Please log in first")
+        else:
+            current_parameter.current_chef_uid = uid
+            current_parameter.current_chef_name = name
+            chef_name.config(text=current_parameter.current_chef_name)
+            top_menu_list(element.get_top_listing(current_user.uid))
     else:
+        current_parameter.current_chef_uid = uid
+        current_parameter.current_chef_name = name
+        chef_name.config(text=current_parameter.current_chef_name)
         current_parameter.menu_list = bar.get_menu_list(uid)
         current_parameter.image_list = bar.get_image_list(uid)
         current_parameter.name_list = bar.get_name_list(uid)
@@ -80,6 +91,15 @@ def bar_change_menu(uid,name):
     current_parameter.menu_current_page = 1
     page_change()
     display_menu()
+
+def top_menu_list(did_list):
+    if len(did_list) == 0:
+        messagebox.showinfo("", "Please make some purchases first")
+    else:
+        current_parameter.menu_list = did_list
+        current_parameter.image_list = bar.get_top_image_list(did_list)
+        current_parameter.name_list = bar.get_top_name_list(did_list)
+        current_parameter.price_list = bar.get_top_price_list(did_list)
 
 def set_parameter():
     current_parameter.menu_list = element.get_menu_list()
