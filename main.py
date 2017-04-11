@@ -99,6 +99,9 @@ def signin_confirm_button_action():
             current_user.uid = signin_confirm_result[1]
             current_user.user_level = signin_confirm_result[0]
             start_interface()
+        elif signin_confirm_result[0] == 3:
+            current_user.user_level = 3
+            delivery_interface()
         elif signin_confirm_result[0] == 4:
             current_user.user_level = 4
             start_interface()
@@ -256,6 +259,74 @@ def menu_previous_page():
     current_parameter.menu_current_page -= 1
     page_change()
     display_menu()
+
+def delivery_interface():
+    reset_gui()
+    node0.grid (row=0, column=0)
+    node1.grid (row=0, column=2)
+    node2.grid (row=0, column=4)
+    node3.grid (row=0, column=6)
+    node4.grid (row=0, column=8)
+    node5.grid (row=2, column=0)    
+    node6.grid (row=2, column=2)
+    node7.grid (row=2, column=4)
+    node8.grid (row=2, column=6)
+    node9.grid (row=2, column=8)
+    node10.grid (row=4, column=0)
+    node11.grid (row=4, column=2)
+    node12.grid (row=4, column=4)
+    node13.grid (row=4, column=6)
+    node14.grid (row=4, column=8)
+    node15.grid (row=6, column=0)
+    node16.grid (row=6, column=2)
+    node17.grid (row=6, column=4)
+    node18.grid (row=6, column=6)
+    node19.grid (row=6, column=8)
+    node20.grid (row=8, column=0)
+    node21.grid (row=8, column=2)
+    node22.grid (row=8, column=4)
+    node23.grid (row=8, column=6)
+    node24.grid (row=8, column=8)
+    edge1.grid(row=0, column=1)
+    edge2.grid(row=0, column=3)
+    edge3.grid(row=0, column=5)
+    edge4.grid(row=0, column=7)
+    edge5.grid(row=1, column=0)
+    edge6.grid(row=1, column=2)
+    edge7.grid(row=1, column=4)
+    edge8.grid(row=1, column=6)
+    edge9.grid(row=1, column=8)
+    edge10.grid(row=2, column=1)
+    edge11.grid(row=2, column=3)
+    edge12.grid(row=2, column=5)
+    edge13.grid(row=2, column=7)
+    edge14.grid(row=3, column=0)
+    edge15.grid(row=3, column=2)
+    edge16.grid(row=3, column=4)
+    edge17.grid(row=3, column=6)
+    edge18.grid(row=3, column=8)
+    edge19.grid(row=4, column=1)
+    edge20.grid(row=4, column=3)
+    edge21.grid(row=4, column=5)
+    edge22.grid(row=4, column=7)
+    edge23.grid(row=5, column=0)
+    edge24.grid(row=5, column=2)
+    edge25.grid(row=5, column=4)
+    edge26.grid(row=5, column=6)
+    edge27.grid(row=5, column=8)
+    edge28.grid(row=6, column=1)
+    edge29.grid(row=6, column=3)
+    edge30.grid(row=6, column=5)
+    edge31.grid(row=6, column=7)
+    edge32.grid(row=7, column=0)
+    edge33.grid(row=7, column=2)
+    edge34.grid(row=7, column=4)
+    edge35.grid(row=7, column=6)
+    edge36.grid(row=7, column=8)
+    edge37.grid(row=8, column=1)
+    edge38.grid(row=8, column=3)
+    edge39.grid(row=8, column=5)
+    edge40.grid(row=8, column=7)
 
 def start_interface():
     reset_gui()
@@ -478,6 +549,226 @@ shopping_price=[]
 shopping_quantity=[]
 shopping_checkout_buttom=Button(text= "Check out",command= None)
 shopping_total_label = Label(program,text="Total:")
+
+#delivery interface
+node_matrix = [[0 for i in range(25)] for j in range(25)]
+edge_matrix = [[0 for i in range(25)] for j in range(25)]
+for i in range(0,25):
+    for j in range(0,25):
+        node_matrix[i][j] = -1
+for i in range(0,25):
+    for j in range(0,25):
+        edge_matrix[i][j] = 0
+node_matrix[0][0] = 1
+node_matrix[0][1] = 1
+node_matrix[0][5] = 1
+node_matrix[1][0] = 1
+node_matrix[1][1] = 1
+node_matrix[1][2] = 1
+node_matrix[1][6] = 1
+node_matrix[2][1] = 1
+node_matrix[2][2] = 1
+node_matrix[2][3] = 1
+node_matrix[2][7] = 1
+node_matrix[3][2] = 1
+node_matrix[3][3] = 1
+node_matrix[3][4] = 1
+node_matrix[3][8] = 1
+node_matrix[4][3] = 1
+node_matrix[4][4] = 1
+node_matrix[4][9] = 1
+node_matrix[5][0] = 1
+node_matrix[5][5] = 1
+node_matrix[5][6] = 1
+node_matrix[5][10] = 1
+node_matrix[6][1] = 1
+node_matrix[6][5] = 1
+node_matrix[6][6] = 1
+node_matrix[6][7] = 1
+node_matrix[6][11] = 1
+node_matrix[7][2] = 1
+node_matrix[7][6] = 1
+node_matrix[7][7] = 1
+node_matrix[7][8] = 1
+node_matrix[7][12] = 1
+node_matrix[8][3] = 1
+node_matrix[8][7] = 1
+node_matrix[8][8] = 1
+node_matrix[8][9] = 1
+node_matrix[8][13] = 1
+node_matrix[9][4] = 1
+node_matrix[9][8] = 1
+node_matrix[9][9] = 1
+node_matrix[9][14] = 1
+node_matrix[10][5] = 1
+node_matrix[10][10] = 1
+node_matrix[10][11] = 1
+node_matrix[10][15] = 1
+node_matrix[11][6] = 1
+node_matrix[11][10] = 1
+node_matrix[11][11] = 1
+node_matrix[11][12] = 1
+node_matrix[11][16] = 1
+node_matrix[12][7] = 1
+node_matrix[12][11] = 1
+node_matrix[12][12] = 1
+node_matrix[12][13] = 1
+node_matrix[12][17] = 1
+node_matrix[13][8] = 1
+node_matrix[13][12] = 1
+node_matrix[13][13] = 1
+node_matrix[13][14] = 1
+node_matrix[13][18] = 1
+node_matrix[14][9] = 1
+node_matrix[14][13] = 1
+node_matrix[14][14] = 1
+node_matrix[14][19] = 1
+node_matrix[15][15] = 1
+node_matrix[15][16] = 1
+node_matrix[15][20] = 1
+node_matrix[15][10] = 1
+node_matrix[16][15] = 1
+node_matrix[16][16] = 1
+node_matrix[16][14] = 1
+node_matrix[16][17] = 1
+node_matrix[16][21] = 1
+node_matrix[17][16] = 1
+node_matrix[17][17] = 1
+node_matrix[17][12] = 1
+node_matrix[17][18] = 1
+node_matrix[17][22] = 1
+node_matrix[18][17] = 1
+node_matrix[18][18] = 1
+node_matrix[18][13] = 1
+node_matrix[18][19] = 1
+node_matrix[18][23] = 1
+node_matrix[19][14] = 1
+node_matrix[19][19] = 1
+node_matrix[19][18] = 1
+node_matrix[19][24] = 1
+node_matrix[20][15] = 1
+node_matrix[20][20] = 1
+node_matrix[20][21] = 1
+node_matrix[21][16] = 1
+node_matrix[21][21] = 1
+node_matrix[21][20] = 1
+node_matrix[21][22] = 1
+node_matrix[22][17] = 1
+node_matrix[22][22] = 1
+node_matrix[22][21] = 1
+node_matrix[22][23] = 1
+node_matrix[23][18] = 1
+node_matrix[23][23] = 1
+node_matrix[23][22] = 1
+node_matrix[23][24] = 1
+node_matrix[24][19] = 1
+node_matrix[24][24] = 1
+node_matrix[24][23] = 1
+edge1 = edge_matrix[0][1]
+edge2 = edge_matrix[1][2]
+edge3 = edge_matrix[2][3]
+edge4 = edge_matrix[3][4]
+edge5 = edge_matrix[0][5]
+edge6 = edge_matrix[1][6]
+edge7 = edge_matrix[2][7]
+edge8 = edge_matrix[3][8]
+edge9 = edge_matrix[4][9]
+edge10 = edge_matrix[5][6]
+edge11 = edge_matrix[6][7]
+edge12 = edge_matrix[7][8]
+edge13 = edge_matrix[8][9]
+edge14 = edge_matrix[5][10]
+edge15 = edge_matrix[6][11]
+edge16 = edge_matrix[7][12]
+edge17 = edge_matrix[8][13]
+edge18 = edge_matrix[9][14]
+edge19 = edge_matrix[10][11]
+edge20 = edge_matrix[11][12]
+edge21 = edge_matrix[12][13]
+edge22 = edge_matrix[13][14]
+edge23 = edge_matrix[10][15]
+edge24 = edge_matrix[11][16]
+edge25 = edge_matrix[12][17]
+edge26 = edge_matrix[13][18]
+edge27 = edge_matrix[14][19]
+edge28 = edge_matrix[15][16]
+edge29 = edge_matrix[16][17]
+edge30 = edge_matrix[17][18]
+edge31 = edge_matrix[18][19]
+edge32 = edge_matrix[15][20]
+edge33 = edge_matrix[16][21]
+edge34 = edge_matrix[17][22]
+edge35 = edge_matrix[18][23]
+edge36 = edge_matrix[19][24]
+edge37 = edge_matrix[20][21]
+edge38 = edge_matrix[21][22]
+edge39 = edge_matrix[22][23]
+edge40 = edge_matrix[23][24]
+node0 = Button(state=DISABLED)
+node1 = Button(state=DISABLED)
+node2 = Button(state=DISABLED)
+node3 = Button(state=DISABLED)
+node4 = Button(state=DISABLED)
+node5 = Button(state=DISABLED)
+node6 = Button(state=DISABLED)
+node7 = Button(state=DISABLED)
+node8 = Button(state=DISABLED)
+node9 = Button(state=DISABLED)
+node10 = Button(state=DISABLED)
+node11 = Button(state=DISABLED)
+node12 = Button(state=DISABLED)
+node13 = Button(state=DISABLED)
+node14 = Button(state=DISABLED)
+node15 = Button(state=DISABLED)
+node16 = Button(state=DISABLED)
+node17 = Button(state=DISABLED)
+node18 = Button(state=DISABLED)
+node19 = Button(state=DISABLED)
+node20 = Button(state=DISABLED)
+node21 = Button(state=DISABLED)
+node22 = Button(state=DISABLED)
+node23 = Button(state=DISABLED)
+node24 = Button(state=DISABLED)
+edge1 = Label(text="__")
+edge2 = Label(text="__")
+edge3 = Label(text="__")
+edge4 = Label(text="__")
+edge5 = Label(text="|")
+edge6 = Label(text="|")
+edge7 = Label(text="|")
+edge8 = Label(text="|")
+edge9 = Label(text="|")
+edge10 = Label(text="__")
+edge11= Label(text="__")
+edge12 = Label(text="__")
+edge13 = Label(text="__")
+edge14 = Label(text="|")
+edge15 = Label(text="|")
+edge16 = Label(text="|")
+edge17 = Label(text="|")
+edge18 = Label(text="|")
+edge19 = Label(text="__")
+edge20 = Label(text="__")
+edge21 = Label(text="__")
+edge22 = Label(text="__")
+edge23 = Label(text="|")
+edge24 = Label(text="|")
+edge25 = Label(text="|")
+edge26 = Label(text="|")
+edge27 = Label(text="|")
+edge28 = Label(text="__")
+edge29 = Label(text="__")
+edge30 = Label(text="__")
+edge31 = Label(text="__")
+edge32 = Label(text="|")
+edge33 = Label(text="|")
+edge34 = Label(text="|")
+edge35 = Label(text="|")
+edge36 = Label(text="|")
+edge37 = Label(text="__")
+edge38 = Label(text="__")
+edge39 = Label(text="__")
+edge40 = Label(text="__")
 
 #start interface
 chef_name = Label(program, text="Chef: All")
