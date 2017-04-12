@@ -3,12 +3,12 @@
 # Software Requirements:
 - Restaurant:
   * [ ] At least 2 chefs who decide the menus
-  * [ ] Same dish can appear on multiple menu for customers to choose from
+  * [x] Same dish can appear on multiple menu for customers to choose from
   * [ ] At least 2 delivery person
   * [ ] Delivery food with best route
   * [x] Manager can process customer registrations
   * [x] Manager can handle customer compliments and complaints
-  * [ ] Manager can hire/fire/promote/demote chef(s)
+  * [x] Manager can hire/fire/promote/demote employees
 - Customers:
   * [ ] Registered customers can browse/search
   * [ ] Registered customers can order and grade (1-5 stars) on food and delivery separately
@@ -23,5 +23,7 @@
   * [x] Registered customers have username and password to login
   * [x] Registered customers or VIP have top listing based on the history of their prior purchase
   * [x] Top 5 most popular dishes (ordered most) are displayed on the page
+  * [x] Employee who received 3 complaints/compliments will be demoted/promoted
+  * [x] Employee who is demoted twice will be fired
 
 Etc...
