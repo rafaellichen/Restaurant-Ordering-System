@@ -61,3 +61,57 @@ def approve_complaints(cnid, input):
                     complaints_database.set_value(i, "approval", -1)
                     complaints_database.to_csv("data/complaints.csv", index=False)
         i+=1
+
+def demote_promote_employee(uid,a):
+    salary_file = pandas.read_csv("data/salary.csv")
+    salary_current = salary_file["salary"].values
+    uid_list = salary_file["uid"].values
+    i=0
+    if a == 1:
+        for e in uid_list:
+            if e == int(uid):
+                salary_file.set_value(i, "salary", salary_current[i]+25)
+                messagebox.showinfo("", "Promoted.\nSalary is increased by 25")
+            i+=1
+    else:
+        for e in uid_list:
+            if e == int(uid):
+                salary_file.set_value(i, "salary", salary_current[i]-25)
+                messagebox.showinfo("", "Demoted.\nSalary is reduced by 25")
+            i+=1
+    salary_file.to_csv("data/salary.csv", index=False)
+
+def auto_demote_promote_employee():
+    auto_fire = []
+    salary_file = pandas.read_csv("data/salary.csv")
+    users_file = pandas.read_csv("data/users.csv")
+    uid = salary_file["uid"].values
+    demoted_time = salary_file["demoted"].values
+    i=0
+    for e in demoted_time:
+        if e == 2:
+            users_file.set_value(uid[i], "approved", -1)
+        i+=1
+    salary_current = salary_file["salary"].values
+    compliments_time = salary_file["compliments"].values
+    complaints_time = salary_file["complaints"].values
+    demoted_current = salary_file["demoted"].values
+    time = []
+    for e,f in zip(compliments_time, complaints_time):
+        time.append(e-f)
+    i=0
+    for e in time:
+        if e >= 3:
+            salary_file.set_value(i, "salary", salary_current[i]+50)
+            salary_file.set_value(i, "compliments", 0)
+            salary_file.set_value(i, "complaints", 0)
+            salary_file.set_value(i, "demoted", demoted_current[i]-1)
+        elif e <= -3:
+            salary_file.set_value(i, "salary", salary_current[i]-50)
+            salary_file.set_value(i, "compliments", 0)
+            salary_file.set_value(i, "complaints", 0)
+            salary_file.set_value(i, "demoted", demoted_current[i]+1)
+        i+=1
+    salary_file.to_csv("data/salary.csv", index=False)
+    users_file.to_csv("data/users.csv", index=False)
+

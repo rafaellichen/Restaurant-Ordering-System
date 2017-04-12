@@ -18,7 +18,7 @@ program.resizable(width=False, height=False)
 
 menubar = Menu(program)
 chef_list = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Chefs", menu=chef_list)
+menubar.add_cascade(label="Menus", menu=chef_list)
 program.config(menu=menubar)
 
 #variables
@@ -42,7 +42,7 @@ class parameter:
         self.price_list = []
         self.current_chef_uid = -1
         self.current_chef_name = "All"
-
+        self.employee_type = 0
 
 global current_parameter
 global current_user
@@ -53,26 +53,49 @@ temp = bar.chef_in_list()
 current_parameter.chef_list = temp
 chef_list.delete(0,END)
 chef_list.add_command(label="All", command=lambda: bar_change_menu("all","All"))
+chef_list.add_command(label="Top", command=lambda: bar_change_menu("top","Top"))
 for e,f in zip(temp[0],temp[1]):
     chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
 
 def refresh_menu():
+    temp = bar.chef_in_list()
+    current_parameter.chef_list = temp
+    chef_list.delete(0,END)
+    chef_list.add_command(label="All", command=lambda: bar_change_menu("all","All"))
+    chef_list.add_command(label="Top", command=lambda: bar_change_menu("top","Top"))
+    for e,f in zip(temp[0],temp[1]):
+        chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
     if current_parameter.current_chef_uid != -1:
         bar_change_menu(current_parameter.current_chef_uid,current_parameter.current_chef_name)
     else:
         bar_change_menu("all",current_parameter.current_chef_name)
 
 def bar_change_menu(uid,name):
-    current_parameter.current_chef_uid = uid
-    current_parameter.current_chef_name = name
-    chef_name.config(text=current_parameter.current_chef_name)
     if uid == "all":
+        current_parameter.current_chef_uid = uid
+        current_parameter.current_chef_name = name
+        chef_name.config(text=current_parameter.current_chef_name)
         start_interface()
+    elif uid == "top":
+        if current_user.uid == -1:
+            messagebox.showinfo("", "Please log in first")
+        else:
+            current_parameter.current_chef_uid = uid
+            current_parameter.current_chef_name = name
+            chef_name.config(text=current_parameter.current_chef_name)
+            top_menu_list(element.get_top_listing(current_user.uid))
+    elif element.menu_check(uid):
+        messagebox.showinfo("", "This chef has not yet added any dishes to the menu")
     else:
+        current_parameter.current_chef_uid = uid
+        current_parameter.current_chef_name = name
+        chef_name.config(text=current_parameter.current_chef_name)
         current_parameter.menu_list = bar.get_menu_list(uid)
         current_parameter.image_list = bar.get_image_list(uid)
         current_parameter.name_list = bar.get_name_list(uid)
         current_parameter.price_list = bar.get_price_list(uid)
+        #print(current_parameter.menu_current_page)
+        #print(current_parameter.menu_max_page)
     if (len(current_parameter.menu_list)-1) % 6 == 0:
         current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6)
     else:
@@ -80,6 +103,15 @@ def bar_change_menu(uid,name):
     current_parameter.menu_current_page = 1
     page_change()
     display_menu()
+
+def top_menu_list(did_list):
+    if len(did_list) == 0:
+        messagebox.showinfo("", "Please make some purchases first")
+    else:
+        current_parameter.menu_list = did_list
+        current_parameter.image_list = bar.get_top_image_list(did_list)
+        current_parameter.name_list = bar.get_top_name_list(did_list)
+        current_parameter.price_list = bar.get_top_price_list(did_list)
 
 def set_parameter():
     current_parameter.menu_list = element.get_menu_list()
@@ -103,6 +135,7 @@ def reset_gui():
         widget.grid_remove()
 
 def window_center():
+    return
     program.update()
     # lines below this:
     x = program.winfo_screenwidth()/2 - program.winfo_width()/2
@@ -442,8 +475,50 @@ def start_interface():
     previous_page_button.grid(row=10, column=0)
     window_center()
 
+def new_employee():
+    reset_gui()
+    employee_chef.config(state=NORMAL)
+    employee_deliver.config(state=NORMAL)
+    employee_back.grid(row=5, column=0)
+    employee_type.grid(row=0, column=0)
+    employee_type_frame.grid(row=0, column=1)
+    employee_username.grid(row=2, column=1)
+    employee_password.grid(row=3, column=1)
+    employee_email.grid(row=4, column=1)
+    employee_add.grid(row=5, column=1)
+    employee_username_label.grid(row=2, column=0)
+    employee_password_label.grid(row=3, column=0)
+    employee_email_label.grid(row=4, column=0)
+    employee_name_label.grid(row=1, column=0)
+    employee_name.grid(row=1, column=1)
+    window_center()
+
+def select_type(t):
+    if t == "c":
+        current_parameter.employee_type = 1
+        employee_chef.config(state=DISABLED)
+        employee_deliver.config(state=NORMAL)
+    else:
+        current_parameter.employee_type = 2
+        employee_chef.config(state=NORMAL)
+        employee_deliver.config(state=DISABLED)
+
+def register_new_employee():
+    if employee_chef["state"] == "normal" and employee_deliver["state"] == "normal":
+        messagebox.showinfo("", "Please select an employee type")
+    else:
+        signin.register_employee(current_parameter.employee_type, employee_name.get(), employee_username.get(), 
+                            employee_password.get(), employee_email.get())
+        employee_chef["state"] = "normal"
+        employee_deliver["state"] = "normal"
+        employee_email.delete(0,END)
+        employee_name.delete(0,END)
+        employee_password.delete(0,END)
+        employee_username.delete(0,END)
+
 def manager_interface():
     reset_gui()
+    manage_employee.grid(row=0, column=1)
     signout_button.grid(row=0, column=2)
     users_approve_list_label.grid(row=1, column=0)
     update_all_button.grid(row=0, column=0)
@@ -547,7 +622,68 @@ def manager_approve_decline_button_action(input):
                                     except TclError:
                                         messagebox.showinfo("","Please select an item to process")
 
+def employee_management():
+    reset_gui()
+    employee_chef["state"] = "normal"
+    employee_deliver["state"] = "normal"
+    employee_email.delete(0,END)
+    employee_name.delete(0,END)
+    employee_password.delete(0,END)
+    employee_username.delete(0,END)
+    chef_employee_list.delete(0,END)
+    dish_complaints_list.delete(0,END)
+    deliver_employee_list.delete(0,END)
+    add_employee.grid(row=0, column=0)
+    chef_employee_list_label.grid(row=1, column=0)
+    deliver_employee_list_label.grid(row=1, column=1)
+    chef_employee_list.grid(row=2, column=0)
+    deliver_employee_list.grid(row=2, column=1)
+    management_back.grid(row=0, column=1)
+    employee_promote.grid(row=3, column=1)
+    employee_demote.grid(row=3, column=0)
+    for item in element.get_chef_employee():
+        chef_employee_list.insert(END, item)
+    for item in element.get_deliver_employee():
+        deliver_employee_list.insert(END, item)
+    window_center()
+
+def employee_salary_adjust(i):
+    try:
+        manage.demote_promote_employee(chef_employee_list.get(chef_employee_list.curselection()), i)
+    except TclError:
+        try:
+            manage.demote_promote_employee(deliver_employee_list.get(deliver_employee_list.curselection()), i)
+        except TclError:
+            messagebox.showinfo("","Please select an item to process")
+    chef_employee_list.selection_clear(0, END)
+    deliver_employee_list.selection_clear(0, END)
+
 #manager interface
+management_back = Button(text="Back", command=manager_interface)
+deliver_employee_list_label = Label(program, text="Deliver")
+chef_employee_list_label = Label(program, text="Chef")
+chef_employee_list = Listbox(program)
+deliver_employee_list = Listbox(program)
+employee_promote = Button(text="Promote", command=lambda: employee_salary_adjust(1))
+employee_demote = Button(text="Demote", command=lambda: employee_salary_adjust(-1))
+manage_employee = Button(text="Manage employees", command=employee_management)
+employee_type_frame = Frame(program)
+employee_chef = Button(employee_type_frame, text="Chef", command=lambda: select_type("c"))
+employee_back = Button(text="Back", command=employee_management)
+employee_deliver = Button(employee_type_frame, text="Deliver", command=lambda: select_type("d"))
+employee_chef.pack(side="left")
+employee_deliver.pack(side="left")
+employee_username = Entry(program)
+employee_password = Entry(program)
+employee_email = Entry(program)
+employee_add = Button(text="Add", command=register_new_employee)
+employee_username_label = Label(program, text="Username")
+employee_password_label = Label(program, text="Password")
+employee_email_label = Label(program, text="Email")
+employee_name_label = Label(program, text="Name")
+employee_name = Entry(program)
+employee_type = Label(program, text="Type")
+add_employee = Button(text="Add employee", command=new_employee)
 users_approve_list = Listbox(program)
 users_approve_list_label = Label(program, text="Pending registrations")
 manager_approve_button = Button(text="Approve", command=lambda: manager_approve_decline_button_action(1))
@@ -837,7 +973,6 @@ edge_matrix[20][21] = edge37
 edge_matrix[21][22] = edge38
 edge_matrix[22][23] = edge39
 edge_matrix[23][24] = edge40
-
 delivery_order_listName = Label(program, text="Order list")
 signout_button = Button(text="Sign Out", command=signout_button_action)
 order_track_button = Button(text="Track", command=delivery_track_interface)
@@ -903,4 +1038,5 @@ dish_img_list = [img1, img2, img3, img4, img5, img6]
 
 start_interface()
 window_center()
+manage.auto_demote_promote_employee()
 program.mainloop()

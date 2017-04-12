@@ -1,5 +1,6 @@
 import pandas
 import numpy
+from collections import Counter
 
 def get_balance(uid):
     users_database = pandas.read_csv("data/users.csv")
@@ -113,3 +114,40 @@ def get_name_list():
 def get_price_list():
     price_database = pandas.read_csv("data/dish.csv")
     return (list(reversed(price_database.sort_values("time")["price"].values)))
+
+def get_top_listing(uid):
+    delivery_database = pandas.read_csv("data/order.csv")
+    delivery_database = delivery_database.loc[delivery_database["uid"] == uid]
+    delivery_database = delivery_database.loc[delivery_database["status"] == 1]
+    did_list = []
+    for e in delivery_database["order"].values:
+        did_list+=e.split(",")
+    did_list = [int(x) for x in did_list]
+    count = Counter(did_list)
+    did_list = sorted(sorted(did_list), key=count.get, reverse=True)
+    set_did_list = []
+    for e in did_list:
+        if len(set_did_list) == 0:
+            set_did_list.append(e)
+        else:
+            if set_did_list[-1] != e:
+                set_did_list.append(e)
+    return set_did_list
+
+def menu_check(num):
+    uid_database = pandas.read_csv("data/menu.csv")
+    uid_database = uid_database.loc[uid_database["uid"] == num]["uid"].values
+    if len(uid_database) == 1:
+        return True
+    else:
+        return False
+
+def get_chef_employee():
+    chef_database = pandas.read_csv("data/users.csv")
+    chef_database = chef_database.loc[(chef_database["level"]==4) & (chef_database["approved"] == 1)]["uid"]
+    return chef_database
+
+def get_deliver_employee():
+    deliver_database = pandas.read_csv("data/users.csv")
+    deliver_database = deliver_database.loc[(deliver_database["level"]==3) & (deliver_database["approved"] == 1)]["uid"]
+    return deliver_database

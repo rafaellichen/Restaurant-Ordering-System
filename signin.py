@@ -46,9 +46,6 @@ def register(username_input,password_input,email_input):
     users_level_database = users_database["level"].values.tolist()
     users_uid_database = users_database["uid"].values.tolist()
     users_cart_database = users_database["cart"].values.tolist()
-    users_compliment_database = users_database["compliment"].values.tolist()
-    users_complaint_database = users_database["complaint"].values.tolist()
-    users_salary_database = users_database["salary"].values.tolist()
     users_name_database = users_database["name"].values.tolist()
     users_approved_database = users_database["approved"].values.tolist()
     users_warning_database = users_database["warning"].values.tolist()
@@ -66,9 +63,6 @@ def register(username_input,password_input,email_input):
     users_approved_database.append(0)
     users_warning_database.append(0)
     users_cart_database.append(numpy.nan)
-    users_compliment_database.append(numpy.nan)
-    users_complaint_database.append(numpy.nan)
-    users_salary_database.append(numpy.nan)
     users_name_database.append(numpy.nan)
     users_database = pandas.DataFrame({"username": users_username_database,
                                         "password": users_password_database,
@@ -77,9 +71,6 @@ def register(username_input,password_input,email_input):
                                         "level": users_level_database,
                                         "uid": users_uid_database,
                                         "cart": users_cart_database,
-                                        "compliment": users_compliment_database,
-                                        "complaint": users_complaint_database,
-                                        "salary": users_salary_database,
                                         "name": users_name_database,
                                         "approved": users_approved_database,
                                         "warning": users_warning_database})
@@ -90,11 +81,81 @@ def register(username_input,password_input,email_input):
                                     "level",
                                     "uid",
                                     "cart",
-                                    "compliment",
-                                    'complaint',
-                                    "salary",
                                     "name",
                                     "approved",
                                     "warning"]]
     users_database.to_csv("data/users.csv", index=False)
     return ("Registration successful")
+
+def register_employee(t, name, username, password, email):
+    users_database = pandas.read_csv("data/users.csv")
+    users_username_database = users_database["username"].values.tolist()
+    users_password_database = users_database["password"].values.tolist()
+    users_balance_database = users_database["balance"].values.tolist()
+    users_email_database = users_database["email"].values.tolist()
+    users_level_database = users_database["level"].values.tolist()
+    users_uid_database = users_database["uid"].values.tolist()
+    users_cart_database = users_database["cart"].values.tolist()
+    users_name_database = users_database["name"].values.tolist()
+    users_approved_database = users_database["approved"].values.tolist()
+    users_warning_database = users_database["warning"].values.tolist()
+    if name == "" or username == "" or password == "" or email == "":
+        messagebox.showinfo("", "Please fill out all information")
+        return
+    for u,e in zip(users_username_database,users_email_database):
+        if u == username or e == email:
+            messagebox.showinfo("", "Username or Email is registered already")
+            return
+    users_username_database.append(username)
+    users_password_database.append(password)
+    users_email_database.append(email)
+    users_balance_database.append(numpy.nan)
+    if t == 1:
+        users_level_database.append(4)
+    else:
+        users_level_database.append(3)
+    users_uid_database.append(users_uid_database[-1]+1)
+    users_approved_database.append(1)
+    users_warning_database.append(numpy.nan)
+    users_cart_database.append(numpy.nan)
+    users_name_database.append(name)
+    users_database = pandas.DataFrame({"username": users_username_database,
+                                        "password": users_password_database,
+                                        "balance": users_balance_database,
+                                        "email": users_email_database,
+                                        "level": users_level_database,
+                                        "uid": users_uid_database,
+                                        "cart": users_cart_database,
+                                        "name": users_name_database,
+                                        "approved": users_approved_database,
+                                        "warning": users_warning_database})
+    users_database = users_database[["username",
+                                    "password",
+                                    "balance",
+                                    "email",
+                                    "level",
+                                    "uid",
+                                    "cart",
+                                    "name",
+                                    "approved",
+                                    "warning"]]
+    users_database.to_csv("data/users.csv", index=False)
+    salary_database = pandas.read_csv("data/salary.csv")
+    salary_uid = salary_database["uid"].values.tolist()
+    salary_salary = salary_database["salary"].values.tolist()
+    salary_complaints = salary_database["complaints"].values.tolist()
+    salary_compliments = salary_database["compliments"].values.tolist()
+    salary_demoted = salary_database["demoted"].values.tolist()
+    salary_salary.append(100)
+    salary_uid.append(users_uid_database[-1])
+    salary_complaints.append(0)
+    salary_compliments.append(0)
+    salary_demoted.append(numpy.nan)
+    salary_database = pandas.DataFrame({"uid": salary_uid,
+                                        "salary": salary_salary,
+                                        "complaints": salary_complaints,
+                                        "compliments": salary_compliments,
+                                        "demoted": salary_demoted})
+    salary_database = salary_database[["uid", "salary", "complaints", "compliments", "demoted"]]
+    salary_database.to_csv("data/salary.csv", index=False)
+    messagebox.showinfo("", "Successful added")
