@@ -134,9 +134,20 @@ def get_top_listing(uid):
                 set_did_list.append(e)
     return set_did_list
 
-def menu_check(uid):
-    uid_database = pandas.read_csv("data/menu.csv")["uid"].values
-    if uid not in uid_database:
+def menu_check(num):
+    uid_database = pandas.read_csv("data/menu.csv")
+    uid_database = uid_database.loc[uid_database["uid"] == num]["uid"].values
+    if len(uid_database) == 1:
         return True
     else:
         return False
+
+def get_chef_employee():
+    chef_database = pandas.read_csv("data/users.csv")
+    chef_database = chef_database.loc[chef_database["level"]==4]["username"]
+    return chef_database
+
+def get_deliver_employee():
+    deliver_database = pandas.read_csv("data/users.csv")
+    deliver_database = deliver_database.loc[deliver_database["level"]==3]["username"]
+    return deliver_database

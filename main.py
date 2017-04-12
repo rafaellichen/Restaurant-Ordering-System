@@ -94,6 +94,8 @@ def bar_change_menu(uid,name):
         current_parameter.image_list = bar.get_image_list(uid)
         current_parameter.name_list = bar.get_name_list(uid)
         current_parameter.price_list = bar.get_price_list(uid)
+        #print(current_parameter.menu_current_page)
+        #print(current_parameter.menu_max_page)
     if (len(current_parameter.menu_list)-1) % 6 == 0:
         current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6)
     else:
@@ -469,7 +471,7 @@ def start_interface():
     previous_page_button.grid(row=10, column=0)
     window_center()
 
-def manage_employee():
+def new_employee():
     reset_gui()
     employee_chef.config(state=NORMAL)
     employee_deliver.config(state=NORMAL)
@@ -496,30 +498,23 @@ def select_type(t):
         current_parameter.employee_type = 2
         employee_chef.config(state=NORMAL)
         employee_deliver.config(state=DISABLED)
-    print(current_parameter.employee_type)
 
-def add_employee():
+def register_new_employee():
     if employee_chef["state"] == "normal" and employee_deliver["state"] == "normal":
         messagebox.showinfo("", "Please select an employee type")
     else:
+        signin.register_employee(current_parameter.employee_type, employee_name.get(), employee_username.get(), 
+                            employee_password.get(), employee_email.get())
         employee_chef["state"] = "normal"
         employee_deliver["state"] = "normal"
         employee_email.delete(0,END)
         employee_name.delete(0,END)
         employee_password.delete(0,END)
         employee_username.delete(0,END)
-        signin.register_employee(current_parameter.employee_type, employee_name.get(), employee_username.get(), 
-                            employee_password.get(), employee_email.get())
 
 def manager_interface():
     reset_gui()
-    employee_chef["state"] = "normal"
-    employee_deliver["state"] = "normal"
-    employee_email.delete(0,END)
-    employee_name.delete(0,END)
-    employee_password.delete(0,END)
-    employee_username.delete(0,END)
-    add_employee.grid(row=0, column=1)
+    manage_employee.grid(row=0, column=1)
     signout_button.grid(row=0, column=2)
     users_approve_list_label.grid(row=1, column=0)
     update_all_button.grid(row=0, column=0)
@@ -623,26 +618,66 @@ def manager_approve_decline_button_action(input):
                                     except TclError:
                                         messagebox.showinfo("","Please select an item to process")
 
-#add_employee
+def employee_management():
+    reset_gui()
+    employee_chef["state"] = "normal"
+    employee_deliver["state"] = "normal"
+    employee_email.delete(0,END)
+    employee_name.delete(0,END)
+    employee_password.delete(0,END)
+    employee_username.delete(0,END)
+    chef_employee_list.delete(0,END)
+    dish_complaints_list.delete(0,END)
+    deliver_employee_list.delete(0,END)
+    add_employee.grid(row=0, column=0)
+    chef_employee_list_label.grid(row=1, column=0)
+    deliver_employee_list_label.grid(row=1, column=1)
+    chef_employee_list.grid(row=2, column=0)
+    deliver_employee_list.grid(row=2, column=1)
+    management_back.grid(row=0, column=1)
+    employee_promote.grid(row=3, column=1)
+    employee_demote.grid(row=3, column=0)
+    for item in element.get_chef_employee():
+        chef_employee_list.insert(END, item)
+    for item in element.get_deliver_employee():
+        deliver_employee_list.insert(END, item)
+    window_center()
+
+def employee_salary_adjust(i):
+    try:
+        manage.demote_promote_employee(chef_employee_list.get(chef_employee_list.curselection()), i)
+    except TclError:
+        try:
+            manage.demote_promote_employee(deliver_employee_list.get(deliver_employee_list.curselection()), i)
+        except TclError:
+            messagebox.showinfo("","Please select an item to process")
+
+#manager interface
+management_back = Button(text="Back", command=manager_interface)
+deliver_employee_list_label = Label(program, text="Deliver")
+chef_employee_list_label = Label(program, text="Chef")
+chef_employee_list = Listbox(program)
+deliver_employee_list = Listbox(program)
+employee_promote = Button(text="Promote", command=lambda: employee_salary_adjust(1))
+employee_demote = Button(text="Demote", command=lambda: employee_salary_adjust(-1))
+manage_employee = Button(text="Manage employees", command=employee_management)
 employee_type_frame = Frame(program)
 employee_chef = Button(employee_type_frame, text="Chef", command=lambda: select_type("c"))
-employee_back = Button(text="Back", command=manager_interface)
+employee_back = Button(text="Back", command=employee_management)
 employee_deliver = Button(employee_type_frame, text="Deliver", command=lambda: select_type("d"))
 employee_chef.pack(side="left")
 employee_deliver.pack(side="left")
 employee_username = Entry(program)
 employee_password = Entry(program)
 employee_email = Entry(program)
-employee_add = Button(text="Add", command=add_employee)
+employee_add = Button(text="Add", command=register_new_employee)
 employee_username_label = Label(program, text="Username")
 employee_password_label = Label(program, text="Password")
 employee_email_label = Label(program, text="Email")
 employee_name_label = Label(program, text="Name")
 employee_name = Entry(program)
 employee_type = Label(program, text="Type")
-
-#manager interface
-add_employee = Button(text="Add employee", command=manage_employee)
+add_employee = Button(text="Add employee", command=new_employee)
 users_approve_list = Listbox(program)
 users_approve_list_label = Label(program, text="Pending registrations")
 manager_approve_button = Button(text="Approve", command=lambda: manager_approve_decline_button_action(1))
@@ -925,7 +960,6 @@ edge_matrix[20][21] = edge37
 edge_matrix[21][22] = edge38
 edge_matrix[22][23] = edge39
 edge_matrix[23][24] = edge40
-
 delivery_order_listName = Label(program, text="Order list")
 signout_button = Button(text="Sign Out", command=signout_button_action)
 order_track_button = Button(text="Track", command=delivery_track_interface)
