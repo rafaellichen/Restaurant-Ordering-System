@@ -133,3 +133,10 @@ def get_top_listing(uid):
             if set_did_list[-1] != e:
                 set_did_list.append(e)
     return set_did_list
+
+def menu_check(uid):
+    uid_database = pandas.read_csv("data/menu.csv")["uid"].values
+    if uid not in uid_database:
+        return True
+    else:
+        return False

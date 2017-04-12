@@ -42,6 +42,7 @@ class parameter:
         self.price_list = []
         self.current_chef_uid = -1
         self.current_chef_name = "All"
+        self.employee_type = 0
 
 global current_parameter
 global current_user
@@ -57,6 +58,13 @@ for e,f in zip(temp[0],temp[1]):
     chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
 
 def refresh_menu():
+    temp = bar.chef_in_list()
+    current_parameter.chef_list = temp
+    chef_list.delete(0,END)
+    chef_list.add_command(label="All", command=lambda: bar_change_menu("all","All"))
+    chef_list.add_command(label="Top", command=lambda: bar_change_menu("top","Top"))
+    for e,f in zip(temp[0],temp[1]):
+        chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
     if current_parameter.current_chef_uid != -1:
         bar_change_menu(current_parameter.current_chef_uid,current_parameter.current_chef_name)
     else:
@@ -76,6 +84,8 @@ def bar_change_menu(uid,name):
             current_parameter.current_chef_name = name
             chef_name.config(text=current_parameter.current_chef_name)
             top_menu_list(element.get_top_listing(current_user.uid))
+    elif element.menu_check(uid):
+        messagebox.showinfo("", "This chef has not yet added any dishes to the menu")
     else:
         current_parameter.current_chef_uid = uid
         current_parameter.current_chef_name = name
@@ -123,6 +133,7 @@ def reset_gui():
         widget.grid_remove()
 
 def window_center():
+    return
     program.update()
     # lines below this:
     x = program.winfo_screenwidth()/2 - program.winfo_width()/2
@@ -458,8 +469,57 @@ def start_interface():
     previous_page_button.grid(row=10, column=0)
     window_center()
 
+def manage_employee():
+    reset_gui()
+    employee_chef.config(state=NORMAL)
+    employee_deliver.config(state=NORMAL)
+    employee_back.grid(row=5, column=0)
+    employee_type.grid(row=0, column=0)
+    employee_type_frame.grid(row=0, column=1)
+    employee_username.grid(row=2, column=1)
+    employee_password.grid(row=3, column=1)
+    employee_email.grid(row=4, column=1)
+    employee_add.grid(row=5, column=1)
+    employee_username_label.grid(row=2, column=0)
+    employee_password_label.grid(row=3, column=0)
+    employee_email_label.grid(row=4, column=0)
+    employee_name_label.grid(row=1, column=0)
+    employee_name.grid(row=1, column=1)
+    window_center()
+
+def select_type(t):
+    if t == "c":
+        current_parameter.employee_type = 1
+        employee_chef.config(state=DISABLED)
+        employee_deliver.config(state=NORMAL)
+    else:
+        current_parameter.employee_type = 2
+        employee_chef.config(state=NORMAL)
+        employee_deliver.config(state=DISABLED)
+    print(current_parameter.employee_type)
+
+def add_employee():
+    if employee_chef["state"] == "normal" and employee_deliver["state"] == "normal":
+        messagebox.showinfo("", "Please select an employee type")
+    else:
+        employee_chef["state"] = "normal"
+        employee_deliver["state"] = "normal"
+        employee_email.delete(0,END)
+        employee_name.delete(0,END)
+        employee_password.delete(0,END)
+        employee_username.delete(0,END)
+        signin.register_employee(current_parameter.employee_type, employee_name.get(), employee_username.get(), 
+                            employee_password.get(), employee_email.get())
+
 def manager_interface():
     reset_gui()
+    employee_chef["state"] = "normal"
+    employee_deliver["state"] = "normal"
+    employee_email.delete(0,END)
+    employee_name.delete(0,END)
+    employee_password.delete(0,END)
+    employee_username.delete(0,END)
+    add_employee.grid(row=0, column=1)
     signout_button.grid(row=0, column=2)
     users_approve_list_label.grid(row=1, column=0)
     update_all_button.grid(row=0, column=0)
@@ -563,7 +623,26 @@ def manager_approve_decline_button_action(input):
                                     except TclError:
                                         messagebox.showinfo("","Please select an item to process")
 
+#add_employee
+employee_type_frame = Frame(program)
+employee_chef = Button(employee_type_frame, text="Chef", command=lambda: select_type("c"))
+employee_back = Button(text="Back", command=manager_interface)
+employee_deliver = Button(employee_type_frame, text="Deliver", command=lambda: select_type("d"))
+employee_chef.pack(side="left")
+employee_deliver.pack(side="left")
+employee_username = Entry(program)
+employee_password = Entry(program)
+employee_email = Entry(program)
+employee_add = Button(text="Add", command=add_employee)
+employee_username_label = Label(program, text="Username")
+employee_password_label = Label(program, text="Password")
+employee_email_label = Label(program, text="Email")
+employee_name_label = Label(program, text="Name")
+employee_name = Entry(program)
+employee_type = Label(program, text="Type")
+
 #manager interface
+add_employee = Button(text="Add employee", command=manage_employee)
 users_approve_list = Listbox(program)
 users_approve_list_label = Label(program, text="Pending registrations")
 manager_approve_button = Button(text="Approve", command=lambda: manager_approve_decline_button_action(1))

@@ -1,12 +1,12 @@
 username,password,balance,email,level,uid,cart,compliment,complaint,salary,name,approved,warning
 r,r,50.0,,1,0,"1,2,3,4,5,6,7,7",,,,,1,0.0
 vip,vip,100.0,,2,1,,,,,,1,0.0
-d1,d1,,,3,2,,,,50.0,,1,
-chef1,chef1,,,4,3,,0.0,0.0,100.0,A,1,
-chef2,chef2,,,4,4,,0.0,0.0,100.0,B,1,
-chef3,chef3,,,4,5,,0.0,0.0,100.0,C,1,
+d1,d1,,d1@gmail.com,3,2,,0.0,0.0,50.0,D1,1,
+chef1,chef1,,chef1@gmail.com,4,3,,0.0,0.0,100.0,A,1,
+chef2,chef2,,chef12@gmail.com,4,4,,0.0,0.0,100.0,B,1,
+chef3,chef3,,chef3@gamail.com,4,5,,0.0,0.0,100.0,C,1,
 admin,admin,,rafaellichen@gmail.com,5,6,,,,,,1,
-d2,d2,,,3,7,,,,50.0,,1,
+d2,d2,,d2@gamil.com,3,7,,0.0,0.0,50.0,D2,1,
 temp,temp,100.0,temp@gmail.com,1,8,,,,,,0,0.0
 test,test,100.0,test@gmail.com,1,9,,,,,,0,0.0
 qwe,qwe,50.0,qwe@gmail.com,1,10,,,,,,1,0.0
@@ -14,4 +14,5 @@ qwe,qwe,50.0,qwe@gmail.com,1,10,,,,,,1,0.0
 1234,1234,50.0,1234@gmail.com,1,12,,,,,,1,0.0
 r2,r2,50.0,r2,1,13,,,,,,-1,0.0
 1,1,50.0,1@gmail.com,1,14,,,,,,0,0.0
-12,12,50.0,12@gmail.com,1,15,,,,,,0,0.0
+12,12,50.0,12@gmail.com,1,15,,,,,,1,0.0
+chef4,chef4,,chef4@gmail.com,4,16,,0.0,0.0,100.0,R,1,
