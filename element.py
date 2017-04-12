@@ -144,10 +144,10 @@ def menu_check(num):
 
 def get_chef_employee():
     chef_database = pandas.read_csv("data/users.csv")
-    chef_database = chef_database.loc[chef_database["level"]==4]["username"]
+    chef_database = chef_database.loc[(chef_database["level"]==4) & (chef_database["approved"] == 1)]["uid"]
     return chef_database
 
 def get_deliver_employee():
     deliver_database = pandas.read_csv("data/users.csv")
-    deliver_database = deliver_database.loc[deliver_database["level"]==3]["username"]
+    deliver_database = deliver_database.loc[(deliver_database["level"]==3) & (deliver_database["approved"] == 1)]["uid"]
     return deliver_database

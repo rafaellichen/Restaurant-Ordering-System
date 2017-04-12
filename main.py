@@ -651,6 +651,8 @@ def employee_salary_adjust(i):
             manage.demote_promote_employee(deliver_employee_list.get(deliver_employee_list.curselection()), i)
         except TclError:
             messagebox.showinfo("","Please select an item to process")
+    chef_employee_list.selection_clear(0, END)
+    deliver_employee_list.selection_clear(0, END)
 
 #manager interface
 management_back = Button(text="Back", command=manager_interface)
@@ -1025,4 +1027,5 @@ dish_img_list = [img1, img2, img3, img4, img5, img6]
 
 start_interface()
 window_center()
+manage.auto_demote_promote_employee()
 program.mainloop()
