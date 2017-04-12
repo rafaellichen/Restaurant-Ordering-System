@@ -24,7 +24,7 @@ program.config(menu=menubar)
 #variables
 class user:
     def __init__(self):
-        self.user_level = 0
+        self.user_level = 1
         self.shopping_cart = []
         self.current_menu = []
         self.top_menu = []
@@ -189,11 +189,15 @@ def become_member_button_action():
 
 def shopping_cart_buttom_action():
     reset_gui()
-    shopping_sum_of_total= Label(program,text= current_user.total)
-    shopping_total_label.grid(row=0,column=0)
-    shopping_sum_of_total.grid(row=1,column=0)
-    shopping_checkout_buttom.grid(row=2,column=0)
-    signin_back_button.grid(row=3, column=0)
+    shoppingcart_checkout_total= Label(program,text= current_user.total)
+    label_shoppingcart_sumnarry.grid(row=0,column=0)
+    label_shoppingcart_item.grid(row=1,column=0)
+    label_shoppingcart_price.grid(row=1,column=1)
+    label_shoppingcart_quantity.grid(row=1,column=3)
+    shoppingcart_checkout_total_label.grid(row=2,column=2)
+    shoppingcart_checkout_total.grid(row=2,column=3)
+    shoppingcart_checkout_buttom.grid(row=3,column=3)
+    signin_back_button.grid(row=3, column=4)
     window_center()
 
 def add_car_buttom_action(i):
@@ -602,8 +606,15 @@ shopping_did = []
 shopping_name=[]
 shopping_price=[]
 shopping_quantity=[]
-shopping_checkout_buttom=Button(text= "Check out",command= None)
-shopping_total_label = Label(program,text="Total:")
+shoppingcart_checkout_buttom=Button(text= "Check out",command= None)
+shoppingcart_checkout_total_label = Label(program,text="Total:")
+label_shoppingcart_item =Label(program,text="Item")
+label_shoppingcart_price =Label(program,text="Unite Price")
+label_shoppingcart_quantity =Label(program,text="Quantity")
+label_shoppingcart_sumnarry =Label(program,text="Your order summury")
+
+
+
 
 #delivery interface
 delivery_order_list = Listbox(program)
