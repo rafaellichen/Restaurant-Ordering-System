@@ -12,6 +12,18 @@ def get_balance(uid):
             return users_balance_database[i]
         i+=1
 
+def get_order_list():
+    order_database = pandas.read_csv("data/order.csv")
+    order_statues = order_database["status"].values
+    order_number = order_database["ddid"].values
+    temp_orderlist = []
+    i=0
+    for x in order_statues:
+        if x == -1:
+            temp_orderlist.append(order_number[i])
+        i+=1
+    return temp_orderlist
+
 def get_pending_registrations():
     users_database = pandas.read_csv("data/users.csv")
     users_approved_database = users_database["approved"].values

@@ -22,5 +22,7 @@ Restaurant Ordering System
 - System features:
   * [x] Provide a GUI
   * [x] Registered customers have username and password to login
+  * [x] Registered customers or VIP have top listing based on the history of their prior purchase
+  * [x] Top 5 most popular dishes (ordered most) are displayed on the page
 
 Etc...

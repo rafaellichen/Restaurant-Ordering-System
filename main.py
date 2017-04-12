@@ -318,31 +318,46 @@ def menu_previous_page():
 
 def delivery_interface():
     reset_gui()
-    node0.grid (row=0, column=0)
-    node1.grid (row=0, column=2)
-    node2.grid (row=0, column=4)
-    node3.grid (row=0, column=6)
-    node4.grid (row=0, column=8)
-    node5.grid (row=2, column=0)    
-    node6.grid (row=2, column=2)
-    node7.grid (row=2, column=4)
-    node8.grid (row=2, column=6)
-    node9.grid (row=2, column=8)
-    node10.grid (row=4, column=0)
-    node11.grid (row=4, column=2)
-    node12.grid (row=4, column=4)
-    node13.grid (row=4, column=6)
-    node14.grid (row=4, column=8)
-    node15.grid (row=6, column=0)
-    node16.grid (row=6, column=2)
-    node17.grid (row=6, column=4)
-    node18.grid (row=6, column=6)
-    node19.grid (row=6, column=8)
-    node20.grid (row=8, column=0)
-    node21.grid (row=8, column=2)
-    node22.grid (row=8, column=4)
-    node23.grid (row=8, column=6)
-    node24.grid (row=8, column=8)
+    signout_button.grid(row=0, column=0)
+    delivery_order_listName.grid(row=1, column=0)
+    delivery_order_list.grid(row=2, column=0)
+    order_track_button.grid(row=3, column=0)
+    order_list = element.get_order_list()
+    delivery_order_list.delete(0,END)
+    for item in order_list:
+        delivery_order_list.insert(END, item)
+    window_center()
+
+def delivery_track_interface():
+    reset_gui()
+    item_list_label.grid(row=0, column=9)
+    item_list.grid(row=1, column=9, rowspan=10)
+    back_botton.grid(row=9, column=9)
+    node0.grid(row=0, column=0)
+    node1.grid(row=0, column=2)
+    node2.grid(row=0, column=4)
+    node3.grid(row=0, column=6)
+    node4.grid(row=0, column=8)
+    node5.grid(row=2, column=0)    
+    node6.grid(row=2, column=2)
+    node7.grid(row=2, column=4)
+    node8.grid(row=2, column=6)
+    node9.grid(row=2, column=8)
+    node10.grid(row=4, column=0)
+    node11.grid(row=4, column=2)
+    node12.grid(row=4, column=4)
+    node13.grid(row=4, column=6)
+    node14.grid(row=4, column=8)
+    node15.grid(row=6, column=0)
+    node16.grid(row=6, column=2)
+    node17.grid(row=6, column=4)
+    node18.grid(row=6, column=6)
+    node19.grid(row=6, column=8)
+    node20.grid(row=8, column=0)
+    node21.grid(row=8, column=2)
+    node22.grid(row=8, column=4)
+    node23.grid(row=8, column=6)
+    node24.grid(row=8, column=8)
     edge1.grid(row=0, column=1)
     edge2.grid(row=0, column=3)
     edge3.grid(row=0, column=5)
@@ -383,6 +398,7 @@ def delivery_interface():
     edge38.grid(row=8, column=3)
     edge39.grid(row=8, column=5)
     edge40.grid(row=8, column=7)
+    window_center()
 
 def start_interface():
     reset_gui()
@@ -610,6 +626,8 @@ shopping_checkout_buttom=Button(text= "Check out",command= None)
 shopping_total_label = Label(program,text="Total:")
 
 #delivery interface
+delivery_order_list = Listbox(program)
+delivery_order_listName = Label(program, text="Order list")
 node_matrix = [[0 for i in range(25)] for j in range(25)]
 edge_matrix = [[0 for i in range(25)] for j in range(25)]
 for i in range(0,25):
@@ -723,46 +741,6 @@ node_matrix[23][24] = 1
 node_matrix[24][19] = 1
 node_matrix[24][24] = 1
 node_matrix[24][23] = 1
-edge1 = edge_matrix[0][1]
-edge2 = edge_matrix[1][2]
-edge3 = edge_matrix[2][3]
-edge4 = edge_matrix[3][4]
-edge5 = edge_matrix[0][5]
-edge6 = edge_matrix[1][6]
-edge7 = edge_matrix[2][7]
-edge8 = edge_matrix[3][8]
-edge9 = edge_matrix[4][9]
-edge10 = edge_matrix[5][6]
-edge11 = edge_matrix[6][7]
-edge12 = edge_matrix[7][8]
-edge13 = edge_matrix[8][9]
-edge14 = edge_matrix[5][10]
-edge15 = edge_matrix[6][11]
-edge16 = edge_matrix[7][12]
-edge17 = edge_matrix[8][13]
-edge18 = edge_matrix[9][14]
-edge19 = edge_matrix[10][11]
-edge20 = edge_matrix[11][12]
-edge21 = edge_matrix[12][13]
-edge22 = edge_matrix[13][14]
-edge23 = edge_matrix[10][15]
-edge24 = edge_matrix[11][16]
-edge25 = edge_matrix[12][17]
-edge26 = edge_matrix[13][18]
-edge27 = edge_matrix[14][19]
-edge28 = edge_matrix[15][16]
-edge29 = edge_matrix[16][17]
-edge30 = edge_matrix[17][18]
-edge31 = edge_matrix[18][19]
-edge32 = edge_matrix[15][20]
-edge33 = edge_matrix[16][21]
-edge34 = edge_matrix[17][22]
-edge35 = edge_matrix[18][23]
-edge36 = edge_matrix[19][24]
-edge37 = edge_matrix[20][21]
-edge38 = edge_matrix[21][22]
-edge39 = edge_matrix[22][23]
-edge40 = edge_matrix[23][24]
 node0 = Button(state=DISABLED)
 node1 = Button(state=DISABLED)
 node2 = Button(state=DISABLED)
@@ -828,6 +806,55 @@ edge37 = Label(text="__")
 edge38 = Label(text="__")
 edge39 = Label(text="__")
 edge40 = Label(text="__")
+edge_matrix[0][1] = edge1
+edge_matrix[1][2] = edge2
+edge_matrix[2][3] = edge3
+edge_matrix[3][4] = edge4
+edge_matrix[0][5] = edge5
+edge_matrix[1][6] = edge6
+edge_matrix[2][7] = edge7
+edge_matrix[3][8] = edge8
+edge_matrix[4][9] = edge9
+edge_matrix[5][6] = edge10
+edge_matrix[6][7] = edge11
+edge_matrix[7][8] = edge12
+edge_matrix[8][9] = edge13
+edge_matrix[5][10] = edge14
+edge_matrix[6][11] = edge15
+edge_matrix[7][12] = edge16
+edge_matrix[8][13] = edge17
+edge_matrix[9][14] = edge18
+edge_matrix[10][11] = edge19
+edge_matrix[11][12] = edge20
+edge_matrix[12][13] = edge21
+edge_matrix[13][14] = edge22
+edge_matrix[10][15] = edge23
+edge_matrix[11][16] = edge24
+edge_matrix[12][17] = edge25
+edge_matrix[13][18] = edge26
+edge_matrix[14][19] = edge27
+edge_matrix[15][16] = edge28
+edge_matrix[16][17] = edge29
+edge_matrix[17][18] = edge30
+edge_matrix[18][19] = edge31
+edge_matrix[15][20] = edge32
+edge_matrix[16][21] = edge33
+edge_matrix[17][22] = edge34
+edge_matrix[18][23] = edge35
+edge_matrix[19][24] = edge36
+edge_matrix[20][21] = edge37
+edge_matrix[21][22] = edge38
+edge_matrix[22][23] = edge39
+edge_matrix[23][24] = edge40
+
+delivery_order_listName = Label(program, text="Order list")
+signout_button = Button(text="Sign Out", command=signout_button_action)
+order_track_button = Button(text="Track", command=delivery_track_interface)
+
+#delivery_track_interface
+back_botton = Button(text="back", command=delivery_interface)
+item_list = Listbox(program)
+item_list_label = Label(text="Item purchased")
 
 #start interface
 chef_name = Label(program, text="All")
