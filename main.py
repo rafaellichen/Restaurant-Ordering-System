@@ -358,9 +358,6 @@ def update_cart():
                 return
         current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:(current_parameter.current_cart_page-1)*6+6] = update_quantity
     else:
-        for e in update_quantity:
-            if not shop.check_quantity(e):
-                return
         if cart_item6_entry["state"] == DISABLED:
             del update_quantity[5]
         if cart_item5_entry["state"] == DISABLED:
@@ -373,6 +370,9 @@ def update_cart():
             del update_quantity[1]
         if cart_item1_entry["state"] == DISABLED:
             del update_quantity[0]
+        for e in update_quantity:
+            if not shop.check_quantity(e):
+                return
         current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:] = update_quantity
     current_user.shopping_cart = []
     for e,f in zip(current_parameter.shopping_quantity_list, current_parameter.shopping_did_list):
