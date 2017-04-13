@@ -43,3 +43,19 @@ def name_list(l):
                 return_image.append(pa)
         i+=1
     return (return_name, return_price, return_image)
+
+def write_cart(uid,cart):
+    if uid != -1:
+        cart_str = ""
+        for e in cart:
+            cart_str+=str(e)+","
+        cart_str=cart_str[:-1]
+        cart_database = pandas.read_csv("data/users.csv")
+        cart_database.set_value(uid, "cart", cart_str)
+        cart_database.to_csv("data/users.csv", index=False)
+
+def get_cart(uid):
+    cart_database = pandas.read_csv("data/users.csv")
+    cart_database = cart_database.loc[cart_database["uid"]==uid]["cart"].values
+    temp = cart_database[0].split(",")
+    return temp
