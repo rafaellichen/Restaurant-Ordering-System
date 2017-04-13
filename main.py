@@ -19,7 +19,7 @@ program.config(menu=menubar)
 #variables
 class user:
     def __init__(self):
-        self.user_level = 1
+        self.user_level = 0
         self.shopping_cart = []
         self.current_menu = []
         self.top_menu = []
@@ -131,6 +131,7 @@ def reset_gui():
     register_password_entry.delete(0,END)
     register_username_entry.delete(0,END)
     register_email_entry.delete(0,END)
+    label_quantity_entry.delete(0,END)
     for widget in program.winfo_children():
         widget.grid_remove()
 
@@ -232,7 +233,8 @@ def display_cart():
             cart_item_price_list[i-(current_parameter.current_cart_page-1)*6].config(text=current_parameter.shopping_price_list[i])
             cart_image_list[i-(current_parameter.current_cart_page-1)*6] = PhotoImage(file=current_parameter.shopping_image_list[i]).subsample(2,2)
             cart_item_image_list[i-(current_parameter.current_cart_page-1)*6].config(image=cart_image_list[i-(current_parameter.current_cart_page-1)*6])
-            
+            cart_item_entry_list[i-(current_parameter.current_cart_page-1)*6].config(state=NORMAL)
+            cart_item_entry_list[i-(current_parameter.current_cart_page-1)*6].insert(0,current_parameter.shopping_quantity_list[i])
     else:
         i=0
         for e in current_parameter.shopping_did_list[(current_parameter.current_cart_page-1)*6:]:
@@ -250,6 +252,11 @@ def display_cart():
         i=0
         for e in current_parameter.shopping_price_list[(current_parameter.current_cart_page-1)*6:]:
             cart_item_price_list[i].config(text=e)
+            i+=1
+        i=0
+        for e in current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:]:
+            cart_item_entry_list[i].config(state=NORMAL)
+            cart_item_entry_list[i].insert(0,e)
             i+=1
 
 def cart_page_change():
@@ -273,6 +280,8 @@ def cart_page_change():
     shopping_name_label4.config(text="--")
     shopping_name_label5.config(text="--")
     shopping_name_label6.config(text="--")
+    for e in cart_item_entry_list:
+        e.delete(0,END)
     cart_item1_entry.config(state=DISABLED)
     cart_item2_entry.config(state=DISABLED)
     cart_item3_entry.config(state=DISABLED)
@@ -305,10 +314,8 @@ def set_cart_data():
     else:
         current_parameter.max_cart_page = int((len(current_parameter.shopping_did_list))/6 + 1)
     current_parameter.current_cart_page = 1
-    display_cart()
 
 def shopping_cart_buttom_action():
-    print(current_parameter.shopping_did_list)
     reset_gui()
     set_cart_data()
     cart_page_change()
@@ -344,8 +351,40 @@ def shopping_cart_buttom_action():
     window_center()
 
 def update_cart():
-    pass
-
+    update_quantity = [cart_item1_entry.get(), cart_item2_entry.get(), cart_item3_entry.get(), cart_item4_entry.get(), cart_item5_entry.get(), cart_item6_entry.get()]
+    if current_parameter.current_cart_page != current_parameter.max_cart_page:
+        for e in update_quantity:
+            if not shop.check_quantity(e):
+                return
+        current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:(current_parameter.current_cart_page-1)*6+6] = update_quantity
+    else:
+        for e in update_quantity:
+            if not shop.check_quantity(e):
+                return
+        if cart_item6_entry["state"] == DISABLED:
+            del update_quantity[5]
+        if cart_item5_entry["state"] == DISABLED:
+            del update_quantity[4]
+        if cart_item4_entry["state"] == DISABLED:
+            del update_quantity[3]
+        if cart_item3_entry["state"] == DISABLED:
+            del update_quantity[2]
+        if cart_item2_entry["state"] == DISABLED:
+            del update_quantity[1]
+        if cart_item1_entry["state"] == DISABLED:
+            del update_quantity[0]
+        current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:] = update_quantity
+    current_user.shopping_cart = []
+    for e,f in zip(current_parameter.shopping_quantity_list, current_parameter.shopping_did_list):
+        for i in range(int(e)):
+            current_user.shopping_cart.append(f)
+    total_price = 0
+    for e,f in zip(current_parameter.shopping_quantity_list, current_parameter.shopping_price_list):
+        total_price += int(e)*int(f)
+    current_user.total = total_price
+    print(current_user.shopping_cart)
+    shopping_cart_buttom_action()
+            
 def add_car_buttom_action(i):
     reset_gui()
     shopping_image = dish_image_list[i]

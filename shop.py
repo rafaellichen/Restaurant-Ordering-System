@@ -8,7 +8,7 @@ def check_quantity(input):
         messagebox.showinfo("", "Please enter valid integer")
         return False
     if input.isdigit():
-        if int(input) >0:
+        if int(input) >=0:
             return True
         else:
             messagebox.showinfo("", "Please enter valid integer")
