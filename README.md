@@ -2,9 +2,9 @@
 
 # Software Requirements:
 - Restaurant:
-  * [ ] At least 2 chefs who decide the menus
+  * [x] At least 2 chefs who decide the menus
   * [x] Same dish can appear on multiple menu for customers to choose from
-  * [ ] At least 2 delivery person
+  * [x] At least 2 delivery person
   * [ ] Delivery food with best route
   * [x] Manager can process customer registrations
   * [x] Manager can handle customer compliments and complaints

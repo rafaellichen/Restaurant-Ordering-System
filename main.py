@@ -149,8 +149,6 @@ def window_center():
 def signin_confirm_button_action():
     signin_confirm_result = signin.validate(signin_username_entry.get(),
                                             signin_password_entry.get())
-    # write function to change the software interface based on the type of user
-    # replace print command
     if signin_confirm_result == 10:
         signin_username_entry.delete(0,END)
         signin_password_entry.delete(0,END)
@@ -162,16 +160,33 @@ def signin_confirm_button_action():
         elif signin_confirm_result[0] == 1 or signin_confirm_result[0] == 2:
             current_user.uid = signin_confirm_result[1]
             current_user.user_level = signin_confirm_result[0]
+            current_user.shopping_cart = shop.get_cart(current_user.uid)
             start_interface()
         elif signin_confirm_result[0] == 3:
             current_user.user_level = 3
             delivery_interface()
         elif signin_confirm_result[0] == 4:
             current_user.user_level = 4
-            start_interface()
+            chef_interface()
         elif signin_confirm_result[0] == 5:
             current_user.user_level = 5
             manager_interface()
+
+def chef_interface():
+    reset_gui()
+    available_dish_list.grid(row=2, column=0)
+    signout_button.grid(row=0, column=2)
+    current_dish_list.grid(row=2, column=2)
+    available_dish_label.grid(row=1, column=0)
+    current_dish_label.grid(row=1, column=2)
+    chef_frame.grid(row=2, column=1)
+    window_center()
+
+def add_dish():
+    pass
+
+def remove_dish():
+    pass    
 
 def signin_forget_button_action():
     reset_gui()
@@ -320,34 +335,33 @@ def shopping_cart_buttom_action():
     set_cart_data()
     cart_page_change()
     display_cart()
-    label_shoppingcart_sumnarry.grid(row=0,column=0)
-    label_shoppingcart_item.grid(row=1,column=0)
-    label_shoppingcart_price.grid(row=1,column=1)
-    label_shoppingcart_quantity.grid(row=1,column=2)
-    cart_label_frame.grid(row=9, column=2)
+    label_shoppingcart_item.grid(row=0,column=0)
+    label_shoppingcart_price.grid(row=0,column=1)
+    label_shoppingcart_quantity.grid(row=0,column=2)
+    cart_label_frame.grid(row=8, column=2)
     shoppingcart_checkout_total.config(text=str(current_user.total))
-    cart_button_frame.grid(row=11,column=2)
-    signin_back_button.grid(row=11, column=0)
-    cart_next.grid(row=10, column=2)
-    cart_previous.grid(row=10, column=0)
-    item_name_frame1.grid(row=3,column=0)
-    item_name_frame2.grid(row=4,column=0)
-    item_name_frame3.grid(row=5,column=0)
-    item_name_frame4.grid(row=6,column=0)
-    item_name_frame5.grid(row=7,column=0)
-    item_name_frame6.grid(row=8,column=0)
-    cart_item_price1.grid(row=3,column=1)
-    cart_item_price2.grid(row=4,column=1)
-    cart_item_price3.grid(row=5,column=1)
-    cart_item_price4.grid(row=6,column=1)
-    cart_item_price5.grid(row=7,column=1)
-    cart_item_price6.grid(row=8,column=1)
-    cart_item1_entry.grid(row=3,column=2)
-    cart_item2_entry.grid(row=4,column=2)
-    cart_item3_entry.grid(row=5,column=2)
-    cart_item4_entry.grid(row=6,column=2)
-    cart_item5_entry.grid(row=7,column=2)
-    cart_item6_entry.grid(row=8,column=2)
+    cart_button_frame.grid(row=10,column=2)
+    signin_back_button.grid(row=10, column=0)
+    cart_next.grid(row=9, column=2)
+    cart_previous.grid(row=9, column=0)
+    item_name_frame1.grid(row=2,column=0)
+    item_name_frame2.grid(row=3,column=0)
+    item_name_frame3.grid(row=4,column=0)
+    item_name_frame4.grid(row=5,column=0)
+    item_name_frame5.grid(row=6,column=0)
+    item_name_frame6.grid(row=7,column=0)
+    cart_item_price1.grid(row=2,column=1)
+    cart_item_price2.grid(row=3,column=1)
+    cart_item_price3.grid(row=4,column=1)
+    cart_item_price4.grid(row=5,column=1)
+    cart_item_price5.grid(row=6,column=1)
+    cart_item_price6.grid(row=7,column=1)
+    cart_item1_entry.grid(row=2,column=2)
+    cart_item2_entry.grid(row=3,column=2)
+    cart_item3_entry.grid(row=4,column=2)
+    cart_item4_entry.grid(row=5,column=2)
+    cart_item5_entry.grid(row=6,column=2)
+    cart_item6_entry.grid(row=7,column=2)
     window_center()
 
 def update_cart():
@@ -382,10 +396,10 @@ def update_cart():
     for e,f in zip(current_parameter.shopping_quantity_list, current_parameter.shopping_price_list):
         total_price += int(e)*int(f)
     current_user.total = total_price
-    print(current_user.shopping_cart)
+    shop.write_cart(current_user.uid, current_user.shopping_cart)
     shopping_cart_buttom_action()
             
-def add_car_buttom_action(i):
+def add_cart_buttom_action(i):
     reset_gui()
     shopping_image = dish_image_list[i]
     shopping_image.grid(row=0,column=0)
@@ -407,6 +421,7 @@ def shopping_enter_button_action():
             current_user.total += int(shopping_price[-1])
         messagebox.showinfo("", "Added to cart")
     label_quantity_entry.delete(0,END)
+    shop.write_cart(current_user.uid, current_user.shopping_cart)
 
 def page_change():
     if current_parameter.menu_current_page == 1:
@@ -820,6 +835,17 @@ def employee_salary_adjust(i):
     chef_employee_list.selection_clear(0, END)
     deliver_employee_list.selection_clear(0, END)
 
+#chef interface
+available_dish_list = Listbox(program)
+current_dish_list = Listbox(program)
+available_dish_label = Label(program, text="Available dish")
+current_dish_label = Label(program, text="Current Dish")
+chef_frame = Frame(program)
+dish_add = Button(chef_frame, text="Add ->", command=add_dish)
+dish_remove = Button(chef_frame, text="<- Remove", command=remove_dish)
+dish_add.pack(side="top")
+dish_remove.pack(side="top")
+
 #manager interface
 management_back = Button(text="Back", command=manager_interface)
 deliver_employee_list_label = Label(program, text="Deliver")
@@ -1205,7 +1231,7 @@ delivery_order_listName = Label(program, text="Order list")
 signout_button = Button(text="Sign Out", command=signout_button_action)
 order_track_button = Button(text="Track", command=delivery_track_interface)
 
-#delivery_track_interface
+#delivery track interface
 back_botton = Button(text="back", command=delivery_interface)
 item_list = Listbox(program)
 item_list_label = Label(text="Item purchased")
@@ -1224,32 +1250,32 @@ etc_photo_small = PhotoImage(file="images/etc.gif").subsample(2,2)
 dish_image1 = Label(image=None)
 dish_name1 = Label(program, text="Name")
 dish_price1 = Label(program, text="Price")
-dish_buy1 = Button(text="Add to cart", command=lambda: add_car_buttom_action(0))
+dish_buy1 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(0))
 dish_did1=""
 dish_image2 = Label(image=None)
 dish_name2 = Label(program, text="Name")
 dish_price2 = Label(program, text="Price")
-dish_buy2 = Button(text="Add to cart", command=lambda: add_car_buttom_action(1))
+dish_buy2 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(1))
 dish_did2=""
 dish_image3 = Label(image=None)
 dish_name3 = Label(program, text="Name")
 dish_price3 = Label(program, text="Price")
-dish_buy3 = Button(text="Add to cart", command=lambda: add_car_buttom_action(2))
+dish_buy3 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(2))
 dish_did3=""
 dish_image4 = Label(image=None)
 dish_name4 = Label(program, text="Name")
 dish_price4 = Label(program, text="Price")
-dish_buy4 = Button(text="Add to cart", command=lambda: add_car_buttom_action(3))
+dish_buy4 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(3))
 dish_did4=""
 dish_image5 = Label(image=None)
 dish_name5 = Label(program, text="Name")
 dish_price5 = Label(program, text="Price")
-dish_buy5 = Button(text="Add to cart", command=lambda: add_car_buttom_action(4))
+dish_buy5 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(4))
 dish_did5=""
 dish_image6 = Label(image=None)
 dish_name6 = Label(program, text="Name")
 dish_price6 = Label(program, text="Price")
-dish_buy6 = Button(text="Add to cart", command=lambda: add_car_buttom_action(5))
+dish_buy6 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(5))
 dish_did6=""
 img1=""
 img2=""
