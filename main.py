@@ -1,10 +1,5 @@
 from tkinter import *
 from tkinter import messagebox
-import time
-import threading
-import queue
-import sys
-from os import system
 
 import signin
 import bar
@@ -24,7 +19,7 @@ program.config(menu=menubar)
 #variables
 class user:
     def __init__(self):
-        self.user_level = 1
+        self.user_level = 0
         self.shopping_cart = []
         self.current_menu = []
         self.top_menu = []
@@ -33,7 +28,7 @@ class user:
 
 class parameter:
     def __init__(self):
-        self.menu_max_page = 0
+        self.menu_max_page = 1
         self.menu_current_page = 1
         self.chef_list = []
         self.menu_list = []
@@ -43,6 +38,13 @@ class parameter:
         self.current_chef_uid = -1
         self.current_chef_name = "All"
         self.employee_type = 0
+        self.current_cart_page = 1
+        self.max_cart_page = 1
+        self.shopping_did_list = []
+        self.shopping_quantity_list = []
+        self.shopping_name_list = []
+        self.shopping_price_list = []
+        self.shopping_image_list = []
 
 global current_parameter
 global current_user
@@ -94,8 +96,6 @@ def bar_change_menu(uid,name):
         current_parameter.image_list = bar.get_image_list(uid)
         current_parameter.name_list = bar.get_name_list(uid)
         current_parameter.price_list = bar.get_price_list(uid)
-        #print(current_parameter.menu_current_page)
-        #print(current_parameter.menu_max_page)
     if (len(current_parameter.menu_list)-1) % 6 == 0:
         current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6)
     else:
@@ -131,6 +131,7 @@ def reset_gui():
     register_password_entry.delete(0,END)
     register_username_entry.delete(0,END)
     register_email_entry.delete(0,END)
+    label_quantity_entry.delete(0,END)
     for widget in program.winfo_children():
         widget.grid_remove()
 
@@ -220,22 +221,173 @@ def become_member_button_action():
         register_username_entry.delete(0,END)
         register_email_entry.delete(0,END)
 
+def display_cart():
+    i=0
+    while i<6:
+        cart_did_list[i]=-1
+        i+=1
+    if current_parameter.current_cart_page != current_parameter.max_cart_page:
+        for i in range(current_parameter.current_cart_page*6-6,current_parameter.current_cart_page*6):
+            cart_did_list[i-(current_parameter.current_cart_page-1)*6] = current_parameter.shopping_did_list[i]
+            shopping_name_label_list[i-(current_parameter.current_cart_page-1)*6].config(text=current_parameter.shopping_name_list[i])
+            cart_item_price_list[i-(current_parameter.current_cart_page-1)*6].config(text=current_parameter.shopping_price_list[i])
+            cart_image_list[i-(current_parameter.current_cart_page-1)*6] = PhotoImage(file=current_parameter.shopping_image_list[i]).subsample(2,2)
+            cart_item_image_list[i-(current_parameter.current_cart_page-1)*6].config(image=cart_image_list[i-(current_parameter.current_cart_page-1)*6])
+            cart_item_entry_list[i-(current_parameter.current_cart_page-1)*6].config(state=NORMAL)
+            cart_item_entry_list[i-(current_parameter.current_cart_page-1)*6].insert(0,current_parameter.shopping_quantity_list[i])
+    else:
+        i=0
+        for e in current_parameter.shopping_did_list[(current_parameter.current_cart_page-1)*6:]:
+            cart_did_list[i]=e
+            i+=1
+        i=0
+        for e in current_parameter.shopping_image_list[(current_parameter.current_cart_page-1)*6:]:
+            cart_image_list[i] = PhotoImage(file=e).subsample(2,2)
+            cart_item_image_list[i].config(image=cart_image_list[i])
+            i+=1
+        i=0
+        for e in current_parameter.shopping_name_list[(current_parameter.current_cart_page-1)*6:]:
+            shopping_name_label_list[i].config(text=e)
+            i+=1
+        i=0
+        for e in current_parameter.shopping_price_list[(current_parameter.current_cart_page-1)*6:]:
+            cart_item_price_list[i].config(text=e)
+            i+=1
+        i=0
+        for e in current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:]:
+            cart_item_entry_list[i].config(state=NORMAL)
+            cart_item_entry_list[i].insert(0,e)
+            i+=1
+
+def cart_page_change():
+    if current_parameter.current_cart_page == 1:
+        cart_previous.config(state=DISABLED)
+    else:
+        cart_previous.config(state=NORMAL)
+    if current_parameter.current_cart_page == current_parameter.max_cart_page:
+        cart_next.config(state=DISABLED)
+    else:
+        cart_next.config(state=NORMAL)
+    cart_item_price1.config(text="--")
+    cart_item_price2.config(text="--")
+    cart_item_price3.config(text="--")
+    cart_item_price4.config(text="--")
+    cart_item_price5.config(text="--")
+    cart_item_price6.config(text="--")
+    shopping_name_label1.config(text="--")
+    shopping_name_label2.config(text="--")
+    shopping_name_label3.config(text="--")
+    shopping_name_label4.config(text="--")
+    shopping_name_label5.config(text="--")
+    shopping_name_label6.config(text="--")
+    for e in cart_item_entry_list:
+        e.delete(0,END)
+    cart_item1_entry.config(state=DISABLED)
+    cart_item2_entry.config(state=DISABLED)
+    cart_item3_entry.config(state=DISABLED)
+    cart_item4_entry.config(state=DISABLED)
+    cart_item5_entry.config(state=DISABLED)
+    cart_item6_entry.config(state=DISABLED)
+    cart_item1_image.config(image=etc_photo_small)
+    cart_item2_image.config(image=etc_photo_small)
+    cart_item3_image.config(image=etc_photo_small)
+    cart_item4_image.config(image=etc_photo_small)
+    cart_item5_image.config(image=etc_photo_small)
+    cart_item6_image.config(image=etc_photo_small)
+
+def set_cart_data():
+    did_quantity = shop.get_list(current_user.shopping_cart)
+    current_parameter.shopping_did_list = []
+    current_parameter.shopping_quantity_list = []
+    current_parameter.shopping_name_list = []
+    current_parameter.shopping_price_list = []
+    current_parameter.shopping_image_list = []
+    for e in did_quantity:
+        current_parameter.shopping_did_list.append(e[0])
+        current_parameter.shopping_quantity_list.append(e[1])
+    temp = shop.name_list(current_parameter.shopping_did_list)
+    current_parameter.shopping_name_list = temp[0]
+    current_parameter.shopping_price_list = temp[1]
+    current_parameter.shopping_image_list = temp[2]
+    if (len(current_parameter.shopping_did_list)) % 6 == 0 and len(current_parameter.shopping_did_list) != 0:
+        current_parameter.max_cart_page = int((len(current_parameter.shopping_did_list))/6)
+    else:
+        current_parameter.max_cart_page = int((len(current_parameter.shopping_did_list))/6 + 1)
+    current_parameter.current_cart_page = 1
+
 def shopping_cart_buttom_action():
     reset_gui()
-    shoppingcart_checkout_total= Label(program,text= current_user.total)
+    set_cart_data()
+    cart_page_change()
+    display_cart()
     label_shoppingcart_sumnarry.grid(row=0,column=0)
     label_shoppingcart_item.grid(row=1,column=0)
     label_shoppingcart_price.grid(row=1,column=1)
-    label_shoppingcart_quantity.grid(row=1,column=3)
-    shoppingcart_checkout_total_label.grid(row=2,column=2)
-    shoppingcart_checkout_total.grid(row=2,column=3)
-    shoppingcart_checkout_buttom.grid(row=3,column=3)
-    signin_back_button.grid(row=3, column=4)
+    label_shoppingcart_quantity.grid(row=1,column=2)
+    cart_label_frame.grid(row=9, column=2)
+    shoppingcart_checkout_total.config(text=str(current_user.total))
+    cart_button_frame.grid(row=11,column=2)
+    signin_back_button.grid(row=11, column=0)
+    cart_next.grid(row=10, column=2)
+    cart_previous.grid(row=10, column=0)
+    item_name_frame1.grid(row=3,column=0)
+    item_name_frame2.grid(row=4,column=0)
+    item_name_frame3.grid(row=5,column=0)
+    item_name_frame4.grid(row=6,column=0)
+    item_name_frame5.grid(row=7,column=0)
+    item_name_frame6.grid(row=8,column=0)
+    cart_item_price1.grid(row=3,column=1)
+    cart_item_price2.grid(row=4,column=1)
+    cart_item_price3.grid(row=5,column=1)
+    cart_item_price4.grid(row=6,column=1)
+    cart_item_price5.grid(row=7,column=1)
+    cart_item_price6.grid(row=8,column=1)
+    cart_item1_entry.grid(row=3,column=2)
+    cart_item2_entry.grid(row=4,column=2)
+    cart_item3_entry.grid(row=5,column=2)
+    cart_item4_entry.grid(row=6,column=2)
+    cart_item5_entry.grid(row=7,column=2)
+    cart_item6_entry.grid(row=8,column=2)
     window_center()
 
+def update_cart():
+    update_quantity = [cart_item1_entry.get(), cart_item2_entry.get(), cart_item3_entry.get(), cart_item4_entry.get(), cart_item5_entry.get(), cart_item6_entry.get()]
+    if current_parameter.current_cart_page != current_parameter.max_cart_page:
+        for e in update_quantity:
+            if not shop.check_quantity(e):
+                return
+        current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:(current_parameter.current_cart_page-1)*6+6] = update_quantity
+    else:
+        if cart_item6_entry["state"] == DISABLED:
+            del update_quantity[5]
+        if cart_item5_entry["state"] == DISABLED:
+            del update_quantity[4]
+        if cart_item4_entry["state"] == DISABLED:
+            del update_quantity[3]
+        if cart_item3_entry["state"] == DISABLED:
+            del update_quantity[2]
+        if cart_item2_entry["state"] == DISABLED:
+            del update_quantity[1]
+        if cart_item1_entry["state"] == DISABLED:
+            del update_quantity[0]
+        for e in update_quantity:
+            if not shop.check_quantity(e):
+                return
+        current_parameter.shopping_quantity_list[(current_parameter.current_cart_page-1)*6:] = update_quantity
+    current_user.shopping_cart = []
+    for e,f in zip(current_parameter.shopping_quantity_list, current_parameter.shopping_did_list):
+        for i in range(int(e)):
+            current_user.shopping_cart.append(f)
+    total_price = 0
+    for e,f in zip(current_parameter.shopping_quantity_list, current_parameter.shopping_price_list):
+        total_price += int(e)*int(f)
+    current_user.total = total_price
+    print(current_user.shopping_cart)
+    shopping_cart_buttom_action()
+            
 def add_car_buttom_action(i):
     reset_gui()
-    shopping_image=dish_image_list[i]
+    shopping_image = dish_image_list[i]
     shopping_image.grid(row=0,column=0)
     shopping_name= dish_name_list[i]
     shopping_name.grid(row=1,column=0)
@@ -245,15 +397,15 @@ def add_car_buttom_action(i):
     label_quantity_entry.grid(row=4,column=0)
     label_quantity.grid(row=3, column=0)
     signin_back_button.grid(row=6, column=0)
-    shpping_enter_button.grid(row=5,column=0)
+    shopping_enter_button.grid(row=5,column=0)
     window_center()
 
-def shpping_enter_button_action():
+def shopping_enter_button_action():
     if shop.check_quantity(label_quantity_entry.get()):
         for i in range(int(label_quantity_entry.get())):
             current_user.shopping_cart.append(shopping_did[-1])
             current_user.total += int(shopping_price[-1])
-    messagebox.showinfo("", "The item has been add on your shopping cart")
+        messagebox.showinfo("", "Added to cart")
     label_quantity_entry.delete(0,END)
 
 def page_change():
@@ -322,7 +474,17 @@ def display_menu():
             else:
                 dish_buy_list[i].config(state=NORMAL)
             i+=1
-    
+
+def cart_next_page():
+    current_parameter.current_cart_page += 1
+    cart_page_change()
+    display_cart()
+
+def cart_previous_page():
+    current_parameter.current_cart_page -= 1
+    cart_page_change()
+    display_cart()
+
 def menu_next_page():
     current_parameter.menu_current_page += 1
     page_change()
@@ -732,25 +894,91 @@ register_email_label = Label(program, text="Email")
 register_enter_button = Button(text="Become Member", command=become_member_button_action)
 register_back_button = Button(text="Back", command=signin_interface)
 
-#shpping cart interface
+#shopping cart interface
+cart_next = Button(program, text="Next", command=cart_next_page)
+cart_previous = Button(program, text="Previous", command=cart_previous_page)
 label_quantity_entry = Entry(program)
-label_quantity = Label(program, text="Please enter item quantities")
-shpping_enter_button = Button(text="Enter", command=shpping_enter_button_action)
-purchased_item_quantity_label=Label(program,text = "You have been add item on your shpping car")
+label_quantity = Label(program, text="Quantity")
+shopping_enter_button = Button(text="Enter", command=shopping_enter_button_action)
 shopping_image = Label(image=None)
 shopping_did = []
 shopping_name=[]
 shopping_price=[]
 shopping_quantity=[]
-shoppingcart_checkout_buttom=Button(text= "Check out",command= None)
-shoppingcart_checkout_total_label = Label(program,text="Total:")
+cart_button_frame = Frame(program)
+shoppingcart_checkout_button=Button(cart_button_frame, text="Check out",command=None)
+cart_update = Button(cart_button_frame, text="Update", command=update_cart)
+cart_update.pack(side="left")
+shoppingcart_checkout_button.pack(side="left")
+cart_label_frame = Frame(program)
+shoppingcart_checkout_total= Label(cart_label_frame,text=0)
+shoppingcart_checkout_total_label = Label(cart_label_frame, text="Total:")
+shoppingcart_checkout_total_label.pack(side="left")
+shoppingcart_checkout_total.pack(side="left")
 label_shoppingcart_item =Label(program,text="Item")
-label_shoppingcart_price =Label(program,text="Unite Price")
+label_shoppingcart_price =Label(program,text="Unit Price")
 label_shoppingcart_quantity =Label(program,text="Quantity")
-label_shoppingcart_sumnarry =Label(program,text="Your order summury")
-
-
-
+label_shoppingcart_sumnarry =Label(program,text="Your order summury:")
+item_name_frame1 = Frame(program)
+item_name_frame2 = Frame(program)
+item_name_frame3 = Frame(program)
+item_name_frame4 = Frame(program)
+item_name_frame5 = Frame(program)
+item_name_frame6 = Frame(program)
+cart_item1_image = Label(item_name_frame1, image=None)
+cart_item2_image = Label(item_name_frame2, image=None)
+cart_item3_image = Label(item_name_frame3, image=None)
+cart_item4_image = Label(item_name_frame4, image=None)
+cart_item5_image = Label(item_name_frame5, image=None)
+cart_item6_image = Label(item_name_frame6, image=None)
+shopping_name_label1 = Label(item_name_frame1, text="Name")
+shopping_name_label2 = Label(item_name_frame2, text="Name")
+shopping_name_label3 = Label(item_name_frame3, text="Name")
+shopping_name_label4 = Label(item_name_frame4, text="Name")
+shopping_name_label5 = Label(item_name_frame5, text="Name")
+shopping_name_label6 = Label(item_name_frame6, text="Name")
+cart_item1_image.pack(side="left")
+cart_item2_image.pack(side="left")
+cart_item3_image.pack(side="left")
+cart_item4_image.pack(side="left")
+cart_item5_image.pack(side="left")
+cart_item6_image.pack(side="left")
+shopping_name_label1.pack(side="left")
+shopping_name_label2.pack(side="left")
+shopping_name_label3.pack(side="left")
+shopping_name_label4.pack(side="left")
+shopping_name_label5.pack(side="left")
+shopping_name_label6.pack(side="left")
+cart_item_price1 = Label(program, text="Price")
+cart_item_price2 = Label(program, text="Price")
+cart_item_price3 = Label(program, text="Price")
+cart_item_price4 = Label(program, text="Price")
+cart_item_price5 = Label(program, text="Price")
+cart_item_price6 = Label(program, text="Price")
+cart_item1_entry = Entry(program)
+cart_item2_entry = Entry(program)
+cart_item3_entry = Entry(program)
+cart_item4_entry = Entry(program)
+cart_item5_entry = Entry(program)
+cart_item6_entry = Entry(program)
+cart_item_price_list = [cart_item_price1, cart_item_price2, cart_item_price3, cart_item_price4, cart_item_price5, cart_item_price6]
+cart_item_image_list = [cart_item1_image, cart_item2_image, cart_item3_image, cart_item4_image, cart_item5_image, cart_item6_image]
+shopping_name_label_list = [shopping_name_label1, shopping_name_label2, shopping_name_label3, shopping_name_label4, shopping_name_label5, shopping_name_label6]
+cart_item_entry_list = [cart_item1_entry, cart_item2_entry, cart_item3_entry, cart_item4_entry, cart_item5_entry, cart_item6_entry]
+cart_did_list1 = ""
+cart_did_list2 = ""
+cart_did_list3 = ""
+cart_did_list4 = ""
+cart_did_list5 = ""
+cart_did_list6 = ""
+cart_image1 = Label(image=None)
+cart_image2 = Label(image=None)
+cart_image3 = Label(image=None)
+cart_image4 = Label(image=None)
+cart_image5 = Label(image=None)
+cart_image6 = Label(image=None)
+cart_image_list = [cart_image1, cart_image2, cart_image3, cart_image4, cart_image5, cart_image6]
+cart_did_list = [cart_did_list1, cart_did_list2, cart_did_list3, cart_did_list4, cart_did_list5, cart_did_list6]
 
 #delivery interface
 delivery_order_list = Listbox(program)
@@ -992,6 +1220,7 @@ signin_button = Button(text="Sign In", command=signin_interface)
 next_page_button = Button(text="Next", command=menu_next_page)
 previous_page_button = Button(text="Previous", command=menu_previous_page)
 etc_photo = PhotoImage(file="images/etc.gif")
+etc_photo_small = PhotoImage(file="images/etc.gif").subsample(2,2)
 dish_image1 = Label(image=None)
 dish_name1 = Label(program, text="Name")
 dish_price1 = Label(program, text="Price")
