@@ -371,6 +371,7 @@ def shopping_cart_button_action():
     cart_item4_entry.grid(row=5,column=2)
     cart_item5_entry.grid(row=6,column=2)
     cart_item6_entry.grid(row=7,column=2)
+    update_cart()
     window_center()
 
 def update_total():
@@ -413,7 +414,10 @@ def update_cart():
         total_price += int(e)*int(f)
     current_user.total = total_price
     shop.write_cart(current_user.uid, current_user.shopping_cart)
-    shopping_cart_button_action()
+    set_cart_data()
+    cart_page_change()
+    display_cart()
+    shoppingcart_checkout_total.config(text=str(current_user.total))
             
 def add_cart_buttom_action(i):
     reset_gui()
