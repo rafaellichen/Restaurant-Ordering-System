@@ -281,7 +281,7 @@ def shoppingcart_checkout_button_action():
         shop.write_order(current_user.uid,current_user.shopping_cart)
         current_user.shopping_cart = []
         current_user.total = 0
-        shopping_cart_buttom_action()
+        shopping_cart_button_action()
 
 def cart_page_change():
     if current_parameter.current_cart_page == 1:
@@ -339,7 +339,7 @@ def set_cart_data():
         current_parameter.max_cart_page = int((len(current_parameter.shopping_did_list))/6 + 1)
     current_parameter.current_cart_page = 1
 
-def shopping_cart_buttom_action():
+def shopping_cart_button_action():
     reset_gui()
     set_cart_data()
     cart_page_change()
@@ -413,7 +413,7 @@ def update_cart():
         total_price += int(e)*int(f)
     current_user.total = total_price
     shop.write_cart(current_user.uid, current_user.shopping_cart)
-    shopping_cart_buttom_action()
+    shopping_cart_button_action()
             
 def add_cart_buttom_action(i):
     reset_gui()
@@ -1256,7 +1256,7 @@ item_list_label = Label(text="Item purchased")
 chef_name = Label(program, text="All")
 info_button = Button(text="Profile", command=None)
 refresh_button = Button(text="Refresh", command=refresh_menu)
-shopping_cart_items = Button(text="Your Shopping Cart", command=shopping_cart_buttom_action)
+shopping_cart_items = Button(text="Your Shopping Cart", command=shopping_cart_button_action)
 signout_button = Button(text="Sign Out", command=signout_button_action)
 signin_button = Button(text="Sign In", command=signin_interface)
 next_page_button = Button(text="Next", command=menu_next_page)
