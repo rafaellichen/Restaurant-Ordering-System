@@ -161,6 +161,7 @@ def signin_confirm_button_action():
             current_user.uid = signin_confirm_result[1]
             current_user.user_level = signin_confirm_result[0]
             current_user.shopping_cart = shop.get_cart(current_user.uid)
+            update_total()
             start_interface()
         elif signin_confirm_result[0] == 3:
             current_user.user_level = 3
@@ -274,6 +275,14 @@ def display_cart():
             cart_item_entry_list[i].insert(0,e)
             i+=1
 
+def shoppingcart_checkout_button_action():
+    result = shop.checkout_balance(current_user.user_level, current_user.total, current_user.uid)
+    if current_user.user_level != 0 and result:
+        shop.write_order(current_user.uid,current_user.shopping_cart)
+        current_user.shopping_cart = []
+        current_user.total = 0
+        shopping_cart_buttom_action()
+
 def cart_page_change():
     if current_parameter.current_cart_page == 1:
         cart_previous.config(state=DISABLED)
@@ -363,6 +372,13 @@ def shopping_cart_buttom_action():
     cart_item5_entry.grid(row=6,column=2)
     cart_item6_entry.grid(row=7,column=2)
     window_center()
+
+def update_total():
+    set_cart_data()
+    total_price = 0
+    for e,f in zip(current_parameter.shopping_quantity_list, current_parameter.shopping_price_list):
+        total_price += int(e)*int(f)
+    current_user.total = total_price
 
 def update_cart():
     update_quantity = [cart_item1_entry.get(), cart_item2_entry.get(), cart_item3_entry.get(), cart_item4_entry.get(), cart_item5_entry.get(), cart_item6_entry.get()]
@@ -932,7 +948,7 @@ shopping_name=[]
 shopping_price=[]
 shopping_quantity=[]
 cart_button_frame = Frame(program)
-shoppingcart_checkout_button=Button(cart_button_frame, text="Check out",command=None)
+shoppingcart_checkout_button=Button(cart_button_frame, text="Check out",command=shoppingcart_checkout_button_action)
 cart_update = Button(cart_button_frame, text="Update", command=update_cart)
 cart_update.pack(side="left")
 shoppingcart_checkout_button.pack(side="left")
@@ -1283,7 +1299,6 @@ img3=""
 img4=""
 img5=""
 img6=""
-
 dish_image_list = [dish_image1, dish_image2, dish_image3, dish_image4, dish_image5, dish_image6]
 dish_buy_list = [dish_buy1, dish_buy2, dish_buy3, dish_buy4, dish_buy5, dish_buy6]
 dish_did_list = [dish_did1, dish_did2, dish_did3, dish_did4, dish_did5, dish_did6]
