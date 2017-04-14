@@ -45,6 +45,8 @@ class parameter:
         self.shopping_name_list = []
         self.shopping_price_list = []
         self.shopping_image_list = []
+        self.available_dish = []
+        self.added_dish = []
 
 global current_parameter
 global current_user
@@ -125,6 +127,7 @@ def set_parameter():
     current_parameter.menu_current_page = 1
 
 def reset_gui():
+    profile_deposit.delete(0,END)
     signin_username_entry.delete(0,END)
     signin_password_entry.delete(0,END)
     signin_forget_entry.delete(0,END)
@@ -168,6 +171,7 @@ def signin_confirm_button_action():
             delivery_interface()
         elif signin_confirm_result[0] == 4:
             current_user.user_level = 4
+            current_user.uid = signin_confirm_result[1]
             chef_interface()
         elif signin_confirm_result[0] == 5:
             current_user.user_level = 5
@@ -176,18 +180,54 @@ def signin_confirm_button_action():
 def chef_interface():
     reset_gui()
     available_dish_list.grid(row=2, column=0)
+    available_dish_list.delete(0,END)
     signout_button.grid(row=0, column=2)
     current_dish_list.grid(row=2, column=2)
+    current_dish_list.delete(0,END)
     available_dish_label.grid(row=1, column=0)
     current_dish_label.grid(row=1, column=2)
     chef_frame.grid(row=2, column=1)
+    save_menu_button.grid(row=3, column=2)
+    element.get_edit_menu(current_user.uid)
+    temp_list = element.get_edit_menu(current_user.uid)
+    current_parameter.available_dish = temp_list[0]
+    current_parameter.added_dish = temp_list[1]
+    for e in current_parameter.available_dish:
+        available_dish_list.insert(END, e)
+    for e in current_parameter.added_dish:
+         if e != -1:
+            current_dish_list.insert(END, e)
     window_center()
 
+def update_edit_menu():
+    available_dish_list.delete(0,END)
+    current_dish_list.delete(0,END)
+    for e in current_parameter.available_dish:
+        available_dish_list.insert(END, e)
+    for e in current_parameter.added_dish:
+        if e != -1:
+            current_dish_list.insert(END, e)
+
+def save_menu_action():
+    element.save_edit_menu(current_parameter.added_dish, current_user.uid)
+
 def add_dish():
-    pass
+    try:
+        item = available_dish_list.get(available_dish_list.curselection())
+        current_parameter.available_dish.remove(int(item))
+        current_parameter.added_dish.append(int(item))
+    except TclError:
+        messagebox.showinfo("", "Select an available dish to add")
+    update_edit_menu()
 
 def remove_dish():
-    pass    
+    try:
+        item = current_dish_list.get(current_dish_list.curselection())
+        current_parameter.added_dish.remove(int(item))
+        current_parameter.available_dish.append(int(item))
+    except TclError:
+        messagebox.showinfo("", "Select a current dish to remove")
+    update_edit_menu()
 
 def signin_forget_button_action():
     reset_gui()
@@ -282,6 +322,7 @@ def shoppingcart_checkout_button_action():
         current_user.shopping_cart = []
         current_user.total = 0
         shopping_cart_button_action()
+    manage.auto_vip_block()
 
 def cart_page_change():
     if current_parameter.current_cart_page == 1:
@@ -855,12 +896,53 @@ def employee_salary_adjust(i):
     chef_employee_list.selection_clear(0, END)
     deliver_employee_list.selection_clear(0, END)
 
+def profile_button_action():
+    reset_gui()
+    profile_username_label.grid(row=0, column=0)
+    profile_username.grid(row=0, column=1)
+    profile_uid_label.grid(row=0, column=2)
+    profile_uid.grid(row=0, column=3)
+    profile_balance_label.grid(row=0, column=4)
+    profile_balance.grid(row=0, column=5)
+    profile_email_label.grid(row=0, column=6)
+    profile_email.grid(row=0, column=7)
+    profile_back_button.grid(row=1, column=7)
+    profile_deposit_frame.grid(row=1,column=0, columnspan=7)
+    profile = element.profile(current_user.uid)
+    profile_username.config(text=profile[0])
+    profile_uid.config(text=current_user.uid)
+    profile_balance.config(text=profile[1])
+    profile_email.config(text=profile[2])
+    window_center()
+
+def make_deposit():
+    element.deposit_money(profile_deposit.get(),current_user.uid)
+    profile_deposit.delete(0,END)
+    profile_button_action()
+
+#user profile
+profile_username_label = Label(program, text="Username")
+profile_username = Button(text="", command=None)
+profile_uid_label = Label(program, text="ID")
+profile_uid = Button(text="", command=None)
+profile_balance_label = Label(program, text="Balance")
+profile_balance = Button(text="", command=None)
+profile_email_label = Label(program, text="Email")
+profile_email = Button(text="", command=None)
+profile_back_button = Button(text="Back", command=start_interface)
+profile_deposit_frame = Frame(program)
+profile_deposit = Entry(profile_deposit_frame)
+profile_deposit_button = Button(profile_deposit_frame, text="Deposit", command=make_deposit)
+profile_deposit.pack(side="left")
+profile_deposit_button.pack(side="left")
+
 #chef interface
 available_dish_list = Listbox(program)
 current_dish_list = Listbox(program)
 available_dish_label = Label(program, text="Available dish")
-current_dish_label = Label(program, text="Current Dish")
+current_dish_label = Label(program, text="Current dish")
 chef_frame = Frame(program)
+save_menu_button = Button(text="Save", command=save_menu_action)
 dish_add = Button(chef_frame, text="Add ->", command=add_dish)
 dish_remove = Button(chef_frame, text="<- Remove", command=remove_dish)
 dish_add.pack(side="top")
@@ -1258,7 +1340,7 @@ item_list_label = Label(text="Item purchased")
 
 #start interface
 chef_name = Label(program, text="All")
-info_button = Button(text="Profile", command=None)
+info_button = Button(text="Profile", command=profile_button_action)
 refresh_button = Button(text="Refresh", command=refresh_menu)
 shopping_cart_items = Button(text="Your Shopping Cart", command=shopping_cart_button_action)
 signout_button = Button(text="Sign Out", command=signout_button_action)
@@ -1313,4 +1395,5 @@ dish_img_list = [img1, img2, img3, img4, img5, img6]
 start_interface()
 window_center()
 manage.auto_demote_promote_employee()
+manage.auto_vip_block()
 program.mainloop()

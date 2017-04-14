@@ -3,7 +3,7 @@ import numpy
 
 def chef_in_list():
     chefs = pandas.read_csv("data/users.csv")
-    chefs = chefs.loc[chefs["level"]==4]
+    chefs = chefs.loc[(chefs["level"]==4) & (chefs["approved"]==1)]
     return (chefs["name"].values, chefs["uid"].values)
 
 def get_menu_list(input):

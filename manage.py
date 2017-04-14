@@ -21,6 +21,7 @@ def approve_pending_registrations(username, input):
                                                 "\nBalance: $"+str(users_balance_database[i]))
                 if result:
                     users_database.set_value(i, "approved", -1)
+                    users_database.set_value(i, "balance", 0)
                     users_database.to_csv("data/users.csv", index=False)
         i+=1
 
@@ -114,4 +115,30 @@ def auto_demote_promote_employee():
         i+=1
     salary_file.to_csv("data/salary.csv", index=False)
     users_file.to_csv("data/users.csv", index=False)
+
+def auto_vip_block():
+    user_file = pandas.read_csv("data/users.csv")
+    spent = user_file["spent"].values
+    orders = user_file["orders"].values
+    warnings = user_file["warning"].values
+    level = user_file["level"].values
+    i=0
+    for e,f in zip(warnings,level):
+        if not numpy.isnan(e) and e>=2 and f==2:
+            user_file.set_value(i, "level", 1)
+            user_file.set_value(i, "spent", 0)
+            user_file.set_value(i, "orders", 0)
+            user_file.set_value(i, "warning", 0)
+        if not numpy.isnan(e) and e>=3 and f==1:
+            user_file.set_value(i, "approved", -1)
+            user_file.set_value(i, "warning", 0)
+        i+=1
+    i=0
+    for e,f in zip(spent,orders):
+        if (not numpy.isnan(e) and e>=500) or (not numpy.isnan(f) and f>=50):
+            user_file.set_value(i, "level", 2)
+            user_file.set_value(i, "spent", 0)
+            user_file.set_value(i, "orders", 0)
+        i+=1
+    user_file.to_csv("data/users.csv", index=False)
 
