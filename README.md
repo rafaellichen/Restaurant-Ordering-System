@@ -1,6 +1,9 @@
 # Restaurant Ordering System
+## Disclaimer:
 
-# Software Requirements:
+This project is purely made for demonstration only
+
+## Software Requirements:
 - Restaurant:
   * [x] At least 2 chefs who decide the menus
   * [x] Same dish can appear on multiple menu for customers to choose from
@@ -25,5 +28,12 @@
   * [x] Top 5 most popular dishes (ordered most) are displayed on the page
   * [x] Employee who received 3 complaints/compliments will be demoted/promoted
   * [x] Employee who is demoted twice will be fired
+  * [ ] One creative feature for the system
+  * [ ] Ratings for food by customers are available to all people
+  * [ ] A map with at least 5 blocks in width and height
+  * [x] Customers who are kicked out or choose to quit will be handled by the manager
+  * [x] The order cannot be placed if balance is not enough during checkout
+  * [ ] Customers with 3 warnings are blocked
+  * [ ] VIP with 2 warnings are demoted to regular customer and cleared
 
 Etc...
