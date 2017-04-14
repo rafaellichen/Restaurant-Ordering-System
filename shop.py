@@ -63,7 +63,6 @@ def get_cart(uid):
                 temp = [cart_database[0]]
     except TypeError:
         temp = cart_database[0].split(",")
-    print(type(temp))
     return temp
 
 def checkout_balance(level, total, uid):
