@@ -49,6 +49,8 @@ def register(username_input,password_input,email_input):
     users_name_database = users_database["name"].values.tolist()
     users_approved_database = users_database["approved"].values.tolist()
     users_warning_database = users_database["warning"].values.tolist()
+    users_spent = users_database["spent"].values.tolist()
+    orders_amount = users_database["orders"].values.tolist()
     if username_input == "" or password_input == "" or email_input == "":
         return ("Please fill out all information")
     for u,e in zip(users_username_database,users_email_database):
@@ -64,6 +66,8 @@ def register(username_input,password_input,email_input):
     users_warning_database.append(0)
     users_cart_database.append(numpy.nan)
     users_name_database.append(numpy.nan)
+    users_spent.append(0)
+    orders_amount.append(0)
     users_database = pandas.DataFrame({"username": users_username_database,
                                         "password": users_password_database,
                                         "balance": users_balance_database,
@@ -73,7 +77,9 @@ def register(username_input,password_input,email_input):
                                         "cart": users_cart_database,
                                         "name": users_name_database,
                                         "approved": users_approved_database,
-                                        "warning": users_warning_database})
+                                        "warning": users_warning_database,
+                                        "spent": users_spent,
+                                        "orders": orders_amount})
     users_database = users_database[["username",
                                     "password",
                                     "balance",
@@ -83,7 +89,9 @@ def register(username_input,password_input,email_input):
                                     "cart",
                                     "name",
                                     "approved",
-                                    "warning"]]
+                                    "warning",
+                                    "spent",
+                                    "orders"]]
     users_database.to_csv("data/users.csv", index=False)
     return ("Registration successful")
 
@@ -99,6 +107,8 @@ def register_employee(t, name, username, password, email):
     users_name_database = users_database["name"].values.tolist()
     users_approved_database = users_database["approved"].values.tolist()
     users_warning_database = users_database["warning"].values.tolist()
+    users_spent = users_database["spent"].values.tolist()
+    orders_amount = users_database["orders"].values.tolist()
     if name == "" or username == "" or password == "" or email == "":
         messagebox.showinfo("", "Please fill out all information")
         return
@@ -119,6 +129,8 @@ def register_employee(t, name, username, password, email):
     users_warning_database.append(numpy.nan)
     users_cart_database.append(numpy.nan)
     users_name_database.append(name)
+    users_spent.append(numpy.nan)
+    orders_amount.append(numpy.nan)
     users_database = pandas.DataFrame({"username": users_username_database,
                                         "password": users_password_database,
                                         "balance": users_balance_database,
@@ -128,7 +140,9 @@ def register_employee(t, name, username, password, email):
                                         "cart": users_cart_database,
                                         "name": users_name_database,
                                         "approved": users_approved_database,
-                                        "warning": users_warning_database})
+                                        "warning": users_warning_database,
+                                        "spent": users_spent,
+                                        "orders": orders_amount})
     users_database = users_database[["username",
                                     "password",
                                     "balance",
@@ -138,7 +152,9 @@ def register_employee(t, name, username, password, email):
                                     "cart",
                                     "name",
                                     "approved",
-                                    "warning"]]
+                                    "warning",
+                                    "spent",
+                                    "orders"]]
     users_database.to_csv("data/users.csv", index=False)
     salary_database = pandas.read_csv("data/salary.csv")
     salary_uid = salary_database["uid"].values.tolist()

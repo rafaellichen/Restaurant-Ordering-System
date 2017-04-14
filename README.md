@@ -1,7 +1,4 @@
 # Restaurant Ordering System
-## Disclaimer:
-
-This project is purely made for demonstration only
 
 ## Software Requirements:
 - Restaurant:
@@ -15,7 +12,7 @@ This project is purely made for demonstration only
 - Customers:
   * [ ] Registered customers can browse/search
   * [ ] Registered customers can order and grade (1-5 stars) on food and delivery separately
-  * [ ] Become VIP cutomers after spending at least $500 or 50 orders
+  * [x] Become VIP cutomers after spending at least $500 or 50 orders
   * [x] VIP customers receive 10% discount
   * [ ] VIP customers' complements/complaints are weight twice as important as regular customers'
 - Surfers:
@@ -33,7 +30,7 @@ This project is purely made for demonstration only
   * [ ] A map with at least 5 blocks in width and height
   * [x] Customers who are kicked out or choose to quit will be handled by the manager
   * [x] The order cannot be placed if balance is not enough during checkout
-  * [ ] Customers with 3 warnings are blocked
-  * [ ] VIP with 2 warnings are demoted to regular customer and cleared
+  * [x] Customers with 3 warnings are blocked
+  * [x] VIP with 2 warnings are demoted to regular customer and cleared
 
 Etc...

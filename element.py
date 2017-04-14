@@ -1,6 +1,9 @@
 import pandas
 import numpy
 from collections import Counter
+from tkinter import messagebox
+
+import shop
 
 def get_balance(uid):
     users_database = pandas.read_csv("data/users.csv")
@@ -151,3 +154,68 @@ def get_deliver_employee():
     deliver_database = pandas.read_csv("data/users.csv")
     deliver_database = deliver_database.loc[(deliver_database["level"]==3) & (deliver_database["approved"] == 1)]["uid"]
     return deliver_database
+
+def profile(uid):
+    profile_database = pandas.read_csv("data/users.csv")
+    username = str(profile_database.loc[profile_database["uid"]==uid]["username"].values[0])
+    balance = str(int([profile_database.loc[profile_database["uid"]==uid]["balance"].values][0]))
+    email = str(profile_database.loc[profile_database["uid"]==uid]["email"].values[0])
+    return [username,balance,email]
+
+def deposit_money(amount,uid):
+    if shop.check_quantity(amount):
+        result = messagebox.askyesno("Confirm Deposit", "Deposit amount: "+str((amount)))
+        if result:
+            temp = pandas.read_csv("data/users.csv")
+            temp.loc[temp["uid"]==uid, "balance"] += int(amount)
+            temp.to_csv("data/users.csv", index=False)
+
+def get_edit_menu(uid):
+    menu_file = pandas.read_csv("data/menu.csv")
+    did = menu_file.loc[menu_file["uid"]==uid]["did"].values
+    dish_file = pandas.read_csv("data/dish.csv")
+    dish_list = dish_file["did"].values
+    available_list = match(dish_list,did)
+    added_list = match(did,available_list)
+    return (available_list,added_list)
+
+def match(a,b):
+    return [x for x in a if x not in b]
+
+def save_edit_menu(dish, uid):
+    current_menu = pandas.read_csv("data/menu.csv")
+    current_menu = current_menu[current_menu.uid != uid]
+    check_table = pandas.read_csv("data/dish.csv")
+    current_menu_uid_list = current_menu["uid"].values.tolist()
+    current_menu_did_list = current_menu["did"].values.tolist()
+    current_menu_time_list = current_menu["time"].values.tolist()
+    current_menu_dish_list = current_menu["dish"].values.tolist()
+    current_menu_price_list = current_menu["price"].values.tolist()
+    current_menu_path_list = current_menu["path"].values.tolist()
+    for e in dish:
+        if e != -1:
+            current_menu_uid_list.append(uid)
+            current_menu_did_list.append(e)
+            current_menu_time_list.append(int(check_table.loc[check_table["did"]==e]["time"]))
+            current_menu_dish_list.append(str(check_table.loc[check_table["did"]==e]["dish"].values[0]))
+            current_menu_price_list.append(int(check_table.loc[check_table["did"]==e]["price"]))
+            current_menu_path_list.append(str(check_table.loc[check_table["did"]==e]["path"].values[0]))
+    current_menu_uid_list.append(uid)
+    current_menu_did_list.append(-1)
+    current_menu_time_list.append(0)
+    current_menu_dish_list.append("etc")
+    current_menu_price_list.append(0)
+    current_menu_path_list.append("images/etc/gif")
+    write = pandas.DataFrame({"uid": current_menu_uid_list,
+                            "did": current_menu_did_list,
+                            "time": current_menu_time_list,
+                            "dish": current_menu_dish_list,
+                            "price": current_menu_price_list,
+                            "path": current_menu_path_list})
+    write = write[["uid",
+                    "did",
+                    "time",
+                    "dish",
+                    "price",
+                    "path"]]
+    write.to_csv("data/menu.csv", index=False)

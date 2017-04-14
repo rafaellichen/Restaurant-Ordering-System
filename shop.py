@@ -76,14 +76,17 @@ def checkout_balance(level, total, uid):
             if result:
                 data_file.loc[data_file["uid"]==uid, "balance"]=balance-int((total*0.9))
                 data_file.loc[data_file["uid"]==uid, "cart"] = numpy.nan
+                data_file.loc[data_file["uid"]==uid, "spent"] += int((total*0.9))
+                data_file.loc[data_file["uid"]==uid, "orders"] += 1
                 data_file.to_csv("data/users.csv", index=False)
                 return True
         if level == 1:
             result = messagebox.askyesno("Confirm payment","Final price: "+str(int((total))))
             if result:
-                print(balance-total)
                 data_file.loc[data_file["uid"]==uid, "balance"]=balance-total
                 data_file.loc[data_file["uid"]==uid, "cart"] = numpy.nan
+                data_file.loc[data_file["uid"]==uid, "spent"] += total
+                data_file.loc[data_file["uid"]==uid, "orders"] += 1
                 data_file.to_csv("data/users.csv", index=False)
                 return True
     else:
