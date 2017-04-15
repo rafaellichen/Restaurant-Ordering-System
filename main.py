@@ -81,7 +81,7 @@ def refresh_comment():
         rate_order_list.insert(END, e)
     current_parameter.star_food_rate = 0
     current_parameter.star_delivery_rate = 0
-    rate_comment.delete(-,END)
+    rate_comment.delete(0,END)
 
 def submit_rating():
     if current_parameter.star_food_rate == 0 or current_parameter.star_delivery_rate == 0:
