@@ -11,10 +11,10 @@
   * [x] Manager can hire/fire/promote/demote employees
 - Customers:
   * [ ] Registered customers can browse/search
-  * [ ] Registered customers can order and grade (1-5 stars) on food and delivery separately
+  * [x] Registered customers can order and grade (1-5 stars) on food and delivery separately
   * [x] Become VIP cutomers after spending at least $500 or 50 orders
   * [x] VIP customers receive 10% discount
-  * [ ] VIP customers' complements/complaints are weight twice as important as regular customers'
+  * [x] VIP customers' complements/complaints are weight twice as important as regular customers'
 - Surfers:
   * [x] Can become a registered customer with fixed amount of deposit
   * [ ] Unregistered customer can browse menus and ratings only
