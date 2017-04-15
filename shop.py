@@ -5,16 +5,16 @@ from collections import Counter
 
 def check_quantity(input):
     if input == "":
-        messagebox.showinfo("", "Please enter valid integer")
+        messagebox.showwarning("", "Please enter valid integer")
         return False
     if input.isdigit():
         if int(input) >=0:
             return True
         else:
-            messagebox.showinfo("", "Please enter valid integer")
+            messagebox.showwarning("", "Please enter valid integer")
             return False
     else:
-        messagebox.showinfo("", "Please enter valid integer")
+        messagebox.showwarning("", "Please enter valid integer")
         return False
 
 def get_list(a):
@@ -90,7 +90,7 @@ def checkout_balance(level, total, uid):
                 data_file.to_csv("data/users.csv", index=False)
                 return True
     else:
-        messagebox.showinfo("","Not enough balance")
+        messagebox.showwarning("","Not enough balance")
     return False
 
 def write_order(uid, cart):

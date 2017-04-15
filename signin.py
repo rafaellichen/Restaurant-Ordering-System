@@ -14,7 +14,7 @@ def validate(username_input,password_input):
     for username_check in users_username_database:
         if username_check == username_input:
             if users_approved_database[i] == 0:
-                messagebox.showinfo("", "Account must be approved first")
+                messagebox.showwarning("", "Account must be approved first")
                 return 10
             else:
                 if users_password_database[i] == password_input and \
@@ -110,11 +110,11 @@ def register_employee(t, name, username, password, email):
     users_spent = users_database["spent"].values.tolist()
     orders_amount = users_database["orders"].values.tolist()
     if name == "" or username == "" or password == "" or email == "":
-        messagebox.showinfo("", "Please fill out all information")
+        messagebox.showwarning("", "Please fill out all information")
         return
     for u,e in zip(users_username_database,users_email_database):
         if u == username or e == email:
-            messagebox.showinfo("", "Username or Email is registered already")
+            messagebox.showwarning("", "Username or Email is registered already")
             return
     users_username_database.append(username)
     users_password_database.append(password)
