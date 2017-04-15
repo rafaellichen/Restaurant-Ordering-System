@@ -219,3 +219,80 @@ def save_edit_menu(dish, uid):
                     "price",
                     "path"]]
     write.to_csv("data/menu.csv", index=False)
+
+def get_ddid_list(uid):
+    ddid_list = pandas.read_csv("data/order.csv")
+    ddid_list = ddid_list.loc[(ddid_list["uid"]==uid) & (ddid_list["rated"]==0)]["ddid"].values
+    return ddid_list
+
+def get_did_list(ddid):
+    ddid_file = pandas.read_csv("data/order.csv")
+    ddid_list = (ddid_file.loc[ddid_file["ddid"]==int(ddid)]["order"].values[0]).split(",")
+    ddid_list = set([int(x) for x in ddid_list])
+    return ddid_list
+
+def save_comment(delivery_rating, food_rating, uid, did_list, comment):
+    if int((delivery_rating+food_rating)/2) < 3:
+        complaints = pandas.read_csv("data/complaints.csv")
+        if comment != "":
+            complaints_uid_list = complaints["uid"].values.tolist()
+            complaints_comment_list = complaints["comment"].values.tolist()
+            complaints_cnid_list = complaints["cnid"].values.tolist()
+            complaints_did_list = complaints["did"].values.tolist()
+            complaints_approval_list = complaints["approval"].values.tolist()
+            for e in did_list:
+                complaints_uid_list.append(uid)
+                complaints_comment_list.append(str(comment))
+                complaints_cnid_list.append(complaints_cnid_list[-1]+1)
+                complaints_did_list.append(int(e))
+                complaints_approval_list.append(0)
+            write = pandas.DataFrame({"uid": complaints_uid_list,
+                                    "comment": complaints_comment_list,
+                                    "cnid": complaints_cnid_list,
+                                    "did": complaints_did_list,
+                                    "approval": complaints_approval_list})
+            write = write[["uid",
+                            "comment",
+                            "cnid",
+                            "did",
+                            "approval"]]
+            write.to_csv("data/complaints.csv", index=False)
+    else:
+        compliments = pandas.read_csv("data/compliments.csv")
+        if comment != "":
+            compliments_uid_list = compliments["uid"].values.tolist()
+            compliments_comment_list = compliments["comment"].values.tolist()
+            compliments_cpid_list = compliments["cpid"].values.tolist()
+            compliments_did_list = compliments["did"].values.tolist()
+            compliments_approval_list = compliments["approval"].values.tolist()
+            for e in did_list:
+                compliments_uid_list.append(uid)
+                compliments_comment_list.append(str(comment))
+                compliments_cpid_list.append(compliments_cpid_list[-1]+1)
+                compliments_did_list.append(int(e))
+                compliments_approval_list.append(0)
+            write = pandas.DataFrame({"uid": compliments_uid_list,
+                                    "comment": compliments_comment_list,
+                                    "cpid": compliments_cpid_list,
+                                    "did": compliments_did_list,
+                                    "approval": compliments_approval_list})
+            write = write[["uid",
+                            "comment",
+                            "cpid",
+                            "did",
+                            "approval"]]
+            write.to_csv("data/compliments.csv", index=False)
+
+def delivery_rating(rate, ddid):
+    order = pandas.read_csv("data/order.csv")
+    order.set_value(int(ddid), "rate", rate)
+    order.set_value(int(ddid), "rated", 1)
+    order.to_csv("data/order.csv", index=False)
+
+def save_rating(food_rate, did_list, level):
+    star = pandas.read_csv("data/star.csv")
+    for e in did_list:
+        star.loc[star["did"]==e, "star"]+=(food_rate*level)
+        star.loc[star["did"]==e, "number"]+=level
+    star.to_csv("data/star.csv", index=False)
+

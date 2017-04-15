@@ -47,6 +47,8 @@ class parameter:
         self.shopping_image_list = []
         self.available_dish = []
         self.added_dish = []
+        self.star_food_rate = 0
+        self.star_delivery_rate = 0
 
 global current_parameter
 global current_user
@@ -60,6 +62,57 @@ chef_list.add_command(label="All", command=lambda: bar_change_menu("all","All"))
 chef_list.add_command(label="Top", command=lambda: bar_change_menu("top","Top"))
 for e,f in zip(temp[0],temp[1]):
     chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
+
+def comment_interface():
+    reset_gui()
+    order_history_label.grid(row=0, column=0)
+    combined_rate_frame.grid(row=0, column=1, rowspan=2)
+    rate_order_list.grid(row=1, column=0)
+    refresh_comment()
+    window_center()
+
+def refresh_comment():
+    for e in star_food_list:
+        e.config(image=star_b)
+    for e in star_delivery_list:
+        e.config(image=star_b)
+    rate_order_list.delete(0,END)
+    for e in element.get_ddid_list(current_user.uid):
+        rate_order_list.insert(END, e)
+    current_parameter.star_food_rate = 0
+    current_parameter.star_delivery_rate = 0
+
+def submit_rating():
+    if current_parameter.star_food_rate == 0 or current_parameter.star_delivery_rate == 0:
+        messagebox.showwarning("","Please rate food and delivery from 1 star to 5 stars")
+    else:
+        try:
+            order_did = element.get_did_list(rate_order_list.get(rate_order_list.curselection()))
+            element.save_comment(current_parameter.star_delivery_rate, current_parameter.star_food_rate, 
+                                current_user.uid, order_did, rate_comment.get())
+            element.save_rating(current_parameter.star_food_rate, order_did, current_user.user_level)
+            element.delivery_rating(current_parameter.star_delivery_rate, rate_order_list.get(rate_order_list.curselection()))
+            refresh_comment()
+        except TclError:
+            messagebox.showwarning("", "Please select an order to rate")
+
+def star_food_change(num):
+    for e in star_food_list:
+        e.config(image=star_b)
+    i=0
+    while i<num:
+        star_food_list[i].config(image=star_c)
+        i+=1
+    current_parameter.star_food_rate = num
+
+def star_delivery_change(num):
+    for e in star_delivery_list:
+        e.config(image=star_b)
+    i=0
+    while i<num:
+        star_delivery_list[i].config(image=star_c)
+        i+=1
+    current_parameter.star_delivery_rate = num
 
 def refresh_menu():
     temp = bar.chef_in_list()
@@ -82,14 +135,14 @@ def bar_change_menu(uid,name):
         start_interface()
     elif uid == "top":
         if current_user.uid == -1:
-            messagebox.showinfo("", "Please log in first")
+            messagebox.showwarning("", "Please log in first")
         else:
             current_parameter.current_chef_uid = uid
             current_parameter.current_chef_name = name
             chef_name.config(text=current_parameter.current_chef_name)
             top_menu_list(element.get_top_listing(current_user.uid))
     elif element.menu_check(uid):
-        messagebox.showinfo("", "This chef has not yet added any dishes to the menu")
+        messagebox.showwarning("", "This chef has not yet added any dishes to the menu")
     else:
         current_parameter.current_chef_uid = uid
         current_parameter.current_chef_name = name
@@ -108,7 +161,7 @@ def bar_change_menu(uid,name):
 
 def top_menu_list(did_list):
     if len(did_list) == 0:
-        messagebox.showinfo("", "Please make some purchases first")
+        messagebox.showwarning("", "Please make some purchases first")
     else:
         current_parameter.menu_list = did_list
         current_parameter.image_list = bar.get_top_image_list(did_list)
@@ -135,6 +188,7 @@ def reset_gui():
     register_username_entry.delete(0,END)
     register_email_entry.delete(0,END)
     label_quantity_entry.delete(0,END)
+    rate_order_list.delete(0,END)
     for widget in program.winfo_children():
         widget.grid_remove()
 
@@ -157,7 +211,7 @@ def signin_confirm_button_action():
         signin_password_entry.delete(0,END)
     else:
         if signin_confirm_result == False:
-            messagebox.showinfo("","Username or Password is incorrect")
+            messagebox.showwarning("","Username or Password is incorrect")
             signin_username_entry.delete(0,END)
             signin_password_entry.delete(0,END)
         elif signin_confirm_result[0] == 1 or signin_confirm_result[0] == 2:
@@ -217,7 +271,7 @@ def add_dish():
         current_parameter.available_dish.remove(int(item))
         current_parameter.added_dish.append(int(item))
     except TclError:
-        messagebox.showinfo("", "Select an available dish to add")
+        messagebox.showwarning("", "Select an available dish to add")
     update_edit_menu()
 
 def remove_dish():
@@ -226,7 +280,7 @@ def remove_dish():
         current_parameter.added_dish.remove(int(item))
         current_parameter.available_dish.append(int(item))
     except TclError:
-        messagebox.showinfo("", "Select a current dish to remove")
+        messagebox.showwarning("", "Select a current dish to remove")
     update_edit_menu()
 
 def signin_forget_button_action():
@@ -242,6 +296,7 @@ def signin_retrieve_button_action():
 
 def signout_button_action():
     current_user.user_level = 0
+    current_user.uid = -1
     start_interface()  
 
 def signin_interface():
@@ -316,13 +371,16 @@ def display_cart():
             i+=1
 
 def shoppingcart_checkout_button_action():
-    result = shop.checkout_balance(current_user.user_level, current_user.total, current_user.uid)
-    if current_user.user_level != 0 and result:
-        shop.write_order(current_user.uid,current_user.shopping_cart)
-        current_user.shopping_cart = []
-        current_user.total = 0
-        shopping_cart_button_action()
-    manage.auto_vip_block()
+    if current_user.total == 0:
+        messagebox.showwarning("", "Empty cart")
+    else:
+        result = shop.checkout_balance(current_user.user_level, current_user.total, current_user.uid)
+        if current_user.user_level != 0 and result:
+            shop.write_order(current_user.uid,current_user.shopping_cart)
+            current_user.shopping_cart = []
+            current_user.total = 0
+            shopping_cart_button_action()
+        manage.auto_vip_block()
 
 def cart_page_change():
     if current_parameter.current_cart_page == 1:
@@ -682,8 +740,9 @@ def start_interface():
     if(current_user.user_level == 0):
         signin_button.grid(row=0, column=2)
     else:
-        info_button.grid(row=0, column=2)
-        signout_button.grid(row=1, column=2)
+        info_button.grid(row=1, column=2)
+        comment_button.grid(row=1, column=0)
+        signout_button.grid(row=0, column=2)
     shopping_cart_items.grid(row=0, column=1)
     dish_image1.grid(row=2, column=0)
     dish_name1.grid(row=3, column=0)
@@ -743,7 +802,7 @@ def select_type(t):
 
 def register_new_employee():
     if employee_chef["state"] == "normal" and employee_deliver["state"] == "normal":
-        messagebox.showinfo("", "Please select an employee type")
+        messagebox.showwarning("", "Please select an employee type")
     else:
         signin.register_employee(current_parameter.employee_type, employee_name.get(), employee_username.get(), 
                             employee_password.get(), employee_email.get())
@@ -858,7 +917,7 @@ def manager_approve_decline_button_action(input):
                                         manage.approve_complaints(dish_declined_compliants_list.get(dish_declined_compliants_list.curselection()), input)
                                         manager_update_all_action()
                                     except TclError:
-                                        messagebox.showinfo("","Please select an item to process")
+                                        messagebox.showwarning("","Please select an item to process")
 
 def employee_management():
     reset_gui()
@@ -892,7 +951,7 @@ def employee_salary_adjust(i):
         try:
             manage.demote_promote_employee(deliver_employee_list.get(deliver_employee_list.curselection()), i)
         except TclError:
-            messagebox.showinfo("","Please select an item to process")
+            messagebox.showwarning("","Please select an item to process")
     chef_employee_list.selection_clear(0, END)
     deliver_employee_list.selection_clear(0, END)
 
@@ -919,6 +978,56 @@ def make_deposit():
     element.deposit_money(profile_deposit.get(),current_user.uid)
     profile_deposit.delete(0,END)
     profile_button_action()
+
+#comment interface
+combined_rate_frame = Frame(program)
+star_food_frame = Frame(combined_rate_frame)
+star_delivery_frame = Frame(combined_rate_frame)
+rate_button_frame = Frame(combined_rate_frame)
+rate_food_back = Button(rate_button_frame, text="Back", command=start_interface)
+rate_food = Button(rate_button_frame, text="Submit", command=submit_rating)
+rate_food_back.pack(side="left")
+rate_food.pack(side="left")
+rate_comment_frame = Frame(combined_rate_frame)
+rate_comment_label = Label(rate_comment_frame, text="Comment")
+rate_comment = Entry(rate_comment_frame)
+rate_comment_label.pack(side="left")
+rate_comment.pack(side="left")
+star_food_frame.pack(side="top")
+star_delivery_frame.pack(side="top")
+rate_comment_frame.pack(side="top")
+rate_button_frame.pack(side="top")
+rate_food.pack(side="top")
+star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
+star_b = PhotoImage(file="images/star_b.gif").subsample(5,5)
+star_food_label = Label(star_food_frame, text="Food")
+star1_food = Button(star_food_frame, image=star_b, command=lambda: star_food_change(1))
+star2_food = Button(star_food_frame, image=star_b, command=lambda: star_food_change(2))
+star3_food = Button(star_food_frame, image=star_b, command=lambda: star_food_change(3))
+star4_food = Button(star_food_frame, image=star_b, command=lambda: star_food_change(4))
+star5_food = Button(star_food_frame, image=star_b, command=lambda: star_food_change(5))
+star_food_list = [star1_food, star2_food, star3_food, star4_food, star5_food]
+star_food_label.pack(side="left")
+star1_food.pack(side="left")
+star2_food.pack(side="left")
+star3_food.pack(side="left")
+star4_food.pack(side="left")
+star5_food.pack(side="left")
+star_delivery_label = Label(star_delivery_frame, text="Delivery")
+star1_delivery = Button(star_delivery_frame, image=star_b, command=lambda: star_delivery_change(1))
+star2_delivery = Button(star_delivery_frame, image=star_b, command=lambda: star_delivery_change(2))
+star3_delivery = Button(star_delivery_frame, image=star_b, command=lambda: star_delivery_change(3))
+star4_delivery = Button(star_delivery_frame, image=star_b, command=lambda: star_delivery_change(4))
+star5_delivery = Button(star_delivery_frame, image=star_b, command=lambda: star_delivery_change(5))
+star_delivery_list = [star1_delivery, star2_delivery, star3_delivery, star4_delivery, star5_delivery]
+star_delivery_label.pack(side="left")
+star1_delivery.pack(side="left")
+star2_delivery.pack(side="left")
+star3_delivery.pack(side="left")
+star4_delivery.pack(side="left")
+star5_delivery.pack(side="left")
+order_history_label = Label(program, text="Unrated order")
+rate_order_list = Listbox(program)
 
 #user profile
 profile_username_label = Label(program, text="Username")
@@ -1341,6 +1450,7 @@ item_list_label = Label(text="Item purchased")
 #start interface
 chef_name = Label(program, text="All")
 info_button = Button(text="Profile", command=profile_button_action)
+comment_button = Button(text="Comment", command=comment_interface)
 refresh_button = Button(text="Refresh", command=refresh_menu)
 shopping_cart_items = Button(text="Your Shopping Cart", command=shopping_cart_button_action)
 signout_button = Button(text="Sign Out", command=signout_button_action)
