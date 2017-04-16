@@ -87,15 +87,19 @@ def submit_rating():
     if current_parameter.star_food_rate == 0 or current_parameter.star_delivery_rate == 0:
         messagebox.showwarning("","Please rate food and delivery from 1 star to 5 stars")
     else:
-        try:
-            order_did = element.get_did_list(rate_order_list.get(rate_order_list.curselection()))
-            element.save_comment(current_parameter.star_delivery_rate, current_parameter.star_food_rate, 
-                                current_user.uid, order_did, rate_comment.get())
-            element.save_rating(current_parameter.star_food_rate, order_did, current_user.user_level)
-            element.delivery_rating(current_parameter.star_delivery_rate, rate_order_list.get(rate_order_list.curselection()))
-            refresh_comment()
-        except TclError:
-            messagebox.showwarning("", "Please select an order to rate")
+        result = messagebox.askyesno("", "Food: "+str(current_parameter.star_food_rate)+"\nDelivery: "
+                                    +str(current_parameter.star_delivery_rate)+"\nComment: "+str(rate_comment.get())+
+                                    "\nConfirm?")
+        if result:
+            try:
+                order_did = element.get_did_list(rate_order_list.get(rate_order_list.curselection()))
+                element.save_comment(current_parameter.star_delivery_rate, current_parameter.star_food_rate,
+                                     current_user.uid, order_did, rate_comment.get())
+                element.save_rating(current_parameter.star_food_rate, order_did, current_user.user_level)
+                element.delivery_rating(current_parameter.star_delivery_rate, rate_order_list.get(rate_order_list.curselection()))
+                refresh_comment()
+            except TclError:
+                messagebox.showwarning("", "Please select an order to rate")
 
 def star_food_change(num):
     for e in star_food_list:
@@ -298,6 +302,7 @@ def signin_retrieve_button_action():
 def signout_button_action():
     current_user.user_level = 0
     current_user.uid = -1
+    current_user.shopping_cart = []
     start_interface()  
 
 def signin_interface():

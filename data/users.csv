@@ -1,5 +1,5 @@
 username,password,balance,email,level,uid,cart,name,approved,warning,spent,orders
-r,r,200.0,r@gmail.com,1,0,,,1,0.0,0.0,0.0
+r,r,200.0,r@gmail.com,1,0,19,,1,0.0,0.0,0.0
 vip,vip,75.0,vip@gmail.com,2,1,,,1,0.0,0.0,0.0
 d1,d1,,d1@gmail.com,3,2,,D1,1,,,
 chef1,chef1,,chef1@gmail.com,4,3,,A,1,,,
