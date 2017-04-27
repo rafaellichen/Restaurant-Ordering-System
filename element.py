@@ -160,7 +160,8 @@ def profile(uid):
     username = str(profile_database.loc[profile_database["uid"]==uid]["username"].values[0])
     balance = str(int([profile_database.loc[profile_database["uid"]==uid]["balance"].values][0]))
     email = str(profile_database.loc[profile_database["uid"]==uid]["email"].values[0])
-    return [username,balance,email]
+    warning = str(profile_database.loc[profile_database["uid"]==uid]["warning"].values[0])
+    return [username,balance,email,warning]
 
 def deposit_money(amount,uid):
     if shop.check_quantity(amount):
@@ -295,4 +296,3 @@ def save_rating(food_rate, did_list, level):
         star.loc[star["did"]==e, "star"]+=(food_rate*level)
         star.loc[star["did"]==e, "number"]+=level
     star.to_csv("data/star.csv", index=False)
-

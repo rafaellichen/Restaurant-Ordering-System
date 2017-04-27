@@ -69,7 +69,6 @@ def comment_interface():
     combined_rate_frame.grid(row=0, column=1, rowspan=2)
     rate_order_list.grid(row=1, column=0)
     refresh_comment()
-    window_center()
 
 def refresh_comment():
     for e in star_food_list:
@@ -197,17 +196,6 @@ def reset_gui():
     for widget in program.winfo_children():
         widget.grid_remove()
 
-def window_center():
-    return
-    program.update()
-    # lines below this:
-    x = program.winfo_screenwidth()/2 - program.winfo_width()/2
-    y = program.winfo_screenheight()/2 - program.winfo_height()/2
-    program.geometry("+%d+%d" % (x, y))
-    # referenced from: https://bbs.archlinux.org/viewtopic.php?id=149559
-    # author: vadmium
-    # modified
-
 def signin_confirm_button_action():
     signin_confirm_result = signin.validate(signin_username_entry.get(),
                                             signin_password_entry.get())
@@ -256,7 +244,6 @@ def chef_interface():
     for e in current_parameter.added_dish:
          if e != -1:
             current_dish_list.insert(END, e)
-    window_center()
 
 def update_edit_menu():
     available_dish_list.delete(0,END)
@@ -294,7 +281,6 @@ def signin_forget_button_action():
     signin_forget_entry.grid(row=0, column=1)
     signin_retrive_button.grid(row=1, column=1)
     forget_back_button.grid(row=1, column=0)
-    window_center()
 
 def signin_retrieve_button_action():
     messagebox.showinfo("",signin.retrieve(signin_forget_entry.get()))
@@ -315,7 +301,6 @@ def signin_interface():
     signin_forget_button.grid(row=2, column=0)
     register_button.grid(row=3, column=1)
     signin_back_button.grid(row=3, column=0)
-    window_center()
 
 def register_button_action():
     reset_gui()
@@ -477,7 +462,6 @@ def shopping_cart_button_action():
     cart_item5_entry.grid(row=6,column=2)
     cart_item6_entry.grid(row=7,column=2)
     update_cart()
-    window_center()
 
 def update_total():
     set_cart_data()
@@ -537,7 +521,6 @@ def add_cart_buttom_action(i):
     label_quantity.grid(row=3, column=0)
     signin_back_button.grid(row=6, column=0)
     shopping_enter_button.grid(row=5,column=0)
-    window_center()
 
 def shopping_enter_button_action():
     if shop.check_quantity(label_quantity_entry.get()):
@@ -645,13 +628,9 @@ def delivery_interface():
     delivery_order_list.delete(0,END)
     for item in order_list:
         delivery_order_list.insert(END, item)
-    window_center()
 
 def delivery_track_interface():
     reset_gui()
-    item_list_label.grid(row=0, column=9)
-    item_list.grid(row=1, column=9, rowspan=10)
-    back_botton.grid(row=9, column=9)
     node0.grid(row=0, column=0)
     node1.grid(row=0, column=2)
     node2.grid(row=0, column=4)
@@ -717,7 +696,7 @@ def delivery_track_interface():
     edge38.grid(row=8, column=3)
     edge39.grid(row=8, column=5)
     edge40.grid(row=8, column=7)
-    window_center()
+    back_frame.grid(row=9, column=0, columnspan=10)
 
 def start_interface():
     reset_gui()
@@ -776,7 +755,6 @@ def start_interface():
     dish_buy6.grid(row=9, column=2)
     next_page_button.grid(row=10, column=2)
     previous_page_button.grid(row=10, column=0)
-    window_center()
 
 def new_employee():
     reset_gui()
@@ -794,7 +772,6 @@ def new_employee():
     employee_email_label.grid(row=4, column=0)
     employee_name_label.grid(row=1, column=0)
     employee_name.grid(row=1, column=1)
-    window_center()
 
 def select_type(t):
     if t == "c":
@@ -845,7 +822,6 @@ def manager_interface():
     manager_approve_button.grid(row=9, column=2)
     manager_decline_button.grid(row=9, column=0)
     manager_update_all_action()
-    window_center()
 
 def manager_update_all_action():
     dish_compliments_list.delete(0,END)
@@ -948,7 +924,6 @@ def employee_management():
         chef_employee_list.insert(END, item)
     for item in element.get_deliver_employee():
         deliver_employee_list.insert(END, item)
-    window_center()
 
 def employee_salary_adjust(i):
     try:
@@ -971,14 +946,17 @@ def profile_button_action():
     profile_balance.grid(row=0, column=5)
     profile_email_label.grid(row=0, column=6)
     profile_email.grid(row=0, column=7)
-    profile_back_button.grid(row=1, column=7)
-    profile_deposit_frame.grid(row=1,column=0, columnspan=7)
+    profile_back_button.grid(row=1, column=9)
+    profile_warning_label.grid(row=0, column=8)
+    profile_warning.grid(row=0, column=9)
+    profile_deposit_frame.grid(row=1,column=0, columnspan=9)
     profile = element.profile(current_user.uid)
     profile_username.config(text=profile[0])
     profile_uid.config(text=current_user.uid)
     profile_balance.config(text=profile[1])
     profile_email.config(text=profile[2])
-    window_center()
+    profile_warning.config(text=profile[3])
+    
 
 def make_deposit():
     element.deposit_money(profile_deposit.get(),current_user.uid)
@@ -1048,6 +1026,8 @@ profile_back_button = Button(text="Back", command=start_interface)
 profile_deposit_frame = Frame(program)
 profile_deposit = Entry(profile_deposit_frame)
 profile_deposit_button = Button(profile_deposit_frame, text="Deposit", command=make_deposit)
+profile_warning_label = Label(program, text="Warning")
+profile_warning = Button(text="", command=None)
 profile_deposit.pack(side="left")
 profile_deposit_button.pack(side="left")
 
@@ -1449,7 +1429,9 @@ signout_button = Button(text="Sign Out", command=signout_button_action)
 order_track_button = Button(text="Track", command=delivery_track_interface)
 
 #delivery track interface
-back_botton = Button(text="back", command=delivery_interface)
+back_frame = Frame(program)
+back_button = Button(back_frame, text="back", command=delivery_interface)
+back_button.pack(side="top")
 item_list = Listbox(program)
 item_list_label = Label(text="Item purchased")
 
@@ -1509,7 +1491,6 @@ dish_price_list = [dish_price1, dish_price2, dish_price3, dish_price4, dish_pric
 dish_img_list = [img1, img2, img3, img4, img5, img6]
 
 start_interface()
-window_center()
 manage.auto_demote_promote_employee()
 manage.auto_vip_block()
 program.mainloop()
