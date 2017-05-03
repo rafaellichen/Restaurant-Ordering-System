@@ -160,7 +160,8 @@ def profile(uid):
     username = str(profile_database.loc[profile_database["uid"]==uid]["username"].values[0])
     balance = str(int([profile_database.loc[profile_database["uid"]==uid]["balance"].values][0]))
     email = str(profile_database.loc[profile_database["uid"]==uid]["email"].values[0])
-    return [username,balance,email]
+    warning = str(profile_database.loc[profile_database["uid"]==uid]["warning"].values[0])
+    return [username,balance,email,warning]
 
 def deposit_money(amount,uid):
     if shop.check_quantity(amount):
@@ -296,3 +297,27 @@ def save_rating(food_rate, did_list, level):
         star.loc[star["did"]==e, "number"]+=level
     star.to_csv("data/star.csv", index=False)
 
+def comment_op(did):
+    compliments_read = pandas.read_csv("data/compliments.csv")
+    complaints_read = pandas.read_csv("data/complaints.csv")
+    compliments_read = compliments_read.loc[compliments_read["approval"]==1]
+    compliments_read = compliments_read.loc[compliments_read["did"]==did]
+    complaints_read = complaints_read.loc[complaints_read["approval"]==1]
+    complaints_read = complaints_read.loc[complaints_read["did"]==did]
+    return_list = compliments_read["comment"].values.tolist()
+    for e in complaints_read["comment"].values:
+        return_list.append(e)    
+    delivery_read = pandas.read_csv("data/order.csv")
+    delivery_read = delivery_read.loc[delivery_read["rated"]==1]["rate"].values.tolist()
+    total_delivery = 0
+    for e in delivery_read:
+        total_delivery+=e
+    total_delivery = total_delivery/len(delivery_read)
+    food_read = pandas.read_csv("data/star.csv")
+    food_read = food_read.loc[food_read["did"]==did]
+    if food_read["number"].values.tolist()[0] != 0:
+        total_food = food_read["star"].values.tolist()[0]/food_read["number"].values.tolist()[0]
+    else:
+        total_food = 0
+    return (return_list, round(total_food), round(total_delivery))
+    

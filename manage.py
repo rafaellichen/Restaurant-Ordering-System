@@ -141,4 +141,3 @@ def auto_vip_block():
             user_file.set_value(i, "orders", 0)
         i+=1
     user_file.to_csv("data/users.csv", index=False)
-

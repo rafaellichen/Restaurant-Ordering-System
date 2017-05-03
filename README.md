@@ -17,7 +17,7 @@
   * [x] VIP customers' complements/complaints are weight twice as important as regular customers'
 - Surfers:
   * [x] Can become a registered customer with fixed amount of deposit
-  * [ ] Unregistered customer can browse menus and ratings only
+  * [x] Unregistered customer can browse menus and ratings only
 - System features:
   * [x] Provide a GUI
   * [x] Registered customers have username and password to login
@@ -26,7 +26,7 @@
   * [x] Employee who received 3 complaints/compliments will be demoted/promoted
   * [x] Employee who is demoted twice will be fired
   * [ ] One creative feature for the system
-  * [ ] Ratings for food by customers are available to all people
+  * [x] Ratings for food by customers are available to all people
   * [ ] A map with at least 5 blocks in width and height
   * [x] Customers who are kicked out or choose to quit will be handled by the manager
   * [x] The order cannot be placed if balance is not enough during checkout
