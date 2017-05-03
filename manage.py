@@ -16,6 +16,19 @@ def approve_pending_registrations(username, input):
                 if result:
                     users_database.set_value(i, "approved", 1)
                     users_database.to_csv("data/users.csv", index=False)
+            elif input == 2:
+                result = messagebox.askyesno("","Closing the following user:\n"+"Username: "+str(username)+
+                                                "\nBalance: $"+str(users_balance_database[i]))
+                if result:
+                    users_database.set_value(i, "approved", -1)
+                    users_database.set_value(i, "balance", 0)
+                    users_database.to_csv("data/users.csv", index=False)
+            elif input == -2:
+                result = messagebox.askyesno("","Reopenng the following user:\n"+"Username: "+str(username)+
+                                                "\nBalance: $"+str(users_balance_database[i]))
+                if result:
+                    users_database.set_value(i, "approved", 1)
+                    users_database.to_csv("data/users.csv", index=False)
             else:
                 result = messagebox.askyesno("","Declining the following user:\n"+"Username: "+str(username)+
                                                 "\nBalance: $"+str(users_balance_database[i]))
@@ -24,6 +37,8 @@ def approve_pending_registrations(username, input):
                     users_database.set_value(i, "balance", 0)
                     users_database.to_csv("data/users.csv", index=False)
         i+=1
+
+
 
 def approve_compliments(cpid, input):
     compliments_database = pandas.read_csv("data/compliments.csv")

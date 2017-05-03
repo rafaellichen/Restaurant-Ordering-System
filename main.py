@@ -817,7 +817,7 @@ def register_new_employee():
 def manager_interface():
     reset_gui()
     manage_employee.grid(row=0, column=1)
-    signout_button.grid(row=0, column=2)
+    signout_button.grid(row=0, column=3)
     users_approve_list_label.grid(row=1, column=0)
     update_all_button.grid(row=0, column=0)
     users_approve_list.grid(row=2, column=0)
@@ -837,8 +837,10 @@ def manager_interface():
     dish_approved_compliants_list.grid(row=6, column=1)
     dish_declined_compliants_list.grid(row=6, column=2)
     dish_declined_compliants_list_label.grid(row=5, column=2)
-    manager_approve_button.grid(row=9, column=2)
+    manager_approve_button.grid(row=9, column=3)
     manager_decline_button.grid(row=9, column=0)
+    user_quit_label.grid(row=1, column=3)
+    user_quit_list.grid(row=2, column=3)
     manager_update_all_action()
 
 def manager_update_all_action():
@@ -851,6 +853,7 @@ def manager_update_all_action():
     dish_declined_compliments_list.delete(0, END)
     dish_approved_compliants_list.delete(0, END)
     dish_declined_compliants_list.delete(0, END)
+    user_quit_list.delete(0,END)
     pending_list = element.get_pending_registrations()
     compliments_list = element.get_pending_compliments()
     complaints_list = element.get_pending_complaints()
@@ -861,6 +864,9 @@ def manager_update_all_action():
     declined_compliments_list = element.get_comment(1,-1)
     approved_compliants_list = element.get_comment(0,1)
     declined_compliants_list = element.get_comment(0,-1)
+    quit_list = element.get_quit_list()
+    for e in quit_list:
+        user_quit_list.insert(END, e)
     for item in approved_compliments_list:
         dish_approved_compliements_list.insert(END, item)
     for item in declined_compliments_list:
@@ -917,7 +923,14 @@ def manager_approve_decline_button_action(input):
                                         manage.approve_complaints(dish_declined_compliants_list.get(dish_declined_compliants_list.curselection()), input)
                                         manager_update_all_action()
                                     except TclError:
-                                        messagebox.showwarning("","Please select an item to process")
+                                        try:
+                                            if input == 1:
+                                                manage.approve_pending_registrations(user_quit_list.get(user_quit_list.curselection()), 2)
+                                            else:
+                                                manage.approve_pending_registrations(user_quit_list.get(user_quit_list.curselection()), -2)
+                                            manager_update_all_action()
+                                        except TclError:
+                                            messagebox.showwarning("","Please select an item to process")
 
 def employee_management():
     reset_gui()
@@ -1004,6 +1017,10 @@ def view_comment(did):
     view_star.grid(row=0, column=1)
     view_delivery.grid(row=1, column=1)
     profile_back_button.grid(row=2, column=1)
+
+def user_quit_action():
+    if element.user_quit(current_user.uid):
+        signout_button_action()
 
 #view comment interface
 star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
@@ -1096,7 +1113,7 @@ profile_balance_label = Label(program, text="Balance")
 profile_balance = Button(text="", command=None)
 profile_email_label = Label(program, text="Email")
 profile_email = Button(text="", command=None)
-profile_back_button = Button(text="Back", command=start_interface)
+profile_back_button = Button(text="Back", command = start_interface)
 profile_deposit_frame = Frame(program)
 profile_deposit = Entry(profile_deposit_frame)
 profile_deposit_button = Button(profile_deposit_frame, text="Deposit", command=make_deposit)
@@ -1104,6 +1121,8 @@ profile_warning_label = Label(program, text="Warning")
 profile_warning = Button(text="", command=None)
 profile_deposit.pack(side="left")
 profile_deposit_button.pack(side="left")
+profile_user_quit = Button(profile_deposit_frame, text="Close account", command= user_quit_action)
+profile_user_quit.pack(side="left")
 
 #chef interface
 available_dish_list = Listbox(program)
@@ -1164,6 +1183,8 @@ dish_declined_compliments_list = Listbox(program)
 dish_declined_compliants_list = Listbox(program)
 user_approved_list = Listbox(program)
 user_declined_list = Listbox(program)
+user_quit_label = Label(program, text="Closing accountss")
+user_quit_list = Listbox(program)
 
 #signin interface
 signin_username_label = Label(program, text="Username")
