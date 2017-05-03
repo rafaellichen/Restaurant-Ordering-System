@@ -560,6 +560,8 @@ def page_change():
     dish_price6.config(text="")
 
 def display_menu():
+    for e in dish_comment_list:
+        e.config(state=NORMAL)
     i=0
     while i<6:
         dish_did_list[i]=-1
@@ -597,6 +599,11 @@ def display_menu():
             else:
                 dish_buy_list[i].config(state=NORMAL)
             i+=1
+    i=0
+    for e in dish_did_list:
+        if e == -1:
+            dish_comment_list[i].config(state=DISABLED)
+        i+=1
 
 def cart_next_page():
     current_parameter.current_cart_page += 1
@@ -714,6 +721,11 @@ def start_interface():
         dish_buy4.config(state=NORMAL)
         dish_buy5.config(state=NORMAL)
         dish_buy6.config(state=NORMAL)
+    i=0
+    for e in dish_did_list:
+        if e == -1:
+            dish_comment_list[i].config(state=DISABLED)
+        i+=1
     chef_name.config(text="All")
     current_parameter.current_chef_name = "All"
     current_parameter.current_chef_uid = -1
@@ -733,28 +745,34 @@ def start_interface():
     dish_name1.grid(row=3, column=0)
     dish_price1.grid(row=4, column=0)
     dish_buy1.grid(row=5, column=0)
+    dish_comment1.grid(row=6, column=0)
     dish_image2.grid(row=2, column=1)
     dish_name2.grid(row=3, column=1)
     dish_price2.grid(row=4, column=1)
     dish_buy2.grid(row=5, column=1)
+    dish_comment2.grid(row=6, column=1)
     dish_image3.grid(row=2, column=2)
     dish_name3.grid(row=3, column=2)
     dish_price3.grid(row=4, column=2)
     dish_buy3.grid(row=5, column=2)
-    dish_image4.grid(row=6, column=0)
-    dish_name4.grid(row=7, column=0)
-    dish_price4.grid(row=8, column=0)
-    dish_buy4.grid(row=9, column=0)
-    dish_image5.grid(row=6, column=1)
-    dish_name5.grid(row=7, column=1)
-    dish_price5.grid(row=8, column=1)
-    dish_buy5.grid(row=9, column=1)
-    dish_image6.grid(row=6, column=2)
-    dish_name6.grid(row=7, column=2)
-    dish_price6.grid(row=8, column=2)
-    dish_buy6.grid(row=9, column=2)
-    next_page_button.grid(row=10, column=2)
-    previous_page_button.grid(row=10, column=0)
+    dish_comment3.grid(row=6, column=2)
+    dish_image4.grid(row=7, column=0)
+    dish_name4.grid(row=8, column=0)
+    dish_price4.grid(row=9, column=0)
+    dish_buy4.grid(row=10, column=0)
+    dish_comment4.grid(row=11, column=0)
+    dish_image5.grid(row=7, column=1)
+    dish_name5.grid(row=8, column=1)
+    dish_price5.grid(row=9, column=1)
+    dish_buy5.grid(row=10, column=1)
+    dish_comment5.grid(row=11, column=1)
+    dish_image6.grid(row=7, column=2)
+    dish_name6.grid(row=8, column=2)
+    dish_price6.grid(row=9, column=2)
+    dish_buy6.grid(row=10, column=2)
+    dish_comment6.grid(row=11, column=2)
+    next_page_button.grid(row=12, column=2)
+    previous_page_button.grid(row=12, column=0)
 
 def new_employee():
     reset_gui()
@@ -963,6 +981,64 @@ def make_deposit():
     profile_deposit.delete(0,END)
     profile_button_action()
 
+def view_comment(did):
+    reset_gui()
+    data = element.comment_op(did)
+    view_user_comment.delete(0,END)
+    for e in data[0]:
+        view_user_comment.insert(END, e)
+    for e,f in zip(view_star_list, view_delivery_list):
+        e.config(image=star_b)
+        f.config(image=star_b)
+    i=0
+    for e in view_star_list:
+        if i<data[1]:
+            e.config(image=star_c)
+        i+=1
+    i=0
+    for e in view_delivery_list:
+        if i<data[2]:
+            e.config(image=star_c)
+        i+=1   
+    view_user_comment.grid(row=0, column=0, rowspan=3)
+    view_star.grid(row=0, column=1)
+    view_delivery.grid(row=1, column=1)
+    profile_back_button.grid(row=2, column=1)
+
+#view comment interface
+star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
+star_b = PhotoImage(file="images/star_b.gif").subsample(5,5)
+view_user_comment = Listbox(program)
+view_star = Frame(program)
+view_delivery = Frame(program)
+view_food_label = Label(view_star, text="Food")
+view_delivery_label = Label(view_delivery, text="Delivery")
+view_star1 = Label(view_star, image=star_b)
+view_star2 = Label(view_star, image=star_b)
+view_star3 = Label(view_star, image=star_b)
+view_star4 = Label(view_star, image=star_b)
+view_star5 = Label(view_star, image=star_b)
+view_star_list = [view_star1, view_star2, view_star3, view_star4, view_star5]
+view_delivery1 = Label(view_delivery, image=star_b)
+view_delivery2 = Label(view_delivery, image=star_b)
+view_delivery3 = Label(view_delivery, image=star_b)
+view_delivery4 = Label(view_delivery, image=star_b)
+view_delivery5 = Label(view_delivery, image=star_b)
+view_delivery_list = [view_delivery1, view_delivery2, view_delivery3, view_delivery4, view_delivery5]
+view_food_label.pack(side="left")
+view_star1.pack(side="left")
+view_star2.pack(side="left")
+view_star3.pack(side="left")
+view_star4.pack(side="left")
+view_star5.pack(side="left")
+view_delivery_label.pack(side="left")
+view_delivery1.pack(side="left")
+view_delivery2.pack(side="left")
+view_delivery3.pack(side="left")
+view_delivery4.pack(side="left")
+view_delivery5.pack(side="left")
+
+
 #comment interface
 combined_rate_frame = Frame(program)
 star_food_frame = Frame(combined_rate_frame)
@@ -982,8 +1058,6 @@ star_delivery_frame.pack(side="top")
 rate_comment_frame.pack(side="top")
 rate_button_frame.pack(side="top")
 rate_food.pack(side="top")
-star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
-star_b = PhotoImage(file="images/star_b.gif").subsample(5,5)
 star_food_label = Label(star_food_frame, text="Food")
 star1_food = Button(star_food_frame, image=star_b, command=lambda: star_food_change(1))
 star2_food = Button(star_food_frame, image=star_b, command=lambda: star_food_change(2))
@@ -1452,37 +1526,44 @@ dish_name1 = Label(program, text="Name")
 dish_price1 = Label(program, text="Price")
 dish_buy1 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(0))
 dish_did1=""
+dish_comment1 = Button(text="View", command=lambda: view_comment(dish_did_list[0]))
 dish_image2 = Label(image=None)
 dish_name2 = Label(program, text="Name")
 dish_price2 = Label(program, text="Price")
 dish_buy2 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(1))
 dish_did2=""
+dish_comment2 = Button(text="View", command=lambda: view_comment(dish_did_list[1]))
 dish_image3 = Label(image=None)
 dish_name3 = Label(program, text="Name")
 dish_price3 = Label(program, text="Price")
 dish_buy3 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(2))
 dish_did3=""
+dish_comment3 = Button(text="View", command=lambda: view_comment(dish_did_list[2]))
 dish_image4 = Label(image=None)
 dish_name4 = Label(program, text="Name")
 dish_price4 = Label(program, text="Price")
 dish_buy4 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(3))
 dish_did4=""
+dish_comment4 = Button(text="View", command=lambda: view_comment(dish_did_list[3]))
 dish_image5 = Label(image=None)
 dish_name5 = Label(program, text="Name")
 dish_price5 = Label(program, text="Price")
 dish_buy5 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(4))
 dish_did5=""
+dish_comment5 = Button(text="View", command=lambda: view_comment(dish_did_list[4]))
 dish_image6 = Label(image=None)
 dish_name6 = Label(program, text="Name")
 dish_price6 = Label(program, text="Price")
 dish_buy6 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(5))
 dish_did6=""
+dish_comment6 = Button(text="View", command=lambda: view_comment(dish_did_list[5]))
 img1=""
 img2=""
 img3=""
 img4=""
 img5=""
 img6=""
+dish_comment_list = [dish_comment1, dish_comment2, dish_comment3, dish_comment4, dish_comment5, dish_comment6]
 dish_image_list = [dish_image1, dish_image2, dish_image3, dish_image4, dish_image5, dish_image6]
 dish_buy_list = [dish_buy1, dish_buy2, dish_buy3, dish_buy4, dish_buy5, dish_buy6]
 dish_did_list = [dish_did1, dish_did2, dish_did3, dish_did4, dish_did5, dish_did6]
