@@ -1021,9 +1021,6 @@ def user_quit_action():
     if element.user_quit(current_user.uid):
         signout_button_action()
 
-def search_cart(name, price, image, did):
-    pass
-
 def search_button_action(text):
     found = False
     for e, did in current_parameter.alldish.items():
