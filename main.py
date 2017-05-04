@@ -49,6 +49,7 @@ class parameter:
         self.added_dish = []
         self.star_food_rate = 0
         self.star_delivery_rate = 0
+        self.alldish = []
 
 global current_parameter
 global current_user
@@ -727,6 +728,7 @@ def start_interface():
         if e == -1:
             dish_comment_list[i].config(state=DISABLED)
         i+=1
+    current_parameter.alldish = element.get_all_dish()
     chef_name.config(text="All")
     current_parameter.current_chef_name = "All"
     current_parameter.current_chef_uid = -1

@@ -334,3 +334,9 @@ def get_quit_list():
     read = pandas.read_csv("data/users.csv")
     read = read.loc[read["approved"]==-2]["username"].values.tolist()
     return read
+
+def get_all_dish():
+    read = pandas.read_csv("data/dish.csv")
+    read = read["dish"].values.tolist()
+    del read[3]
+    return read
