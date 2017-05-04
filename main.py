@@ -193,6 +193,10 @@ def reset_gui():
     register_email_entry.delete(0,END)
     label_quantity_entry.delete(0,END)
     rate_order_list.delete(0,END)
+    dish_name_entry.delete(0,END)
+    price_entry.delete(0,END)
+    description_entry.delete(0,END)
+    image_entry.delete(0,END)
     for widget in program.winfo_children():
         widget.grid_remove()
 
@@ -1021,6 +1025,13 @@ def view_comment(did):
     view_delivery.grid(row=1, column=1)
     profile_back_button.grid(row=2, column=1)
 
+def save_new_dish_action():
+    element.save_new_dish(dish_name_entry.get(), price_entry.get(), description_entry.get(), image_entry.get())
+    dish_name_entry.delete(0,END)
+    price_entry.delete(0,END)
+    description_entry.delete(0,END)
+    image_entry.delete(0,END)
+
 #view comment interface
 star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
 star_b = PhotoImage(file="images/star_b.gif").subsample(5,5)
@@ -1145,8 +1156,7 @@ dish_name_entry = Entry(program)
 price_entry = Entry(program)
 description_entry = Entry(program)
 image_entry = Entry(program)
-save_button = Button(text="Save", command=lambda:element.save_new_dish(dish_name_entry.get(), price_entry().get(),
-                                                description_entry.get(), image_entry.get()))
+save_button = Button(text="Save", command= save_new_dish_action)
 
 #manager interface
 management_back = Button(text="Back", command=manager_interface)

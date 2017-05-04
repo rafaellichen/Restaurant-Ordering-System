@@ -285,34 +285,36 @@ def save_comment(delivery_rating, food_rating, uid, did_list, comment):
             write.to_csv("data/compliments.csv", index=False)
 
 def save_new_dish(name, price, description, image):
-    add_dish = pandas.read_csv("data/dish.csv")
-    add_dish_name_list = add_dish["dish"].values.tolist()
-    add_dish_price_list = add_dish["price"].values.tolist()
-    add_dish_description_list = add_dish["description"].values.tolist()
-    add_dish_image_list = add_dish["path"].values.tolist()
-    did_list = add_dish["did"].values.tolist()
-    time_list = add_dish["time"].values.tolist()
-    time_list.append(0)
-    did_list.append(did_list[-1]+1)
-    add_dish_name_list.append(name)
-    add_dish_price_list.append(price)
-    add_dish_description_list.append(description)
-    add_dish_image_list.append(image)
-    write = pandas.DataFrame({"dish": add_dish_name_list,
-                            "price": add_dish_price_list,
-                            "description": add_dish_description_list,
-                            "path": add_dish_image_list,
-                            "did": did_list,
-                            "time": time_list})
-    write = write[["dish",
-                    "did",
-                    "time",
-                    "price",
-                    "path",
-                    "description"]]
-    #write.to_csv("data/dish.csv", index=False)
+    if name=="" or price=="" or description=="" or image=="" or (not price.isdigit()):
+        messagebox.showwarning("", "Please enter valid information")
+    else:
+        add_dish = pandas.read_csv("data/dish.csv")
+        add_dish_name_list = add_dish["dish"].values.tolist()
+        add_dish_price_list = add_dish["price"].values.tolist()
+        add_dish_description_list = add_dish["description"].values.tolist()
+        add_dish_image_list = add_dish["path"].values.tolist()
+        did_list = add_dish["did"].values.tolist()
+        time_list = add_dish["time"].values.tolist()
+        time_list.append(0)
+        did_list.append(did_list[-1]+1)
+        add_dish_name_list.append(name)
+        add_dish_price_list.append(price)
+        add_dish_description_list.append(description)
+        add_dish_image_list.append(image)
+        write = pandas.DataFrame({"dish": add_dish_name_list,
+                                 "price": add_dish_price_list,
+                                 "description": add_dish_description_list,
+                                 "path": add_dish_image_list,
+                                 "did": did_list,
+                                 "time": time_list})
+        write = write[["dish",
+                        "did",
+                        "time",
+                        "price",
+                        "path",
+                        "description"]]
+    write.to_csv("data/dish.csv", index=False)
 
-    print(write)
 
 def delivery_rating(rate, ddid):
     order = pandas.read_csv("data/order.csv")
