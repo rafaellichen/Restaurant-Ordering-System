@@ -338,5 +338,13 @@ def get_quit_list():
 def get_all_dish():
     read = pandas.read_csv("data/dish.csv")
     read = read["dish"].values.tolist()
+    did = list(range(len(read)))
+    del did[3]
     del read[3]
-    return read
+    dic = dict(zip(read, did))
+    return dic 
+
+def get_all(did):
+    read = pandas.read_csv("data/dish.csv")
+    read = read.loc[read["did"]==did]
+    return (read["dish"].values[0], read["price"].values[0], read["path"].values[0])
