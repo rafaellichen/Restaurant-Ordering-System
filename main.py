@@ -195,6 +195,10 @@ def reset_gui():
     register_email_entry.delete(0,END)
     label_quantity_entry.delete(0,END)
     rate_order_list.delete(0,END)
+    dish_name_entry.delete(0,END)
+    price_entry.delete(0,END)
+    description_entry.delete(0,END)
+    image_entry.delete(0,END)
     for widget in program.winfo_children():
         widget.grid_remove()
 
@@ -230,6 +234,7 @@ def chef_interface():
     reset_gui()
     available_dish_list.grid(row=2, column=0)
     available_dish_list.delete(0,END)
+    add_new_dish_button.grid(row=0, column=0)
     signout_button.grid(row=0, column=2)
     current_dish_list.grid(row=2, column=2)
     current_dish_list.delete(0,END)
@@ -246,6 +251,21 @@ def chef_interface():
     for e in current_parameter.added_dish:
          if e != -1:
             current_dish_list.insert(END, e)
+
+def add_new_dish_interface():
+    reset_gui()
+    add_back_button.grid(row=0, column=1)
+    dish_name_label.grid(row=1, column=0)
+    price_label.grid(row=2, column=0)
+    description_label.grid(row=3, column=0)
+    image_label.grid(row=4, column=0)
+    save_button.grid(row=5, column=1)
+    dish_name_entry.grid(row=1, column=1)
+    price_entry.grid(row=2, column=1)
+    description_entry.grid(row=3, column=1)
+    image_entry.grid(row=4, column=1)
+
+
 
 def update_edit_menu():
     available_dish_list.delete(0,END)
@@ -1045,6 +1065,13 @@ def search_button_action(text):
         signin_back_button.grid(row=6, column=0)
         shopping_enter_button.grid(row=5,column=0)
 
+def save_new_dish_action():
+    element.save_new_dish(dish_name_entry.get(), price_entry.get(), description_entry.get(), image_entry.get())
+    dish_name_entry.delete(0,END)
+    price_entry.delete(0,END)
+    description_entry.delete(0,END)
+    image_entry.delete(0,END)
+
 #view comment interface
 star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
 star_b = PhotoImage(file="images/star_b.gif").subsample(5,5)
@@ -1151,12 +1178,26 @@ available_dish_list = Listbox(program)
 current_dish_list = Listbox(program)
 available_dish_label = Label(program, text="Available dish")
 current_dish_label = Label(program, text="Current dish")
+add_new_dish_button_label = Label(program, text="Add new dish")
+add_new_dish_button = Button(text="Add new dish", command=add_new_dish_interface)
 chef_frame = Frame(program)
 save_menu_button = Button(text="Save", command=save_menu_action)
 dish_add = Button(chef_frame, text="Add ->", command=add_dish)
 dish_remove = Button(chef_frame, text="<- Remove", command=remove_dish)
 dish_add.pack(side="top")
 dish_remove.pack(side="top")
+
+#add new dish interface
+add_back_button = Button(text="Back", command=chef_interface)
+dish_name_label = Label(program, text="Name")
+price_label = Label(program, text="Price $")
+description_label = Label(program, text="Description")
+image_label = Label(program, text="Image")
+dish_name_entry = Entry(program)
+price_entry = Entry(program)
+description_entry = Entry(program)
+image_entry = Entry(program)
+save_button = Button(text="Save", command= save_new_dish_action)
 
 #manager interface
 management_back = Button(text="Back", command=manager_interface)
