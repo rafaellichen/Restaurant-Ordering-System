@@ -185,6 +185,7 @@ def set_parameter():
 
 def reset_gui():
     profile_deposit.delete(0,END)
+    search_entry.delete(0,END)
     signin_username_entry.delete(0,END)
     signin_password_entry.delete(0,END)
     signin_forget_entry.delete(0,END)
@@ -741,38 +742,39 @@ def start_interface():
         comment_button.grid(row=1, column=0)
         signout_button.grid(row=0, column=2)
     shopping_cart_items.grid(row=0, column=1)
-    dish_image1.grid(row=2, column=0)
-    dish_name1.grid(row=3, column=0)
-    dish_price1.grid(row=4, column=0)
-    dish_buy1.grid(row=5, column=0)
-    dish_comment1.grid(row=6, column=0)
-    dish_image2.grid(row=2, column=1)
-    dish_name2.grid(row=3, column=1)
-    dish_price2.grid(row=4, column=1)
-    dish_buy2.grid(row=5, column=1)
-    dish_comment2.grid(row=6, column=1)
-    dish_image3.grid(row=2, column=2)
-    dish_name3.grid(row=3, column=2)
-    dish_price3.grid(row=4, column=2)
-    dish_buy3.grid(row=5, column=2)
-    dish_comment3.grid(row=6, column=2)
-    dish_image4.grid(row=7, column=0)
-    dish_name4.grid(row=8, column=0)
-    dish_price4.grid(row=9, column=0)
-    dish_buy4.grid(row=10, column=0)
-    dish_comment4.grid(row=11, column=0)
-    dish_image5.grid(row=7, column=1)
-    dish_name5.grid(row=8, column=1)
-    dish_price5.grid(row=9, column=1)
-    dish_buy5.grid(row=10, column=1)
-    dish_comment5.grid(row=11, column=1)
-    dish_image6.grid(row=7, column=2)
-    dish_name6.grid(row=8, column=2)
-    dish_price6.grid(row=9, column=2)
-    dish_buy6.grid(row=10, column=2)
-    dish_comment6.grid(row=11, column=2)
-    next_page_button.grid(row=12, column=2)
-    previous_page_button.grid(row=12, column=0)
+    search_frame.grid(row=2, column=0, columnspan=3)
+    dish_image1.grid(row=3, column=0)
+    dish_name1.grid(row=4, column=0)
+    dish_price1.grid(row=5, column=0)
+    dish_buy1.grid(row=6, column=0)
+    dish_comment1.grid(row=7, column=0)
+    dish_image2.grid(row=3, column=1)
+    dish_name2.grid(row=4, column=1)
+    dish_price2.grid(row=5, column=1)
+    dish_buy2.grid(row=6, column=1)
+    dish_comment2.grid(row=7, column=1)
+    dish_image3.grid(row=3, column=2)
+    dish_name3.grid(row=4, column=2)
+    dish_price3.grid(row=5, column=2)
+    dish_buy3.grid(row=6, column=2)
+    dish_comment3.grid(row=7, column=2)
+    dish_image4.grid(row=8, column=0)
+    dish_name4.grid(row=9, column=0)
+    dish_price4.grid(row=10, column=0)
+    dish_buy4.grid(row=11, column=0)
+    dish_comment4.grid(row=12, column=0)
+    dish_image5.grid(row=8, column=1)
+    dish_name5.grid(row=9, column=1)
+    dish_price5.grid(row=10, column=1)
+    dish_buy5.grid(row=11, column=1)
+    dish_comment5.grid(row=12, column=1)
+    dish_image6.grid(row=8, column=2)
+    dish_name6.grid(row=9, column=2)
+    dish_price6.grid(row=10, column=2)
+    dish_buy6.grid(row=11, column=2)
+    dish_comment6.grid(row=12, column=2)
+    next_page_button.grid(row=13, column=2)
+    previous_page_button.grid(row=13, column=0)
 
 def new_employee():
     reset_gui()
@@ -816,7 +818,7 @@ def register_new_employee():
 
 def manager_interface():
     reset_gui()
-    manage_employee.grid(row=0, column=1)
+    manage_employee.grid(row=0, column=1, columnspan=2)
     signout_button.grid(row=0, column=3)
     users_approve_list_label.grid(row=1, column=0)
     update_all_button.grid(row=0, column=0)
@@ -889,48 +891,41 @@ def manager_update_all_action():
 def manager_approve_decline_button_action(input):
     try:
         manage.approve_pending_registrations(users_approve_list.get(users_approve_list.curselection()), input)
-        manager_update_all_action()
     except TclError:
         try:
             manage.approve_compliments(dish_compliments_list.get(dish_compliments_list.curselection()), input)
-            manager_update_all_action()
         except TclError:
             try:
                 manage.approve_complaints(dish_complaints_list.get(dish_complaints_list.curselection()), input)
-                manager_update_all_action()
             except TclError:
                 try:
-                    manage.approve_pending_registrations(user_approved_list.get(user_approved_list.curselection()), input)
-                    manager_update_all_action()
+                    manage.approve_pending_registrations(user_approved_list.get(user_approved_list.curselection()), input) 
                 except TclError:
                     try:
-                        manage.approve_pending_registrations(user_declined_list.get(user_declined_list.curselection()), input)
-                        manager_update_all_action()
+                        manage.approve_pending_registrations(user_declined_list.get(user_declined_list.curselection()), input)        
                     except TclError:
                         try:
-                            manage.approve_compliments(dish_approved_compliements_list.get(dish_approved_compliements_list.curselection()), input)
-                            manager_update_all_action()
+                            manage.approve_compliments(dish_approved_compliements_list.get(dish_approved_compliements_list.curselection()), input)            
                         except TclError:
                             try:
-                                manage.approve_compliments(dish_declined_compliments_list.get(dish_declined_compliments_list.curselection()), input)
-                                manager_update_all_action()
+                                manage.approve_compliments(dish_declined_compliments_list.get(dish_declined_compliments_list.curselection()), input)                 
                             except TclError:
                                 try:
-                                    manage.approve_complaints(dish_approved_compliants_list.get(dish_approved_compliants_list.curselection()), input)
-                                    manager_update_all_action()
+                                    manage.approve_complaints(dish_approved_compliants_list.get(dish_approved_compliants_list.curselection()), input)                   
                                 except TclError:
                                     try:
-                                        manage.approve_complaints(dish_declined_compliants_list.get(dish_declined_compliants_list.curselection()), input)
-                                        manager_update_all_action()
+                                        manage.approve_complaints(dish_declined_compliants_list.get(dish_declined_compliants_list.curselection()), input)                       
                                     except TclError:
                                         try:
                                             if input == 1:
                                                 manage.approve_pending_registrations(user_quit_list.get(user_quit_list.curselection()), 2)
                                             else:
-                                                manage.approve_pending_registrations(user_quit_list.get(user_quit_list.curselection()), -2)
-                                            manager_update_all_action()
+                                                manage.approve_pending_registrations(user_quit_list.get(user_quit_list.curselection()), -2)                             
                                         except TclError:
                                             messagebox.showwarning("","Please select an item to process")
+    manager_update_all_action()
+    manage.auto_demote_promote_employee()
+    manage.auto_vip_block()
 
 def employee_management():
     reset_gui()
@@ -1022,6 +1017,9 @@ def user_quit_action():
     if element.user_quit(current_user.uid):
         signout_button_action()
 
+def search_button_action(text):
+    dic = []
+
 #view comment interface
 star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
 star_b = PhotoImage(file="images/star_b.gif").subsample(5,5)
@@ -1054,7 +1052,6 @@ view_delivery2.pack(side="left")
 view_delivery3.pack(side="left")
 view_delivery4.pack(side="left")
 view_delivery5.pack(side="left")
-
 
 #comment interface
 combined_rate_frame = Frame(program)
@@ -1531,6 +1528,11 @@ item_list = Listbox(program)
 item_list_label = Label(text="Item purchased")
 
 #start interface
+search_frame = Frame(program)
+search_entry = Entry(search_frame)
+search_button = Button(search_frame, text="Search", command = lambda: search_entry.get())
+search_entry.pack(side="left")
+search_button.pack(side="left")
 chef_name = Label(program, text="All")
 info_button = Button(text="Profile", command=profile_button_action)
 comment_button = Button(text="Comment", command=comment_interface)

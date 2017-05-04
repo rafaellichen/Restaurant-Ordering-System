@@ -42,6 +42,7 @@ def approve_pending_registrations(username, input):
 
 def approve_compliments(cpid, input):
     compliments_database = pandas.read_csv("data/compliments.csv")
+    uid = compliments_database.loc[compliments_database["cpid"]==int(cpid)]["uid"].values[0]
     compliments_cpid_database = compliments_database["cpid"].values
     compliments_comment_database = compliments_database["comment"].values
     i=0
@@ -57,10 +58,12 @@ def approve_compliments(cpid, input):
                 if result:
                     compliments_database.set_value(i, "approval", -1)
                     compliments_database.to_csv("data/compliments.csv", index=False)
+                    issue_warning(uid)
         i+=1
 
 def approve_complaints(cnid, input):
     complaints_database = pandas.read_csv("data/complaints.csv")
+    uid = complaints_database.loc[complaints_database["cnid"]==int(cnid)]["uid"].values[0]
     complaints_cnid_database = complaints_database["cnid"].values
     complaints_comment_database = complaints_database["comment"].values
     i=0
@@ -76,7 +79,13 @@ def approve_complaints(cnid, input):
                 if result:
                     complaints_database.set_value(i, "approval", -1)
                     complaints_database.to_csv("data/complaints.csv", index=False)
+                    issue_warning(uid)
         i+=1
+
+def issue_warning(uid):
+    read = pandas.read_csv("data/users.csv")
+    read.loc[read["uid"]==uid, "warning"] += 1
+    read.to_csv("data/users.csv", index=False)
 
 def demote_promote_employee(uid,a):
     salary_file = pandas.read_csv("data/salary.csv")
