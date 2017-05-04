@@ -8,8 +8,8 @@ This project is for class demonstration only
   * [ ] Delivery food with best route
   * [x] Manager can process customer registrations and can handle customer compliments and complaints
   * [x] Manager can hire/fire/promote/demote employees
-- Customers:
-  * [x] Registered customers can browse/search
+- Customers: 
+  * [x] Registered customers can browse/search
   * [x] Registered customers can order and grade (1-5 stars) on food and delivery separately
   * [x] Become VIP cutomers after spending at least $500 or 50 orders
   * [x] VIP customers receive 10% discount and their complements/complaints are weight twice as important as regular customers'
