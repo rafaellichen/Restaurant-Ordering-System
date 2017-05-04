@@ -320,4 +320,23 @@ def comment_op(did):
     else:
         total_food = 0
     return (return_list, round(total_food), round(total_delivery))
-    
+
+def user_quit(uid):
+    if messagebox.askyesno("", "Closing account will refund all remaining balance"):
+        messagebox.showinfo("", "Your request is waitfing for approval")
+        data_file = pandas.read_csv("data/users.csv")
+        data_file.loc[data_file["uid"]==uid, "approved"] = -2
+        data_file.to_csv("data/users.csv", index=False)
+        return True
+    return False
+
+def get_quit_list():
+    read = pandas.read_csv("data/users.csv")
+    read = read.loc[read["approved"]==-2]["username"].values.tolist()
+    return read
+
+def get_all_dish():
+    read = pandas.read_csv("data/dish.csv")
+    read = read["dish"].values.tolist()
+    del read[3]
+    return read

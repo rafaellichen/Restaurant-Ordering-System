@@ -3,18 +3,16 @@
 ## Software Requirements:
 - Restaurant:
   * [x] At least 2 chefs who decide the menus
-  * [x] Same dish can appear on multiple menu for customers to choose from
+  * [x] Same dish can appear on multiple menus for customers to choose from
   * [x] At least 2 delivery person
   * [ ] Delivery food with best route
-  * [x] Manager can process customer registrations
-  * [x] Manager can handle customer compliments and complaints
+  * [x] Manager can process customer registrations and can handle customer compliments and complaints
   * [x] Manager can hire/fire/promote/demote employees
 - Customers:
   * [ ] Registered customers can browse/search
   * [x] Registered customers can order and grade (1-5 stars) on food and delivery separately
   * [x] Become VIP cutomers after spending at least $500 or 50 orders
-  * [x] VIP customers receive 10% discount
-  * [x] VIP customers' complements/complaints are weight twice as important as regular customers'
+  * [x] VIP customers receive 10% discount and their complements/complaints are weight twice as important as regular customers'
 - Surfers:
   * [x] Can become a registered customer with fixed amount of deposit
   * [x] Unregistered customer can browse menus and ratings only
@@ -25,6 +23,8 @@
   * [x] Top 5 most popular dishes (ordered most) are displayed on the page
   * [x] Employee who received 3 complaints/compliments will be demoted/promoted
   * [x] Employee who is demoted twice will be fired
+  * [ ] Customers will gain 1 warning for each rejected comments
+  * [ ] Delivery person can issue warning to customoers
   * [ ] One creative feature for the system
   * [x] Ratings for food by customers are available to all people
   * [ ] A map with at least 5 blocks in width and height
