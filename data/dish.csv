@@ -1,21 +1,21 @@
-dish,did,time,price,path
-anago,0,14,4,images/anago.gif
-california,1,5,6,images/california.gif
-ebi,2,7,8,images/ebi.gif
-etc,-1,0,0,images/etc.gif
-futo,4,10,10,images/futo.gif
-hirame,5,12,14,images/hirame.gif
-ika,6,3,6,images/ika.gif
-ikura,7,1,17,images/ikura.gif
-inari,8,6,20,images/inari.gif
-kappa,9,8,5,images/kappa.gif
-masago,10,3,9,images/masago.gif
-saba,11,22,11,images/saba.gif
-sake,12,2,22,images/sake.gif
-tako,13,1,13,images/tako.gif
-tamago,14,7,12,images/tamago.gif
-tekka,15,3,18,images/tekka.gif
-temaki,16,7,19,images/temaki.gif
-toro,17,3,20,images/toro.gif
-unagi,18,5,16,images/unagi.gif
-uni,19,23,14,images/uni.gif
+dish,did,time,price,path,description
+anago,0,14,4,images/anago.gif,Anago is the japanese salt-water eel sushi.
+california,1,5,6,images/california.gif,"California roll is a sushi roll containing cucumber, imitation crab, and avocado."
+ebi,2,7,8,images/ebi.gif,Ebi sushi contains baby shrimp.
+etc,-1,0,0,images/etc.gif,
+futo,4,10,10,images/futo.gif,Futo is a thick sushi roll consists of several ingredients.
+hirame,5,12,14,images/hirame.gif,Hirame is a Japanese Flatfish sushi.
+ika,6,3,6,images/ika.gif,Ika is a Squid sushi.
+ikura,7,1,17,images/ikura.gif, Ikura has thin slices of cucumber inside its seaweed wrapping.
+inari,8,6,20,images/inari.gif,Inari is a sushi that made of sushi rice wrapped inside the seasoned deep-fried tofu pockets.
+kappa,9,8,5,images/kappa.gif,Kappa sushi is made of sushi rice and a piece of cucumber in the middle.
+masago,10,3,9,images/masago.gif,masago is a sushi top with fish egg.
+saba,11,22,11,images/saba.gif,"Saba sushi is made of a fish called Makerel, grouped as a shiny fish."
+sake,12,2,22,images/sake.gif,Sake is the raw Salmon sushi.
+tako,13,1,13,images/tako.gif,Tako is the boiled octopus sushi.
+tamago,14,7,12,images/tamago.gif,Tamago is the Japanese word for egg.
+tekka,15,3,18,images/tekka.gif,Tekka is a tuna sushi roll.
+temaki,16,7,19,images/temaki.gif,Temaki is a sushi hand roll.
+toro,17,3,20,images/toro.gif,Toro is the bluefin tuna sushi.
+unagi,18,5,16,images/unagi.gif,Unagi is a sushi topping with cooked eel.
+uni,19,23,14,images/uni.gif,Uni is the sea urchin sushi.
