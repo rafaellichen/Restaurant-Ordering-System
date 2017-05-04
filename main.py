@@ -509,8 +509,8 @@ def update_cart():
     cart_page_change()
     display_cart()
     shoppingcart_checkout_total.config(text=str(current_user.total))
-            
-def add_cart_buttom_action(i):
+
+def add_cart_button_action(i):
     reset_gui()
     shopping_image = dish_image_list[i]
     shopping_image.grid(row=0,column=0)
@@ -525,13 +525,16 @@ def add_cart_buttom_action(i):
     shopping_enter_button.grid(row=5,column=0)
 
 def shopping_enter_button_action():
-    if shop.check_quantity(label_quantity_entry.get()):
-        for i in range(int(label_quantity_entry.get())):
-            current_user.shopping_cart.append(shopping_did[-1])
-            current_user.total += int(shopping_price[-1])
-        messagebox.showinfo("", "Added to cart")
-    label_quantity_entry.delete(0,END)
-    shop.write_cart(current_user.uid, current_user.shopping_cart)
+    if current_user.uid != -1:
+        if shop.check_quantity(label_quantity_entry.get()):
+            for i in range(int(label_quantity_entry.get())):
+                current_user.shopping_cart.append(shopping_did[-1])
+                current_user.total += int(shopping_price[-1])
+            messagebox.showinfo("", "Added to cart")
+        label_quantity_entry.delete(0,END)
+        shop.write_cart(current_user.uid, current_user.shopping_cart)
+    else:
+        messagebox.showwarning("", "Please log in first")
 
 def page_change():
     if current_parameter.menu_current_page == 1:
@@ -984,7 +987,6 @@ def profile_button_action():
     profile_balance.config(text=profile[1])
     profile_email.config(text=profile[2])
     profile_warning.config(text=profile[3])
-    
 
 def make_deposit():
     element.deposit_money(profile_deposit.get(),current_user.uid)
@@ -993,6 +995,10 @@ def make_deposit():
 
 def view_comment(did):
     reset_gui()
+    view_user_comment.grid(row=0, column=0, rowspan=3)
+    view_star.grid(row=0, column=1)
+    view_delivery.grid(row=1, column=1)
+    profile_back_button.grid(row=2, column=1)
     data = element.comment_op(did)
     view_user_comment.delete(0,END)
     for e in data[0]:
@@ -1009,18 +1015,35 @@ def view_comment(did):
     for e in view_delivery_list:
         if i<data[2]:
             e.config(image=star_c)
-        i+=1   
-    view_user_comment.grid(row=0, column=0, rowspan=3)
-    view_star.grid(row=0, column=1)
-    view_delivery.grid(row=1, column=1)
-    profile_back_button.grid(row=2, column=1)
+        i+=1
 
 def user_quit_action():
     if element.user_quit(current_user.uid):
         signout_button_action()
 
 def search_button_action(text):
-    dic = []
+    found = False
+    for e, did in current_parameter.alldish.items():
+        if e == text:
+            found = True
+            temp = element.get_all(did)
+    if not found:
+        messagebox.showwarning("", "No dish named "+str(text))
+    else:
+        reset_gui()
+        search_component[0] = PhotoImage(file=temp[2])
+        shopping_image.config(image=search_component[0])
+        shopping_image.grid(row=0,column=0)
+        shopping_name.config(text=temp[0])
+        shopping_name.grid(row=1,column=0)
+        shopping_price.append(temp[1])
+        dish_price.config(text=temp[1])
+        dish_price.grid(row=2,column=0)
+        shopping_did.append(did)
+        label_quantity_entry.grid(row=4,column=0)
+        label_quantity.grid(row=3, column=0)
+        signin_back_button.grid(row=6, column=0)
+        shopping_enter_button.grid(row=5,column=0)
 
 #view comment interface
 star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
@@ -1212,6 +1235,9 @@ register_enter_button = Button(text="Become Member", command=become_member_butto
 register_back_button = Button(text="Back", command=signin_interface)
 
 #shopping cart interface
+photo=""
+search_component = [photo]
+dish_price = Label(program, text="")
 cart_next = Button(program, text="Next", command=cart_next_page)
 cart_previous = Button(program, text="Previous", command=cart_previous_page)
 label_quantity_entry = Entry(program)
@@ -1219,7 +1245,7 @@ label_quantity = Label(program, text="Quantity")
 shopping_enter_button = Button(text="Enter", command=shopping_enter_button_action)
 shopping_image = Label(image=None)
 shopping_did = []
-shopping_name=[]
+shopping_name = Label(program, text="")
 shopping_price=[]
 shopping_quantity=[]
 cart_button_frame = Frame(program)
@@ -1532,7 +1558,7 @@ item_list_label = Label(text="Item purchased")
 #start interface
 search_frame = Frame(program)
 search_entry = Entry(search_frame)
-search_button = Button(search_frame, text="Search", command = lambda: search_entry.get())
+search_button = Button(search_frame, text="Search", command = lambda: search_button_action(search_entry.get()))
 search_entry.pack(side="left")
 search_button.pack(side="left")
 chef_name = Label(program, text="All")
@@ -1549,37 +1575,37 @@ etc_photo_small = PhotoImage(file="images/etc.gif").subsample(2,2)
 dish_image1 = Label(image=None)
 dish_name1 = Label(program, text="Name")
 dish_price1 = Label(program, text="Price")
-dish_buy1 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(0))
+dish_buy1 = Button(text="Add to cart", command=lambda: add_cart_button_action(0))
 dish_did1=""
 dish_comment1 = Button(text="View", command=lambda: view_comment(dish_did_list[0]))
 dish_image2 = Label(image=None)
 dish_name2 = Label(program, text="Name")
 dish_price2 = Label(program, text="Price")
-dish_buy2 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(1))
+dish_buy2 = Button(text="Add to cart", command=lambda: add_cart_button_action(1))
 dish_did2=""
 dish_comment2 = Button(text="View", command=lambda: view_comment(dish_did_list[1]))
 dish_image3 = Label(image=None)
 dish_name3 = Label(program, text="Name")
 dish_price3 = Label(program, text="Price")
-dish_buy3 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(2))
+dish_buy3 = Button(text="Add to cart", command=lambda: add_cart_button_action(2))
 dish_did3=""
 dish_comment3 = Button(text="View", command=lambda: view_comment(dish_did_list[2]))
 dish_image4 = Label(image=None)
 dish_name4 = Label(program, text="Name")
 dish_price4 = Label(program, text="Price")
-dish_buy4 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(3))
+dish_buy4 = Button(text="Add to cart", command=lambda: add_cart_button_action(3))
 dish_did4=""
 dish_comment4 = Button(text="View", command=lambda: view_comment(dish_did_list[3]))
 dish_image5 = Label(image=None)
 dish_name5 = Label(program, text="Name")
 dish_price5 = Label(program, text="Price")
-dish_buy5 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(4))
+dish_buy5 = Button(text="Add to cart", command=lambda: add_cart_button_action(4))
 dish_did5=""
 dish_comment5 = Button(text="View", command=lambda: view_comment(dish_did_list[4]))
 dish_image6 = Label(image=None)
 dish_name6 = Label(program, text="Name")
 dish_price6 = Label(program, text="Price")
-dish_buy6 = Button(text="Add to cart", command=lambda: add_cart_buttom_action(5))
+dish_buy6 = Button(text="Add to cart", command=lambda: add_cart_button_action(5))
 dish_did6=""
 dish_comment6 = Button(text="View", command=lambda: view_comment(dish_did_list[5]))
 img1=""
