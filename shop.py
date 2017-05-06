@@ -92,6 +92,7 @@ def checkout_balance(level, total, uid):
                 return True
     else:
         messagebox.showwarning("","Not enough balance")
+    manage.auto_vip_block()
     return False
 
 def write_order(uid, cart):

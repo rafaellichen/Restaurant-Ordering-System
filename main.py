@@ -1096,6 +1096,7 @@ def user_quit_action():
 
 def search_button_action(text):
     found = False
+    text = text.lower()
     if current_parameter.alldish.get(text) != None:
         found = True
         temp = element.get_all(current_parameter.alldish.get(text))
