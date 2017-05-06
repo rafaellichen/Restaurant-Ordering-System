@@ -100,6 +100,16 @@ def rand_situation():
     for e in choice3:
         map_matrix[e[0]][e[1]] = 1
         map_matrix[e[1]][e[0]] = 1
+    choice4 = [[6,7], [8,7], [6,11], [16,11], [16,17], [18,17], [8,13], [18,13]]
+    i = randint(0,7)
+    i2 = randint(0,7)
+    while i == i2:
+        i = randint(0,7)
+        i2 = randint(0,7)
+    choice4 = [choice4[i], choice4[i2]]
+    for e in choice4:
+        map_matrix[e[0]][e[1]] = 1
+        map_matrix[e[1]][e[0]] = 1
     return map_matrix
 
 def solution(tree, destination, ans):
