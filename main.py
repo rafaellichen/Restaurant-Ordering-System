@@ -1420,7 +1420,7 @@ cart_did_list = [cart_did_list1, cart_did_list2, cart_did_list3, cart_did_list4,
 
 #delivery track interface
 delivery_track_frame = Frame(program)
-delivery_back_button = Button(delivery_track_frame, text="back", command=delivery_interface)
+delivery_back_button = Button(delivery_track_frame, text="Back", command=delivery_interface)
 delivered = Button(delivery_track_frame, text="Delivered", command=None)
 delivered.pack(side=LEFT)
 delivery_back_button.pack(side=LEFT)
