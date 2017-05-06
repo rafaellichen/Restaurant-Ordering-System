@@ -1,5 +1,4 @@
 import pandas
-import numpy
 from collections import Counter
 from tkinter import messagebox
 
@@ -388,9 +387,12 @@ def get_description(did):
     return read
 
 def delivery_track_status(ddid):
-    read = pandas.read_csv("data/order.csv")
-    read.loc[read["ddid"]==int(ddid), "status"] = 1
-    read.to_csv("data/order.csv", index=False)
+    if messagebox.askyesno("", "Mark this order (ddid: "+str(ddid)+") to be delivered?"):
+        read = pandas.read_csv("data/order.csv")
+        read.loc[read["ddid"]==int(ddid), "status"] = 1
+        read.to_csv("data/order.csv", index=False)
+        return True
+    return False
 
 def issue_warning(ddid):
     read = pandas.read_csv("data/order.csv")
@@ -400,4 +402,3 @@ def issue_warning(ddid):
     read = pandas.read_csv("data/users.csv")
     read.loc[read["uid"]==int(uid), "warning"]+=1
     read.to_csv("data/users.csv", index=False)
-    

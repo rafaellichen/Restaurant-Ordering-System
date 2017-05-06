@@ -1,5 +1,6 @@
 import pandas
 import numpy
+from random import randint
 from tkinter import messagebox
 from collections import Counter
 
@@ -108,7 +109,10 @@ def write_order(uid, cart):
         cart_str+=str(int(e))+","
     cart_str=cart_str[:-1]
     order.append(cart_str)
-    destination.append(numpy.nan)
+    des = randint(0,24)
+    while des==12:
+        des = randint(0,24)
+    destination.append(des)
     status.append(-1)
     uid_data.append(uid)
     rate.append(0)

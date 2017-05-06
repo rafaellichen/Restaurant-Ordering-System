@@ -6,6 +6,7 @@ import bar
 import element
 import manage
 import shop
+import cmap
 
 program = Tk()
 program.title("Restaurant Ordering System")
@@ -183,7 +184,7 @@ def set_parameter():
     else:
         current_parameter.menu_max_page = int((len(current_parameter.menu_list)-1)/6 + 1)
     current_parameter.menu_current_page = 1
-
+    
 def reset_gui():
     profile_deposit.delete(0,END)
     search_entry.delete(0,END)
@@ -675,8 +676,8 @@ def delivery_track_interface_action(w):
             messagebox.showwarning("", "Please select an order to issue warning")
 
 def delivered_action(ddid):
-    element.delivery_track_status(ddid)
-    delivery_interface()
+    if element.delivery_track_status(ddid):
+        delivery_interface()
 
 def delivery_track_interface(ddid):
     reset_gui()
@@ -711,7 +712,6 @@ def delivery_track_interface(ddid):
     edge4.grid(row=0, column=7)
     edge5.grid(row=1, column=0)
     edge6.grid(row=1, column=2)
-    edge7.grid(row=1, column=4)
     edge8.grid(row=1, column=6)
     edge9.grid(row=1, column=8)
     edge10.grid(row=2, column=1)
@@ -723,10 +723,8 @@ def delivery_track_interface(ddid):
     edge16.grid(row=3, column=4)
     edge17.grid(row=3, column=6)
     edge18.grid(row=3, column=8)
-    edge19.grid(row=4, column=1)
     edge20.grid(row=4, column=3)
     edge21.grid(row=4, column=5)
-    edge22.grid(row=4, column=7)
     edge23.grid(row=5, column=0)
     edge24.grid(row=5, column=2)
     edge25.grid(row=5, column=4)
@@ -738,15 +736,50 @@ def delivery_track_interface(ddid):
     edge31.grid(row=6, column=7)
     edge32.grid(row=7, column=0)
     edge33.grid(row=7, column=2)
-    edge34.grid(row=7, column=4)
     edge35.grid(row=7, column=6)
     edge36.grid(row=7, column=8)
     edge37.grid(row=8, column=1)
     edge38.grid(row=8, column=3)
     edge39.grid(row=8, column=5)
     edge40.grid(row=8, column=7)
-    delivery_track_frame.grid(row=9, column=0, columnspan=10)
+    legend_frame.grid(row=9, column=0, columnspan=10)
+    delivery_track_frame.grid(row=10, column=0, columnspan=10)
+    map_matrix = cmap.rand_situation()
+    change_map(map_matrix, cmap.find_path(map_matrix, cmap.get_destination(ddid)))
     delivered.config(command=lambda: delivered_action(ddid))
+
+def change_map(map_matrix, path):
+    for h,v in zip(h_edge_list, v_edge_list):
+        h.config(image=h_normal)
+        v.config(image=v_normal)
+    i = 0
+    while i<len(path)-1:
+        if h_edge_matrix[path[i]][path[i+1]] != 0:
+            h_edge_matrix[path[i]][path[i+1]].config(image=h_path)
+        elif v_edge_matrix[path[i]][path[i+1]] != 0:
+            v_edge_matrix[path[i]][path[i+1]].config(image=v_path)
+        i+=1
+    for e in node_list:
+        e.config(highlightbackground="white")
+    i = 0
+    for e in path:
+        if i == 0 or i==len(path)-1:
+            node_list[e].config(highlightbackground="Yellow")
+        else:
+            node_list[e].config(highlightbackground="Green")
+        i+=1
+    for x in range(0,25):
+        for y in range(0,25):
+            if map_matrix[x][y] == 0:
+                if h_edge_matrix[x][y] != 0:
+                    h_edge_matrix[x][y].config(image=h_block)
+                if v_edge_matrix[x][y] != 0:
+                    v_edge_matrix[x][y].config(image=v_block)
+            elif map_matrix[x][y] == 1:
+                if h_edge_matrix[x][y] != 0:
+                    h_edge_matrix[x][y].config(image=h_free)
+                if v_edge_matrix[x][y] != 0:
+                    v_edge_matrix[x][y].config(image=v_free)
 
 def start_interface():
     reset_gui()
@@ -1063,10 +1096,9 @@ def user_quit_action():
 
 def search_button_action(text):
     found = False
-    for e, did in current_parameter.alldish.items():
-        if e == text:
-            found = True
-            temp = element.get_all(did)
+    if current_parameter.alldish.get(text) != None:
+        found = True
+        temp = element.get_all(current_parameter.alldish.get(text))
     if not found:
         messagebox.showwarning("", "No dish named "+str(text))
     else:
@@ -1079,7 +1111,7 @@ def search_button_action(text):
         shopping_price.append(temp[1])
         dish_price.config(text=temp[1])
         dish_price.grid(row=2,column=0)
-        shopping_did.append(did)
+        shopping_did.append(current_parameter.alldish.get(text))
         label_quantity_entry.grid(row=4,column=0)
         label_quantity.grid(row=3, column=0)
         signin_back_button.grid(row=6, column=0)
@@ -1395,224 +1427,177 @@ delivery_back_button.pack(side=LEFT)
 #delivery interface
 delivery_order_list = Listbox(program)
 delivery_order_listName = Label(program, text="Order list")
-node_matrix = [[0 for i in range(25)] for j in range(25)]
-edge_matrix = [[0 for i in range(25)] for j in range(25)]
-for i in range(0,25):
-    for j in range(0,25):
-        node_matrix[i][j] = -1
-for i in range(0,25):
-    for j in range(0,25):
-        edge_matrix[i][j] = 0
-node_matrix[0][0] = 1
-node_matrix[0][1] = 1
-node_matrix[0][5] = 1
-node_matrix[1][0] = 1
-node_matrix[1][1] = 1
-node_matrix[1][2] = 1
-node_matrix[1][6] = 1
-node_matrix[2][1] = 1
-node_matrix[2][2] = 1
-node_matrix[2][3] = 1
-node_matrix[2][7] = 1
-node_matrix[3][2] = 1
-node_matrix[3][3] = 1
-node_matrix[3][4] = 1
-node_matrix[3][8] = 1
-node_matrix[4][3] = 1
-node_matrix[4][4] = 1
-node_matrix[4][9] = 1
-node_matrix[5][0] = 1
-node_matrix[5][5] = 1
-node_matrix[5][6] = 1
-node_matrix[5][10] = 1
-node_matrix[6][1] = 1
-node_matrix[6][5] = 1
-node_matrix[6][6] = 1
-node_matrix[6][7] = 1
-node_matrix[6][11] = 1
-node_matrix[7][2] = 1
-node_matrix[7][6] = 1
-node_matrix[7][7] = 1
-node_matrix[7][8] = 1
-node_matrix[7][12] = 1
-node_matrix[8][3] = 1
-node_matrix[8][7] = 1
-node_matrix[8][8] = 1
-node_matrix[8][9] = 1
-node_matrix[8][13] = 1
-node_matrix[9][4] = 1
-node_matrix[9][8] = 1
-node_matrix[9][9] = 1
-node_matrix[9][14] = 1
-node_matrix[10][5] = 1
-node_matrix[10][10] = 1
-node_matrix[10][11] = 1
-node_matrix[10][15] = 1
-node_matrix[11][6] = 1
-node_matrix[11][10] = 1
-node_matrix[11][11] = 1
-node_matrix[11][12] = 1
-node_matrix[11][16] = 1
-node_matrix[12][7] = 1
-node_matrix[12][11] = 1
-node_matrix[12][12] = 1
-node_matrix[12][13] = 1
-node_matrix[12][17] = 1
-node_matrix[13][8] = 1
-node_matrix[13][12] = 1
-node_matrix[13][13] = 1
-node_matrix[13][14] = 1
-node_matrix[13][18] = 1
-node_matrix[14][9] = 1
-node_matrix[14][13] = 1
-node_matrix[14][14] = 1
-node_matrix[14][19] = 1
-node_matrix[15][15] = 1
-node_matrix[15][16] = 1
-node_matrix[15][20] = 1
-node_matrix[15][10] = 1
-node_matrix[16][15] = 1
-node_matrix[16][16] = 1
-node_matrix[16][14] = 1
-node_matrix[16][17] = 1
-node_matrix[16][21] = 1
-node_matrix[17][16] = 1
-node_matrix[17][17] = 1
-node_matrix[17][12] = 1
-node_matrix[17][18] = 1
-node_matrix[17][22] = 1
-node_matrix[18][17] = 1
-node_matrix[18][18] = 1
-node_matrix[18][13] = 1
-node_matrix[18][19] = 1
-node_matrix[18][23] = 1
-node_matrix[19][14] = 1
-node_matrix[19][19] = 1
-node_matrix[19][18] = 1
-node_matrix[19][24] = 1
-node_matrix[20][15] = 1
-node_matrix[20][20] = 1
-node_matrix[20][21] = 1
-node_matrix[21][16] = 1
-node_matrix[21][21] = 1
-node_matrix[21][20] = 1
-node_matrix[21][22] = 1
-node_matrix[22][17] = 1
-node_matrix[22][22] = 1
-node_matrix[22][21] = 1
-node_matrix[22][23] = 1
-node_matrix[23][18] = 1
-node_matrix[23][23] = 1
-node_matrix[23][22] = 1
-node_matrix[23][24] = 1
-node_matrix[24][19] = 1
-node_matrix[24][24] = 1
-node_matrix[24][23] = 1
-node0 = Button(state=DISABLED)
-node1 = Button(state=DISABLED)
-node2 = Button(state=DISABLED)
-node3 = Button(state=DISABLED)
-node4 = Button(state=DISABLED)
-node5 = Button(state=DISABLED)
-node6 = Button(state=DISABLED)
-node7 = Button(state=DISABLED)
-node8 = Button(state=DISABLED)
-node9 = Button(state=DISABLED)
-node10 = Button(state=DISABLED)
-node11 = Button(state=DISABLED)
-node12 = Button(state=DISABLED)
-node13 = Button(state=DISABLED)
-node14 = Button(state=DISABLED)
-node15 = Button(state=DISABLED)
-node16 = Button(state=DISABLED)
-node17 = Button(state=DISABLED)
-node18 = Button(state=DISABLED)
-node19 = Button(state=DISABLED)
-node20 = Button(state=DISABLED)
-node21 = Button(state=DISABLED)
-node22 = Button(state=DISABLED)
-node23 = Button(state=DISABLED)
-node24 = Button(state=DISABLED)
-edge1 = Label(text="__")
-edge2 = Label(text="__")
-edge3 = Label(text="__")
-edge4 = Label(text="__")
-edge5 = Label(text="|")
-edge6 = Label(text="|")
-edge7 = Label(text="|")
-edge8 = Label(text="|")
-edge9 = Label(text="|")
-edge10 = Label(text="__")
-edge11= Label(text="__")
-edge12 = Label(text="__")
-edge13 = Label(text="__")
-edge14 = Label(text="|")
-edge15 = Label(text="|")
-edge16 = Label(text="|")
-edge17 = Label(text="|")
-edge18 = Label(text="|")
-edge19 = Label(text="__")
-edge20 = Label(text="__")
-edge21 = Label(text="__")
-edge22 = Label(text="__")
-edge23 = Label(text="|")
-edge24 = Label(text="|")
-edge25 = Label(text="|")
-edge26 = Label(text="|")
-edge27 = Label(text="|")
-edge28 = Label(text="__")
-edge29 = Label(text="__")
-edge30 = Label(text="__")
-edge31 = Label(text="__")
-edge32 = Label(text="|")
-edge33 = Label(text="|")
-edge34 = Label(text="|")
-edge35 = Label(text="|")
-edge36 = Label(text="|")
-edge37 = Label(text="__")
-edge38 = Label(text="__")
-edge39 = Label(text="__")
-edge40 = Label(text="__")
-edge_matrix[0][1] = edge1
-edge_matrix[1][2] = edge2
-edge_matrix[2][3] = edge3
-edge_matrix[3][4] = edge4
-edge_matrix[0][5] = edge5
-edge_matrix[1][6] = edge6
-edge_matrix[2][7] = edge7
-edge_matrix[3][8] = edge8
-edge_matrix[4][9] = edge9
-edge_matrix[5][6] = edge10
-edge_matrix[6][7] = edge11
-edge_matrix[7][8] = edge12
-edge_matrix[8][9] = edge13
-edge_matrix[5][10] = edge14
-edge_matrix[6][11] = edge15
-edge_matrix[7][12] = edge16
-edge_matrix[8][13] = edge17
-edge_matrix[9][14] = edge18
-edge_matrix[10][11] = edge19
-edge_matrix[11][12] = edge20
-edge_matrix[12][13] = edge21
-edge_matrix[13][14] = edge22
-edge_matrix[10][15] = edge23
-edge_matrix[11][16] = edge24
-edge_matrix[12][17] = edge25
-edge_matrix[13][18] = edge26
-edge_matrix[14][19] = edge27
-edge_matrix[15][16] = edge28
-edge_matrix[16][17] = edge29
-edge_matrix[17][18] = edge30
-edge_matrix[18][19] = edge31
-edge_matrix[15][20] = edge32
-edge_matrix[16][21] = edge33
-edge_matrix[17][22] = edge34
-edge_matrix[18][23] = edge35
-edge_matrix[19][24] = edge36
-edge_matrix[20][21] = edge37
-edge_matrix[21][22] = edge38
-edge_matrix[22][23] = edge39
-edge_matrix[23][24] = edge40
+node0 = Button(state=DISABLED, text=0)
+node1 = Button(state=DISABLED, text=1)
+node2 = Button(state=DISABLED, text=2)
+node3 = Button(state=DISABLED, text=3)
+node4 = Button(state=DISABLED, text=4)
+node5 = Button(state=DISABLED, text=5)
+node6 = Button(state=DISABLED, text=6)
+node7 = Button(state=DISABLED, text=7)
+node8 = Button(state=DISABLED, text=8)
+node9 = Button(state=DISABLED, text=9)
+node10 = Button(state=DISABLED, text=10)
+node11 = Button(state=DISABLED, text=11)
+node12 = Button(state=DISABLED, text=12)
+node13 = Button(state=DISABLED, text=13)
+node14 = Button(state=DISABLED, text=14)
+node15 = Button(state=DISABLED, text=15)
+node16 = Button(state=DISABLED, text=16)
+node17 = Button(state=DISABLED, text=17)
+node18 = Button(state=DISABLED, text=18)
+node19 = Button(state=DISABLED, text=19)
+node20 = Button(state=DISABLED, text=20)
+node21 = Button(state=DISABLED, text=21)
+node22 = Button(state=DISABLED, text=22)
+node23 = Button(state=DISABLED, text=23)
+node24 = Button(state=DISABLED, text=24)
+node_list = [node0, node1, node2, node3, node4, node5, node6, node7, node8, node9, node10, 
+            node11, node12, node13, node14, node15, node16, node17, node18, node19, node20, 
+            node21, node22, node23, node24]
+v_normal = PhotoImage(file="images/v_normal.gif").subsample(10,10)
+h_normal = PhotoImage(file="images/h_normal.gif").subsample(10,10)
+v_free = PhotoImage(file="images/v_free.gif").subsample(10,10)
+h_free = PhotoImage(file="images/h_free.gif").subsample(10,10)
+v_path = PhotoImage(file="images/v_path.gif").subsample(10,10)
+h_path = PhotoImage(file="images/h_path.gif").subsample(10,10)
+v_block = PhotoImage(file="images/v_block.gif").subsample(10,10)
+h_block = PhotoImage(file="images/h_block.gif").subsample(10,10)
+legend_frame = Frame(program)
+legend_frame1 = Frame(legend_frame)
+legend_frame2 = Frame(legend_frame)
+legend_button = Button(legend_frame1, state=DISABLED, highlightbackground="yellow")
+legend_button_text = Label(legend_frame1, text="Start/Destination")
+legend_button.pack(side="left")
+legend_button_text.pack(side="left")
+legend_label_free = Label(legend_frame2, bg="Green")
+legend_label_text_free = Label(legend_frame2, text="Path")
+legend_label_free.pack(side="left")
+legend_label_text_free.pack(side="left")
+legend_label_block = Label(legend_frame2, bg="Red")
+legend_label_text_block = Label(legend_frame2, text="Blocked")
+legend_label_block.pack(side="left")
+legend_label_text_block.pack(side="left")
+legend_label_notra = Label(legend_frame2, bg="yellow")
+legend_label_text_notra = Label(legend_frame2, text="No traffic")
+legend_label_notra.pack(side="left")
+legend_label_text_notra.pack(side="left")
+legend_frame1.pack(side="top")
+legend_frame2.pack(side="top")
+edge1 = Label(image=h_normal)
+edge2 = Label(image=h_normal)
+edge3 = Label(image=h_normal)
+edge4 = Label(image=h_normal)
+edge10 = Label(image=h_normal)
+edge11 = Label(image=h_normal)
+edge12 = Label(image=h_normal)
+edge13 = Label(image=h_normal)
+edge20 = Label(image=h_normal)
+edge21 = Label(image=h_normal)
+edge28 = Label(image=h_normal)
+edge29 = Label(image=h_normal)
+edge30 = Label(image=h_normal)
+edge31 = Label(image=h_normal)
+edge37 = Label(image=h_normal)
+edge38 = Label(image=h_normal)
+edge39 = Label(image=h_normal)
+edge40 = Label(image=h_normal)
+edge5 = Label(image=v_normal)
+edge6 = Label(image=v_normal)
+edge8 = Label(image=v_normal)
+edge9 = Label(image=v_normal)
+edge14 = Label(image=v_normal)
+edge15 = Label(image=v_normal)
+edge16 = Label(image=v_normal)
+edge17 = Label(image=v_normal)
+edge18 = Label(image=v_normal)
+edge23 = Label(image=v_normal)
+edge24 = Label(image=v_normal)
+edge25 = Label(image=v_normal)
+edge26 = Label(image=v_normal)
+edge27 = Label(image=v_normal)
+edge32 = Label(image=v_normal)
+edge33 = Label(image=v_normal)
+edge35 = Label(image=v_normal)
+edge36 = Label(image=v_normal)
+h_edge_matrix = [[0 for i in range(25)] for j in range(25)]
+v_edge_matrix = [[0 for i in range(25)] for j in range(25)]
+h_edge_matrix[0][1] = edge1
+h_edge_matrix[1][2] = edge2
+h_edge_matrix[2][3] = edge3
+h_edge_matrix[3][4] = edge4
+v_edge_matrix[0][5] = edge5
+v_edge_matrix[1][6] = edge6
+v_edge_matrix[3][8] = edge8
+v_edge_matrix[4][9] = edge9
+h_edge_matrix[5][6] = edge10
+h_edge_matrix[6][7] = edge11
+h_edge_matrix[7][8] = edge12
+h_edge_matrix[8][9] = edge13
+v_edge_matrix[5][10] = edge14
+v_edge_matrix[6][11] = edge15
+v_edge_matrix[7][12] = edge16
+v_edge_matrix[8][13] = edge17
+v_edge_matrix[9][14] = edge18
+h_edge_matrix[11][12] = edge20
+h_edge_matrix[12][13] = edge21
+v_edge_matrix[10][15] = edge23
+v_edge_matrix[11][16] = edge24
+v_edge_matrix[12][17] = edge25
+v_edge_matrix[13][18] = edge26
+v_edge_matrix[14][19] = edge27
+h_edge_matrix[15][16] = edge28
+h_edge_matrix[16][17] = edge29
+h_edge_matrix[17][18] = edge30
+h_edge_matrix[18][19] = edge31
+v_edge_matrix[15][20] = edge32
+v_edge_matrix[16][21] = edge33
+v_edge_matrix[18][23] = edge35
+v_edge_matrix[19][24] = edge36
+h_edge_matrix[20][21] = edge37
+h_edge_matrix[21][22] = edge38
+h_edge_matrix[22][23] = edge39
+h_edge_matrix[23][24] = edge40
+h_edge_matrix[1][0]= edge1
+h_edge_matrix[2][1]= edge2
+h_edge_matrix[3][2]= edge3
+h_edge_matrix[4][3]= edge4
+v_edge_matrix[5][0]= edge5
+v_edge_matrix[6][1]= edge6
+v_edge_matrix[8][3]= edge8
+v_edge_matrix[9][4]= edge9
+h_edge_matrix[6][5]= edge10
+h_edge_matrix[7][6]= edge11
+h_edge_matrix[8][7]= edge12
+h_edge_matrix[9][8]= edge13
+v_edge_matrix[10][5] = edge14
+v_edge_matrix[11][6] = edge15
+v_edge_matrix[12][7] = edge16
+v_edge_matrix[13][8] = edge17
+v_edge_matrix[14][9] = edge18
+h_edge_matrix[12][11] = edge20
+h_edge_matrix[13][12] = edge21
+v_edge_matrix[15][10] = edge23
+v_edge_matrix[16][11] = edge24
+v_edge_matrix[17][12] = edge25
+v_edge_matrix[18][13] = edge26
+v_edge_matrix[19][14] = edge27
+h_edge_matrix[16][15] = edge28
+h_edge_matrix[17][16] = edge29
+h_edge_matrix[18][17] = edge30
+h_edge_matrix[19][18] = edge31
+v_edge_matrix[20][15] = edge32
+v_edge_matrix[21][16] = edge33
+v_edge_matrix[23][18] = edge35
+v_edge_matrix[24][19] = edge36
+h_edge_matrix[21][20] = edge37
+h_edge_matrix[22][21] = edge38
+h_edge_matrix[23][22] = edge39
+h_edge_matrix[24][23] = edge40
+h_edge_list = [edge1, edge2, edge3, edge4, edge10, edge11, edge12, edge13, edge20, edge21, edge28,
+            edge29, edge30, edge31, edge37, edge38, edge39, edge40]
+v_edge_list = [edge5, edge6, edge8, edge9, edge14, edge15, edge16, edge17, edge18, edge23, edge24,
+            edge25, edge26, edge27, edge32, edge33, edge35, edge36]
 delivery_order_listName = Label(program, text="Order list")
 signout_button = Button(text="Sign Out", command=signout_button_action)
 delivery_frame = Frame(program)

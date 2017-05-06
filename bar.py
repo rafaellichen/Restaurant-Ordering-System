@@ -1,5 +1,4 @@
 import pandas
-import numpy
 
 def chef_in_list():
     chefs = pandas.read_csv("data/users.csv")
