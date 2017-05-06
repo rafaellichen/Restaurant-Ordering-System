@@ -395,10 +395,11 @@ def delivery_track_status(ddid):
     return False
 
 def issue_warning(ddid):
-    read = pandas.read_csv("data/order.csv")
-    read.loc[read["ddid"]==int(ddid), "status"] = -1
-    uid = read.loc[read["ddid"]==int(ddid)]["uid"]
-    read.to_csv("data/order.csv", index=False)
-    read = pandas.read_csv("data/users.csv")
-    read.loc[read["uid"]==int(uid), "warning"]+=1
-    read.to_csv("data/users.csv", index=False)
+    if messagebox.askyesno("", "Issue warning to order (ddid: "+str(ddid)+") and delete order?"):
+        read = pandas.read_csv("data/order.csv")
+        read.loc[read["ddid"]==int(ddid), "status"] = -1
+        uid = read.loc[read["ddid"]==int(ddid)]["uid"]
+        read.to_csv("data/order.csv", index=False)
+        read = pandas.read_csv("data/users.csv")
+        read.loc[read["uid"]==int(uid), "warning"]+=1
+        read.to_csv("data/users.csv", index=False)
