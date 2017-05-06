@@ -1015,10 +1015,12 @@ def make_deposit():
 
 def view_comment(did):
     reset_gui()
-    view_user_comment.grid(row=0, column=0, rowspan=3)
+    description_view.grid(row=3, column=0)
+    description_view.config(text=element.get_description(did), wraplength=185, justify=LEFT)
+    view_user_comment.grid(row=0, column=0, rowspan=2)
     view_star.grid(row=0, column=1)
     view_delivery.grid(row=1, column=1)
-    profile_back_button.grid(row=2, column=1)
+    profile_back_button.grid(row=3, column=1)
     data = element.comment_op(did)
     view_user_comment.delete(0,END)
     for e in data[0]:
@@ -1104,6 +1106,7 @@ view_delivery2.pack(side="left")
 view_delivery3.pack(side="left")
 view_delivery4.pack(side="left")
 view_delivery5.pack(side="left")
+description_view = Label(program)
 
 #comment interface
 combined_rate_frame = Frame(program)
@@ -1588,13 +1591,6 @@ edge_matrix[23][24] = edge40
 delivery_order_listName = Label(program, text="Order list")
 signout_button = Button(text="Sign Out", command=signout_button_action)
 order_track_button = Button(text="Track", command=delivery_track_interface)
-
-#delivery track interface
-back_frame = Frame(program)
-back_button = Button(back_frame, text="back", command=delivery_interface)
-back_button.pack(side="top")
-item_list = Listbox(program)
-item_list_label = Label(text="Item purchased")
 
 #start interface
 search_frame = Frame(program)

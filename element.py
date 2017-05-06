@@ -380,3 +380,8 @@ def get_all(did):
     read = pandas.read_csv("data/dish.csv")
     read = read.loc[read["did"]==did]
     return (read["dish"].values[0], read["price"].values[0], read["path"].values[0])
+
+def get_description(did):
+    read = pandas.read_csv("data/dish.csv")
+    read = read.loc[read["did"]==did]["description"].values[0]
+    return read
