@@ -655,13 +655,30 @@ def delivery_interface():
     signout_button.grid(row=0, column=0)
     delivery_order_listName.grid(row=1, column=0)
     delivery_order_list.grid(row=2, column=0)
-    order_track_button.grid(row=3, column=0)
+    delivery_frame.grid(row=3, column=0)
     order_list = element.get_order_list()
     delivery_order_list.delete(0,END)
     for item in order_list:
         delivery_order_list.insert(END, item)
 
-def delivery_track_interface():
+def delivery_track_interface_action(w):
+    if w == 0:
+        try:
+            delivery_track_interface(delivery_order_list.get(delivery_order_list.curselection()))
+        except TclError:
+            messagebox.showwarning("", "Please select an order to track")
+    elif w == 1:
+        try:
+            element.issue_warning(delivery_order_list.get(delivery_order_list.curselection()))
+            delivery_interface()
+        except TclError:
+            messagebox.showwarning("", "Please select an order to issue warning")
+
+def delivered_action(ddid):
+    element.delivery_track_status(ddid)
+    delivery_interface()
+
+def delivery_track_interface(ddid):
     reset_gui()
     node0.grid(row=0, column=0)
     node1.grid(row=0, column=2)
@@ -728,7 +745,8 @@ def delivery_track_interface():
     edge38.grid(row=8, column=3)
     edge39.grid(row=8, column=5)
     edge40.grid(row=8, column=7)
-    back_frame.grid(row=9, column=0, columnspan=10)
+    delivery_track_frame.grid(row=9, column=0, columnspan=10)
+    delivered.config(command=lambda: delivered_action(ddid))
 
 def start_interface():
     reset_gui()
@@ -1367,6 +1385,13 @@ cart_image6 = Label(image=None)
 cart_image_list = [cart_image1, cart_image2, cart_image3, cart_image4, cart_image5, cart_image6]
 cart_did_list = [cart_did_list1, cart_did_list2, cart_did_list3, cart_did_list4, cart_did_list5, cart_did_list6]
 
+#delivery track interface
+delivery_track_frame = Frame(program)
+delivery_back_button = Button(delivery_track_frame, text="back", command=delivery_interface)
+delivered = Button(delivery_track_frame, text="Delivered", command=None)
+delivered.pack(side=LEFT)
+delivery_back_button.pack(side=LEFT)
+
 #delivery interface
 delivery_order_list = Listbox(program)
 delivery_order_listName = Label(program, text="Order list")
@@ -1590,7 +1615,11 @@ edge_matrix[22][23] = edge39
 edge_matrix[23][24] = edge40
 delivery_order_listName = Label(program, text="Order list")
 signout_button = Button(text="Sign Out", command=signout_button_action)
-order_track_button = Button(text="Track", command=delivery_track_interface)
+delivery_frame = Frame(program)
+issue_warning = Button(delivery_frame, text="Issue warning", command=lambda: delivery_track_interface_action(1))
+order_track_button = Button(delivery_frame, text="Track", command=lambda: delivery_track_interface_action(0))
+order_track_button.pack(side="left")
+issue_warning.pack(side="left")
 
 #start interface
 search_frame = Frame(program)

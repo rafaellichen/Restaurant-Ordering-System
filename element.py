@@ -22,7 +22,7 @@ def get_order_list():
     temp_orderlist = []
     i=0
     for x in order_statues:
-        if x == -1:
+        if x == 0:
             temp_orderlist.append(order_number[i])
         i+=1
     return temp_orderlist
@@ -223,7 +223,7 @@ def save_edit_menu(dish, uid):
 
 def get_ddid_list(uid):
     ddid_list = pandas.read_csv("data/order.csv")
-    ddid_list = ddid_list.loc[(ddid_list["uid"]==uid) & (ddid_list["rated"]==0)]["ddid"].values
+    ddid_list = ddid_list.loc[(ddid_list["uid"]==uid) & (ddid_list["rated"]==0) & (ddid_list["status"]==1)]["ddid"].values
     return ddid_list
 
 def get_did_list(ddid):
@@ -344,7 +344,8 @@ def comment_op(did):
     total_delivery = 0
     for e in delivery_read:
         total_delivery+=e
-    total_delivery = total_delivery/len(delivery_read)
+    if len(delivery_read)!=0:
+        total_delivery = total_delivery/len(delivery_read)
     food_read = pandas.read_csv("data/star.csv")
     food_read = food_read.loc[food_read["did"]==did]
     if food_read["number"].values.tolist()[0] != 0:
@@ -385,3 +386,18 @@ def get_description(did):
     read = pandas.read_csv("data/dish.csv")
     read = read.loc[read["did"]==did]["description"].values[0]
     return read
+
+def delivery_track_status(ddid):
+    read = pandas.read_csv("data/order.csv")
+    read.loc[read["ddid"]==int(ddid), "status"] = 1
+    read.to_csv("data/order.csv", index=False)
+
+def issue_warning(ddid):
+    read = pandas.read_csv("data/order.csv")
+    read.loc[read["ddid"]==int(ddid), "status"] = -1
+    uid = read.loc[read["ddid"]==int(ddid)]["uid"]
+    read.to_csv("data/order.csv", index=False)
+    read = pandas.read_csv("data/users.csv")
+    read.loc[read["uid"]==int(uid), "warning"]+=1
+    read.to_csv("data/users.csv", index=False)
+    
