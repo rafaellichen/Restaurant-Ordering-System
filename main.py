@@ -738,7 +738,6 @@ def delivery_track_interface_action(w):
     if w == 0:
         try:
             current_location()
-           #delivery_track_interface(delivery_order_list.get(delivery_order_list.curselection()))
         except TclError:
             messagebox.showwarning("", "Please select an order to track")
     elif w == 1:
@@ -1177,6 +1176,7 @@ def search_button_action(text):
         temp = element.get_all(current_parameter.alldish.get(text))
     if not found:
         messagebox.showwarning("", "No dish named "+str(text))
+        search_entry.delete(0,END)
     else:
         reset_gui()
         search_component[0] = PhotoImage(file=temp[2])
