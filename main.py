@@ -1366,7 +1366,7 @@ update_all_button = Button(text="Refresh", command=manager_update_all_action)
 dish_approved_compliements_list_label = Label(program, text="Approved compliments")
 dish_approved_compliants_list_label = Label(program, text="Approved complaints")
 dish_declined_compliments_list_label = Label(program, text="Declined compliments")
-dish_declined_compliants_list_label = Label(program, text="Declined compliants")
+dish_declined_compliants_list_label = Label(program, text="Declined complaints")
 user_approved_list_label = Label(program, text="Approved users")
 user_declined_list_label = Label(program, text="Declined users")
 dish_approved_compliements_list = Listbox(program)
@@ -1375,7 +1375,7 @@ dish_declined_compliments_list = Listbox(program)
 dish_declined_compliants_list = Listbox(program)
 user_approved_list = Listbox(program)
 user_declined_list = Listbox(program)
-user_quit_label = Label(program, text="Closing accountss")
+user_quit_label = Label(program, text="Closing accounts")
 user_quit_list = Listbox(program)
 
 #signin interface
@@ -1495,7 +1495,7 @@ cart_did_list = [cart_did_list1, cart_did_list2, cart_did_list3, cart_did_list4,
 
 #delivery track interface
 delivery_track_frame = Frame(program)
-delivery_back_button = Button(delivery_track_frame, text="back", command=delivery_interface)
+delivery_back_button = Button(delivery_track_frame, text="Back", command=delivery_interface)
 delivered = Button(delivery_track_frame, text="Delivered", command=None)
 delivered.pack(side=LEFT)
 delivery_back_button.pack(side=LEFT)
