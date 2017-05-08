@@ -25,7 +25,7 @@ This project is for class demonstration only
   * [x] Employee who is demoted twice will be fired
   * [x] Customers will gain 1 warning for each rejected comments
   * [x] Delivery person can issue warning to customoers
-  * [ ] One creative feature for the system
+  * [x] One creative feature for the system
   * [x] Ratings for food by customers are available to all people
   * [x] A map with at least 5 blocks in width and height
   * [x] Customers who are kicked out or choose to quit will be handled by the manager
