@@ -4,6 +4,8 @@ from random import randint
 from tkinter import messagebox
 from collections import Counter
 
+import manage
+
 def check_quantity(input):
     if input == "":
         messagebox.showwarning("", "Please enter valid integer")

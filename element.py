@@ -403,3 +403,7 @@ def issue_warning(ddid):
         read = pandas.read_csv("data/users.csv")
         read.loc[read["uid"]==int(uid), "warning"]+=1
         read.to_csv("data/users.csv", index=False)
+
+def update_user(uid):
+    read = pandas.read_csv("data/users.csv")
+    return read.loc[read["uid"]==uid]["level"].values[0]

@@ -112,18 +112,18 @@ def rand_situation():
         map_matrix[e[1]][e[0]] = 1
     return map_matrix
 
-def solution(tree, destination, ans):
+def solution(tree, destination, ans, cur_loc):
     if tree[destination] == -1:
-        ans.append(12)
+        ans.append(cur_loc)
         return ans
     else:
         ans.append(destination)
-        return solution(tree, tree[destination], ans)
+        return solution(tree, tree[destination], ans, cur_loc)
 
-def find_path(map_matrix, destination):
+def find_path(map_matrix, destination, cur_loc):
     tree = [-1]*25
     distance = [111]*25
-    distance[12] = 0
+    distance[cur_loc] = 0
     temp = []
     for i in range(25):
         temp.append(i)
@@ -140,7 +140,7 @@ def find_path(map_matrix, destination):
                 tree[i]=node
                 distance[i]=distance[node]+map_matrix[node][i]
     ans = []
-    return solution(tree, destination, ans)
+    return solution(tree, destination, ans, cur_loc)
 
 def get_destination(ddid):
     read = pandas.read_csv("data/order.csv")

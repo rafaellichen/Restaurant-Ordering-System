@@ -388,6 +388,7 @@ def shoppingcart_checkout_button_action():
     if current_user.total == 0:
         messagebox.showwarning("", "Empty cart")
     else:
+        current_user.user_level = element.update_user(current_user.uid)
         result = shop.checkout_balance(current_user.user_level, current_user.total, current_user.uid)
         if current_user.user_level != 0 and result:
             shop.write_order(current_user.uid,current_user.shopping_cart)
@@ -745,7 +746,7 @@ def delivery_track_interface(ddid):
     legend_frame.grid(row=9, column=0, columnspan=10)
     delivery_track_frame.grid(row=10, column=0, columnspan=10)
     map_matrix = cmap.rand_situation()
-    change_map(map_matrix, cmap.find_path(map_matrix, cmap.get_destination(ddid)))
+    change_map(map_matrix, cmap.find_path(map_matrix, cmap.get_destination(ddid), 12))
     delivered.config(command=lambda: delivered_action(ddid))
 
 def change_map(map_matrix, path):

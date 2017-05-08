@@ -32,4 +32,3 @@ This project is for class demonstration only
   * [x] The order cannot be placed if balance is not enough during checkout
   * [x] Customers with 3 warnings are blocked
   * [x] VIP with 2 warnings are demoted to regular customer and cleared
-  
