@@ -1,6 +1,7 @@
 import pandas
 from collections import Counter
 from tkinter import messagebox
+import shutil
 
 import shop
 
@@ -286,7 +287,15 @@ def save_comment(delivery_rating, food_rating, uid, did_list, comment):
 def save_new_dish(name, price, description, image):
     if name=="" or price=="" or description=="" or image=="" or (not price.isdigit()):
         messagebox.showwarning("", "Please enter valid information")
+        return False
     else:
+        path_split = image.split("/")
+        path_split = path_split[-1]
+        try:
+            path_image = shutil.move(image,"images/")
+        except shutil.Error:
+            messagebox.showwarning("", "Unable to add image")
+            return False
         add_dish = pandas.read_csv("data/dish.csv")
         add_dish_name_list = add_dish["dish"].values.tolist()
         add_dish_price_list = add_dish["price"].values.tolist()
@@ -299,7 +308,7 @@ def save_new_dish(name, price, description, image):
         add_dish_name_list.append(name)
         add_dish_price_list.append(price)
         add_dish_description_list.append(description)
-        add_dish_image_list.append(image)
+        add_dish_image_list.append(path_image)
         write = pandas.DataFrame({"dish": add_dish_name_list,
                                  "price": add_dish_price_list,
                                  "description": add_dish_description_list,
@@ -312,8 +321,11 @@ def save_new_dish(name, price, description, image):
                         "price",
                         "path",
                         "description"]]
-    write.to_csv("data/dish.csv", index=False)
-
+        write.to_csv("data/dish.csv", index=False)
+        star_file = pandas.read_csv("data/star.csv")
+        star_file.loc[len(star_file)]=[did_list[-2]+1,0,0]
+        star_file.to_csv("data/star.csv", index=False)
+        return True
 
 def delivery_rating(rate, ddid):
     order = pandas.read_csv("data/order.csv")

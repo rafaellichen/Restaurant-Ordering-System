@@ -2,7 +2,7 @@ dish,did,time,price,path,description
 anago,0,14,4,images/anago.gif,Anago is the japanese salt-water eel sushi.
 california,1,5,6,images/california.gif,"California roll is a sushi roll containing cucumber, imitation crab, and avocado."
 ebi,2,7,8,images/ebi.gif,Ebi sushi contains baby shrimp.
-etc,-1,0,0,images/etc.gif,
+etc,-1,-1,0,images/etc.gif,
 futo,4,10,10,images/futo.gif,Futo is a thick sushi roll consists of several ingredients.
 hirame,5,12,14,images/hirame.gif,Hirame is a Japanese Flatfish sushi.
 ika,6,3,6,images/ika.gif,Ika is a Squid sushi.

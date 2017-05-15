@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter.filedialog import askopenfilename
 
 import signin
 import bar
@@ -186,6 +187,7 @@ def set_parameter():
     current_parameter.menu_current_page = 1
     
 def reset_gui():
+    image_entry.delete(0,END)
     profile_deposit.delete(0,END)
     search_entry.delete(0,END)
     signin_username_entry.delete(0,END)
@@ -264,9 +266,14 @@ def add_new_dish_interface():
     dish_name_entry.grid(row=1, column=1)
     price_entry.grid(row=2, column=1)
     description_entry.grid(row=3, column=1)
-    image_entry.grid(row=4, column=1)
+    image_path.grid(row=4, column=1)
 
-
+def select_file():
+    filename = askopenfilename()
+    image_entry.config(state=NORMAL)
+    image_entry.delete(0,END)
+    image_entry.insert(0, filename)
+    image_entry.config(state=DISABLED)
 
 def update_edit_menu():
     available_dish_list.delete(0,END)
@@ -1194,11 +1201,13 @@ def search_button_action(text):
         shopping_enter_button.grid(row=5,column=0)
 
 def save_new_dish_action():
-    element.save_new_dish(dish_name_entry.get(), price_entry.get(), description_entry.get(), image_entry.get())
-    dish_name_entry.delete(0,END)
-    price_entry.delete(0,END)
-    description_entry.delete(0,END)
-    image_entry.delete(0,END)
+    if element.save_new_dish(dish_name_entry.get(), price_entry.get(), description_entry.get(), image_entry.get()):
+        dish_name_entry.delete(0,END)
+        price_entry.delete(0,END)
+        description_entry.delete(0,END)
+        image_entry.config(state=NORMAL)
+        image_entry.delete(0,END)
+        image_entry.config(state=DISABLED)
 
 #view comment interface
 star_c = PhotoImage(file="images/star_c.gif").subsample(5,5)
@@ -1325,7 +1334,11 @@ image_label = Label(program, text="Image")
 dish_name_entry = Entry(program)
 price_entry = Entry(program)
 description_entry = Entry(program)
-image_entry = Entry(program)
+image_path = Frame(program)
+image_add_button = Button(image_path, text="Add image", command=select_file)
+image_entry = Entry(image_path, state=DISABLED)
+image_entry.pack(side="left")
+image_add_button.pack(side="left")
 save_button = Button(text="Save", command= save_new_dish_action)
 
 #manager interface
