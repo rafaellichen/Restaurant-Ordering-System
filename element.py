@@ -2,6 +2,8 @@ import pandas
 from collections import Counter
 from tkinter import messagebox
 import shutil
+from PIL import Image
+import os
 
 import shop
 
@@ -284,17 +286,24 @@ def save_comment(delivery_rating, food_rating, uid, did_list, comment):
                             "approval"]]
             write.to_csv("data/compliments.csv", index=False)
 
-def save_new_dish(name, price, description, image):
-    if name=="" or price=="" or description=="" or image=="" or (not price.isdigit()):
+def save_new_dish(name, price, description, image_path):
+    if name=="" or price=="" or description=="" or image_path=="" or (not price.isdigit()):
         messagebox.showwarning("", "Please enter valid information")
         return False
     else:
-        path_split = image.split("/")
-        path_split = path_split[-1]
+        path_split = image_path.split("/")
+        temp = path_split[-1]
+        del path_split[-1]
+        for e in temp.split("."):
+            path_split.append(e)
+        img = Image.open(image_path)
+        img.save(path_split[-2]+".gif",'gif')
+        recreate = path_split[-2]+".gif"
         try:
-            path_image = shutil.move(image,"images/")
+            path_image = shutil.move(recreate,"images/")
         except shutil.Error:
-            messagebox.showwarning("", "Unable to add image")
+            messagebox.showwarning("", "Duplicate file name")
+            os.remove(recreate)
             return False
         add_dish = pandas.read_csv("data/dish.csv")
         add_dish_name_list = add_dish["dish"].values.tolist()
@@ -308,7 +317,7 @@ def save_new_dish(name, price, description, image):
         add_dish_name_list.append(name)
         add_dish_price_list.append(price)
         add_dish_description_list.append(description)
-        add_dish_image_list.append(path_image)
+        add_dish_image_list.append("images/"+recreate)
         write = pandas.DataFrame({"dish": add_dish_name_list,
                                  "price": add_dish_price_list,
                                  "description": add_dish_description_list,
