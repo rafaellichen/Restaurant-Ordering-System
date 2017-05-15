@@ -4,6 +4,7 @@ from tkinter import messagebox
 import shutil
 from PIL import Image
 import os
+import imghdr
 
 import shop
 
@@ -291,6 +292,9 @@ def save_new_dish(name, price, description, image_path):
         messagebox.showwarning("", "Please enter valid information")
         return False
     else:
+        if imghdr.what(image_path) is None:
+            messagebox.showwarning("", "File type not supported")
+            return False
         path_split = image_path.split("/")
         temp = path_split[-1]
         del path_split[-1]
