@@ -9,13 +9,6 @@ uid,did,time,dish,price,path
 16,-1,-1,etc,0,images/etc.gif
 16,13,1,tako,13,images/tako.gif
 16,14,7,tamago,12,images/tamago.gif
-4,1,5,california,6,images/california.gif
-4,4,10,futo,10,images/futo.gif
-4,7,1,ikura,17,images/ikura.gif
-4,10,3,masago,9,images/masago.gif
-4,13,1,tako,13,images/tako.gif
-4,16,7,temaki,19,images/temaki.gif
-4,-1,-1,etc,0,images/etc/gif
 3,4,10,futo,10,images/futo.gif
 3,6,3,ika,6,images/ika.gif
 3,18,5,unagi,16,images/unagi.gif
@@ -27,3 +20,11 @@ uid,did,time,dish,price,path
 3,15,3,tekka,18,images/tekka.gif
 3,20,0,blueberry,5,images/blueberry.gif
 3,-1,-1,etc,0,images/etc.gif
+4,1,5,california,6,images/california.gif
+4,4,10,futo,10,images/futo.gif
+4,7,1,ikura,17,images/ikura.gif
+4,10,3,masago,9,images/masago.gif
+4,13,1,tako,13,images/tako.gif
+4,16,7,temaki,19,images/temaki.gif
+4,21,0,banana,4,images/banana.gif
+4,-1,-1,etc,0,images/etc.gif
