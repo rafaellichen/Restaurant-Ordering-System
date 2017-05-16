@@ -7,6 +7,7 @@ import os
 import imghdr
 
 import shop
+import manage
 
 def get_balance(uid):
     users_database = pandas.read_csv("data/users.csv")
@@ -436,6 +437,7 @@ def issue_warning(ddid):
         read = pandas.read_csv("data/users.csv")
         read.loc[read["uid"]==int(uid), "warning"]+=1
         read.to_csv("data/users.csv", index=False)
+    manage.auto_vip_block()
 
 def update_user(uid):
     read = pandas.read_csv("data/users.csv")

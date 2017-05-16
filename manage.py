@@ -148,7 +148,7 @@ def auto_vip_block():
     level = user_file["level"].values
     i=0
     for e,f in zip(warnings,level):
-        if not numpy.isnan(e) and e>=2 and f==2:
+        if not numpy.isnan(e) and e>=3 and f==2:
             user_file.set_value(i, "level", 1)
             user_file.set_value(i, "spent", 0)
             user_file.set_value(i, "orders", 0)
