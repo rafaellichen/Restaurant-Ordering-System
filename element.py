@@ -163,7 +163,7 @@ def profile(uid):
     username = str(profile_database.loc[profile_database["uid"]==uid]["username"].values[0])
     balance = str(int([profile_database.loc[profile_database["uid"]==uid]["balance"].values][0]))
     email = str(profile_database.loc[profile_database["uid"]==uid]["email"].values[0])
-    warning = str(profile_database.loc[profile_database["uid"]==uid]["warning"].values[0])
+    warning = str(int(profile_database.loc[profile_database["uid"]==uid]["warning"].values[0]))
     return [username,balance,email,warning]
 
 def deposit_money(amount,uid):
@@ -206,10 +206,10 @@ def save_edit_menu(dish, uid):
             current_menu_path_list.append(str(check_table.loc[check_table["did"]==e]["path"].values[0]))
     current_menu_uid_list.append(uid)
     current_menu_did_list.append(-1)
-    current_menu_time_list.append(0)
+    current_menu_time_list.append(-1)
     current_menu_dish_list.append("etc")
     current_menu_price_list.append(0)
-    current_menu_path_list.append("images/etc/gif")
+    current_menu_path_list.append("images/etc.gif")
     write = pandas.DataFrame({"uid": current_menu_uid_list,
                             "did": current_menu_did_list,
                             "time": current_menu_time_list,
@@ -301,6 +301,13 @@ def save_new_dish(name, price, description, image_path):
         for e in temp.split("."):
             path_split.append(e)
         img = Image.open(image_path)
+        ###########
+        wpercent = (150/float(img.size[0]))
+        hsize = int((float(img.size[1])*float(wpercent)))
+        img = img.resize((150,hsize), Image.ANTIALIAS)
+        ###########
+        # Referenced from: http://stackoverflow.com/questions/273946/how-do-i-resize-an-image-using-pil-and-maintain-its-aspect-ratio
+        # Author: tomvon
         img.save(path_split[-2]+".gif",'gif')
         recreate = path_split[-2]+".gif"
         try:
