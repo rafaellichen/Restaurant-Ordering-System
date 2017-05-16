@@ -116,7 +116,7 @@ def write_order(uid, cart):
     while des==12:
         des = randint(0,24)
     destination.append(des)
-    status.append(-1)
+    status.append(0)
     uid_data.append(uid)
     rate.append(0)
     rated.append(0)

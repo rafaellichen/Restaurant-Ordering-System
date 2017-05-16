@@ -25,4 +25,5 @@ uid,did,time,dish,price,path
 3,13,1,tako,13,images/tako.gif
 3,10,3,masago,9,images/masago.gif
 3,15,3,tekka,18,images/tekka.gif
+3,20,0,blueberry,5,images/blueberry.gif
 3,-1,-1,etc,0,images/etc.gif
