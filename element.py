@@ -160,11 +160,12 @@ def get_deliver_employee():
 
 def profile(uid):
     profile_database = pandas.read_csv("data/users.csv")
+    vip = int(profile_database.loc[profile_database["uid"]==uid]["level"].values[0])
     username = str(profile_database.loc[profile_database["uid"]==uid]["username"].values[0])
     balance = str(int([profile_database.loc[profile_database["uid"]==uid]["balance"].values][0]))
     email = str(profile_database.loc[profile_database["uid"]==uid]["email"].values[0])
     warning = str(int(profile_database.loc[profile_database["uid"]==uid]["warning"].values[0]))
-    return [username,balance,email,warning]
+    return [username,balance,email,warning,vip]
 
 def deposit_money(amount,uid):
     if shop.check_quantity(amount):
