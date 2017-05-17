@@ -28,3 +28,6 @@ uid,did,time,dish,price,path
 4,16,7,temaki,19,images/temaki.gif
 4,21,0,banana,4,images/banana.gif
 4,-1,-1,etc,0,images/etc.gif
+19,-1,-1,etc,0,images/etc.gif
+22,1,5,california,6,images/california.gif
+22,-1,-1,etc,0,images/etc.gif

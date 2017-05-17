@@ -111,17 +111,20 @@ def register_employee(t, name, username, password, email):
     orders_amount = users_database["orders"].values.tolist()
     if name == "" or username == "" or password == "" or email == "":
         messagebox.showwarning("", "Please fill out all information")
-        return
+        return False
     for u,e in zip(users_username_database,users_email_database):
         if u == username or e == email:
             messagebox.showwarning("", "Username or Email is registered already")
-            return
+            return False
     users_username_database.append(username)
     users_password_database.append(password)
     users_email_database.append(email)
     users_balance_database.append(numpy.nan)
     if t == 1:
         users_level_database.append(4)
+        edit_menu = pandas.read_csv("data/menu.csv")
+        edit_menu.loc[len(edit_menu)] = [users_uid_database[-1]+1, -1, -1, "etc", 0, "images/etc.gif"]
+        edit_menu.to_csv("data/menu.csv", index=False)
     else:
         users_level_database.append(3)
     users_uid_database.append(users_uid_database[-1]+1)
@@ -166,7 +169,7 @@ def register_employee(t, name, username, password, email):
     salary_uid.append(users_uid_database[-1])
     salary_complaints.append(0)
     salary_compliments.append(0)
-    salary_demoted.append(numpy.nan)
+    salary_demoted.append(0)
     salary_database = pandas.DataFrame({"uid": salary_uid,
                                         "salary": salary_salary,
                                         "complaints": salary_complaints,
@@ -175,3 +178,4 @@ def register_employee(t, name, username, password, email):
     salary_database = salary_database[["uid", "salary", "complaints", "compliments", "demoted"]]
     salary_database.to_csv("data/salary.csv", index=False)
     messagebox.showinfo("", "Successful added")
+    return True

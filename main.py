@@ -121,7 +121,7 @@ def star_delivery_change(num):
         i+=1
     current_parameter.star_delivery_rate = num
 
-def refresh_menu():
+def refresh_menu(input):
     temp = bar.chef_in_list()
     current_parameter.chef_list = temp
     chef_list.delete(0,END)
@@ -129,10 +129,11 @@ def refresh_menu():
     chef_list.add_command(label="Top", command=lambda: bar_change_menu("top","Top"))
     for e,f in zip(temp[0],temp[1]):
         chef_list.add_command(label=str(e), command=lambda uid=f,name=e: bar_change_menu(uid,name))
-    if current_parameter.current_chef_uid != -1:
-        bar_change_menu(current_parameter.current_chef_uid,current_parameter.current_chef_name)
-    else:
-        bar_change_menu("all",current_parameter.current_chef_name)
+    if input == 1:
+        if current_parameter.current_chef_uid != -1:
+            bar_change_menu(current_parameter.current_chef_uid,current_parameter.current_chef_name)
+        else:
+            bar_change_menu("all",current_parameter.current_chef_name)
 
 def bar_change_menu(uid,name):
     if uid == "all":
@@ -964,14 +965,15 @@ def register_new_employee():
     if employee_chef["state"] == "normal" and employee_deliver["state"] == "normal":
         messagebox.showwarning("", "Please select an employee type")
     else:
-        signin.register_employee(current_parameter.employee_type, employee_name.get(), employee_username.get(), 
-                            employee_password.get(), employee_email.get())
-        employee_chef["state"] = "normal"
-        employee_deliver["state"] = "normal"
-        employee_email.delete(0,END)
-        employee_name.delete(0,END)
-        employee_password.delete(0,END)
-        employee_username.delete(0,END)
+        if signin.register_employee(current_parameter.employee_type, employee_name.get(), employee_username.get(), 
+                            employee_password.get(), employee_email.get()):
+            employee_chef["state"] = "normal"
+            employee_deliver["state"] = "normal"
+            employee_email.delete(0,END)
+            employee_name.delete(0,END)
+            employee_password.delete(0,END)
+            employee_username.delete(0,END)
+            refresh_menu(0)
 
 def manager_interface():
     reset_gui()
@@ -1083,6 +1085,7 @@ def manager_approve_decline_button_action(input):
     manager_update_all_action()
     manage.auto_demote_promote_employee()
     manage.auto_vip_block()
+    refresh_menu(0)
 
 def employee_management():
     reset_gui()
@@ -1717,7 +1720,7 @@ search_button.pack(side="left")
 chef_name = Label(program, text="All")
 info_button = Button(text="Profile", command=profile_button_action)
 comment_button = Button(text="Comment", command=comment_interface)
-refresh_button = Button(text="Refresh", command=refresh_menu)
+refresh_button = Button(text="Refresh", command=lambda: refresh_menu(1))
 shopping_cart_items = Button(text="Your Shopping Cart", command=shopping_cart_button_action)
 signout_button = Button(text="Sign Out", command=signout_button_action)
 signin_button = Button(text="Sign In", command=signin_interface)

@@ -16,29 +16,31 @@ def approve_pending_registrations(username, input):
                 if result:
                     users_database.set_value(i, "approved", 1)
                     users_database.to_csv("data/users.csv", index=False)
-            elif input == 2:
+                return
+            if input == 2:
                 result = messagebox.askyesno("","Closing the following user:\n"+"Username: "+str(username)+
                                                 "\nBalance: $"+str(users_balance_database[i]))
                 if result:
                     users_database.set_value(i, "approved", -1)
                     users_database.set_value(i, "balance", 0)
                     users_database.to_csv("data/users.csv", index=False)
-            elif input == -2:
+                return
+            if input == -2:
                 result = messagebox.askyesno("","Reopenng the following user:\n"+"Username: "+str(username)+
                                                 "\nBalance: $"+str(users_balance_database[i]))
                 if result:
                     users_database.set_value(i, "approved", 1)
                     users_database.to_csv("data/users.csv", index=False)
-            else:
+                return
+            if input == -1:
                 result = messagebox.askyesno("","Declining the following user:\n"+"Username: "+str(username)+
                                                 "\nBalance: $"+str(users_balance_database[i]))
                 if result:
                     users_database.set_value(i, "approved", -1)
                     users_database.set_value(i, "balance", 0)
                     users_database.to_csv("data/users.csv", index=False)
+                return
         i+=1
-
-
 
 def approve_compliments(cpid, input):
     compliments_database = pandas.read_csv("data/compliments.csv")
@@ -116,6 +118,7 @@ def auto_demote_promote_employee():
     for e in demoted_time:
         if e == 2:
             users_file.set_value(uid[i], "approved", -1)
+            salary_file.set_value(i, "demoted", 0)
         i+=1
     salary_current = salary_file["salary"].values
     compliments_time = salary_file["compliments"].values
